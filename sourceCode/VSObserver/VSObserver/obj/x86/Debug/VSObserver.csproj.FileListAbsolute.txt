@@ -1,0 +1,15 @@
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\bin\Debug\VSObserver.exe
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\bin\Debug\VSObserver.pdb
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\bin\Debug\Hardcodet.Wpf.TaskbarNotification.pdb
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\MainWindow.baml
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\MainWindow.g.cs
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\App.g.cs
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\VSObserver_MarkupCompile.cache
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\VSObserver.g.resources
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\VSObserver.Properties.Resources.resources
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\VSObserver.exe
+D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\VSObserver.pdb
