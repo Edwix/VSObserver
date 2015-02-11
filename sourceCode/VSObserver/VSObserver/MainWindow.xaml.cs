@@ -30,6 +30,8 @@ namespace VSObserver
         {
             InitializeComponent();
 
+            //Création du timer pour récupérer la valeur du presse papier
+            //Initialisation de l'ancienne valeur du presse papier
             oldClipBoardText = "";
             clipBoardTimer = new DispatcherTimer();
             clipBoardTimer.Tick += new EventHandler(clipBoardTimer_Tick);
@@ -49,6 +51,12 @@ namespace VSObserver
             Clipboard.Clear();
         }
 
+        /// <summary>
+        /// Récupère le dernier texte du presse-papier
+        /// Si le texte est différent de l'ancienne copie
+        /// Sinon ça retourne une chaine vide
+        /// </summary>
+        /// <returns></returns>
         public string getTextFromClipBoard()
         {
             string clipBoardText = "";
@@ -67,17 +75,30 @@ namespace VSObserver
             return clipBoardText;
         }
 
+        /// <summary>
+        /// A chaque intervale cette méthode est déclenché
+        /// Elle permet de mettre le texte récupérer du presse-papier dans une textbox et d'afficher le dialogue
+        /// Par contre si le texte du presse-papier retourne une chaine vide, alors on n'affiche pas le dialogue
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void clipBoardTimer_Tick(object sender, EventArgs e)
         {
             string clipBoardText = getTextFromClipBoard();
 
             if (clipBoardText != "")
             {
-                tb_variableName.Text = clipBoardText;
+                ///Suppression des espace blancs au debut et à la fin
+                tb_variableName.Text = clipBoardText.TrimStart().TrimEnd();
                 this.Show();
             }
         }
 
+        /// <summary>
+        /// Cache la fenêtre du programme lorsqu'on clique sur le bouton hide
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_hideDialog_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();

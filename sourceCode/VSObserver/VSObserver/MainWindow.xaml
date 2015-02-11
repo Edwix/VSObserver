@@ -5,7 +5,7 @@
         Title="MainWindow" Height="350" Width="525"
         Style="{x:Null}">
     <Grid>
-        <Button Name="btn_hideDialog" Height="20" Width="20" Click="btn_hideDialog_Click" />
+        <Button Name="btn_hideDialog" Content="Hide" Height="20" Width="20" Click="btn_hideDialog_Click" />
         <TextBox Name="tb_variableName" Height="20" Width="120" Margin="188,172,195,118" />
     </Grid>
 </Window>
