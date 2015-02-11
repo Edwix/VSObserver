@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
+using System.Windows.Threading;
 
 namespace VSObserver
 {
@@ -20,10 +21,21 @@ namespace VSObserver
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const int SECOND_INTERVAL = 1;
+
+        private string oldClipBoardText;
+        private DispatcherTimer clipBoardTimer;
+
         public MainWindow()
         {
             InitializeComponent();
-            //this.Hide();
+
+            oldClipBoardText = "";
+            clipBoardTimer = new DispatcherTimer();
+            clipBoardTimer.Tick += new EventHandler(clipBoardTimer_Tick);
+            clipBoardTimer.Interval = new TimeSpan(0, 0, SECOND_INTERVAL);
+
+            this.Hide();
 
             //Affichage en premier de l'application
             this.Topmost = true;
@@ -32,6 +44,38 @@ namespace VSObserver
             var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
             this.Left = desktopWorkingArea.Right - this.Width;
             this.Top = desktopWorkingArea.Bottom - this.Height;
+
+            clipBoardTimer.Start();
+            Clipboard.Clear();
+        }
+
+        public string getTextFromClipBoard()
+        {
+            string clipBoardText = "";
+
+            if (Clipboard.ContainsText())
+            {
+                string tempText = Clipboard.GetText(System.Windows.TextDataFormat.Text);
+
+                if (tempText != oldClipBoardText)
+                {
+                    clipBoardText = tempText;
+                    oldClipBoardText = tempText;
+                }
+            }
+
+            return clipBoardText;
+        }
+
+        private void clipBoardTimer_Tick(object sender, EventArgs e)
+        {
+            string clipBoardText = getTextFromClipBoard();
+
+            if (clipBoardText != "")
+            {
+                tb_variableName.Text = clipBoardText;
+                this.Show();
+            }
         }
     }
 }

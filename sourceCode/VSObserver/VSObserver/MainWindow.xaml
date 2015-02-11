@@ -4,6 +4,6 @@
         xmlns:tb="http://www.hardcodet.net/taskbar"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <TextBox Height="20" Width="120" />
+        <TextBox Name="tb_variableName" Height="20" Width="120" />
     </Grid>
 </Window>
