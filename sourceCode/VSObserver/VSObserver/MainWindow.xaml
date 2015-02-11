@@ -5,9 +5,20 @@
         Title="MainWindow" Height="350" Width="525"
         Style="{x:Null}">
     <Grid>
-        <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Margin="431,12,12,279" />
-        <TextBox Name="tb_variableName" Height="20" Margin="27,12,137,280" />
-        <TextBlock Height="94" HorizontalAlignment="Left" Margin="27,62,0,0" Name="tbl_varReader" Text="TextBlock" VerticalAlignment="Top" Width="464" />
-        <TextBlock Height="18" HorizontalAlignment="Left" Margin="27,38,0,0" Name="tbl_varNumber" Text="TextBlock" VerticalAlignment="Top" Width="248" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="40"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Grid.Column="1" Grid.Row="0"/>
+        <TextBox Name="tb_variableName" Height="20" Grid.Column="0" Grid.Row="0"/>
+        <TextBlock HorizontalAlignment="Left" Name="tbl_varNumber" Text="TextBlock" VerticalAlignment="Top" Height="20" Width="248" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" />  
+        <ScrollViewer Height="250" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" >
+            <TextBlock HorizontalAlignment="Left" Name="tbl_varReader" Text="TextBlock" VerticalAlignment="Top" Width="464" />
+        </ScrollViewer>
     </Grid>
 </Window>
