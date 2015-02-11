@@ -97,6 +97,7 @@ namespace VSObserver
                 this.Show();
             }
             
+            //Raffraîchissement des variables toutes les secondes (si on a une variable)
             if(tb_variableName.Text != "")
                 tbl_varReader.Text = vo.readValue(tb_variableName.Text);
         }
