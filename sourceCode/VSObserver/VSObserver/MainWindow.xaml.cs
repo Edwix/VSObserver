@@ -97,8 +97,9 @@ namespace VSObserver
                 this.Show();
             }
             
-            //Raffraîchissement des variables toutes les secondes (si on a une variable)
-            if (tb_variableName.Text != "")
+            ///Raffraîchissement des variables toutes les secondes (si on a une variable)
+            ///On affiche les variable aussi si la variable copier à une longeur supérieur à 3
+            if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3)
             {
                 int variableNumber = 0;
                 tbl_varReader.Text = vo.readValue(tb_variableName.Text, out variableNumber);
