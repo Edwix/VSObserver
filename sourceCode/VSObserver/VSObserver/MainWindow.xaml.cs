@@ -98,8 +98,12 @@ namespace VSObserver
             }
             
             //Raffraîchissement des variables toutes les secondes (si on a une variable)
-            if(tb_variableName.Text != "")
-                tbl_varReader.Text = vo.readValue(tb_variableName.Text);
+            if (tb_variableName.Text != "")
+            {
+                int variableNumber = 0;
+                tbl_varReader.Text = vo.readValue(tb_variableName.Text, out variableNumber);
+                tbl_varNumber.Text = "Variables number : " + variableNumber.ToString();
+            }
         }
 
         /// <summary>

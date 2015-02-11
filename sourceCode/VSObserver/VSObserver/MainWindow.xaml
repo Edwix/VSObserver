@@ -7,6 +7,7 @@
     <Grid>
         <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Margin="431,12,12,279" />
         <TextBox Name="tb_variableName" Height="20" Margin="27,12,137,280" />
-        <TextBlock Height="94" HorizontalAlignment="Left" Margin="27,52,0,0" Name="tbl_varReader" Text="TextBlock" VerticalAlignment="Top" Width="464" />
+        <TextBlock Height="94" HorizontalAlignment="Left" Margin="27,62,0,0" Name="tbl_varReader" Text="TextBlock" VerticalAlignment="Top" Width="464" />
+        <TextBlock Height="18" HorizontalAlignment="Left" Margin="27,38,0,0" Name="tbl_varNumber" Text="TextBlock" VerticalAlignment="Top" Width="248" />
     </Grid>
 </Window>
