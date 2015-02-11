@@ -93,10 +93,12 @@ namespace VSObserver
             {
                 ///Suppression des espace blancs au debut et à la fin
                 tb_variableName.Text = clipBoardText.TrimStart().TrimEnd();
-
-                tbl_varReader.Text = vo.readValue(tb_variableName.Text);
+                
                 this.Show();
             }
+            
+            if(tb_variableName.Text != "")
+                tbl_varReader.Text = vo.readValue(tb_variableName.Text);
         }
 
         /// <summary>
