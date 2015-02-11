@@ -13,5 +13,3 @@ D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\GenerateResourc
 D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\GenerateResource.write.1.tlog
 D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\VSObserver.exe
 D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\VSObserver.pdb
-D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\CustomBalloon.baml
-D:\GIT\VSObserver\sourceCode\VSObserver\VSObserver\obj\x86\Debug\CustomBalloon.g.cs
