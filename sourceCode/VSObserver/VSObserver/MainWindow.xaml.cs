@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Controls.Primitives;
 
 namespace VSObserver
 {
@@ -22,6 +23,15 @@ namespace VSObserver
         public MainWindow()
         {
             InitializeComponent();
+            //this.Hide();
+
+            //Affichage en premier de l'application
+            this.Topmost = true;
+
+            //Affichage de la fenêtre en bas à droite
+            var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
+            this.Left = desktopWorkingArea.Right - this.Width;
+            this.Top = desktopWorkingArea.Bottom - this.Height;
         }
     }
 }
