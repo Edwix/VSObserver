@@ -77,5 +77,10 @@ namespace VSObserver
                 this.Show();
             }
         }
+
+        private void btn_hideDialog_Click(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+        }
     }
 }
