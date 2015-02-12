@@ -15,6 +15,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
 using Forms = System.Windows.Forms;
 using Draw = System.Drawing;
+using System.Data;
 
 namespace VSObserver
 {
@@ -105,7 +106,9 @@ namespace VSObserver
                 {
                     ///Suppression des espace blancs au debut et à la fin
                     tb_variableName.Text = clipBoardText.TrimStart().TrimEnd();
-
+                    int variableNumber = 0;
+                    VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
+                    tbl_varNumber.Text = "Variables number : " + variableNumber.ToString();
                     this.Show();
                 }
 
@@ -113,9 +116,10 @@ namespace VSObserver
                 ///On affiche les variable aussi si la variable copier à une longeur supérieur à 3
                 if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3)
                 {
-                    int variableNumber = 0;
-                    VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
-                    tbl_varNumber.Text = "Variables number : " + variableNumber.ToString();
+                    
+                    //VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
+                    
+                    vo.refreshValues(tb_variableName.Text, ((DataView)VariableList.ItemsSource).Table);
                 }
             }
             catch (Exception ex)

@@ -30,11 +30,7 @@ namespace VSObserver
             variableTable.Columns.Add(TYPE, typeof(string));
             variableTable.Columns.Add(VALUE, typeof(string));
 
-            variableResult = new DataTable();
-            variableResult.Columns.Add(PATH, typeof(string));
-            variableResult.Columns.Add(VARIABLE, typeof(string));
-            variableResult.Columns.Add(VALUE, typeof(string));
-            variableResult.Columns.Add(TIMESTAMP, typeof(string));
+            
 
             loadVariableList();
         }
@@ -75,7 +71,13 @@ namespace VSObserver
             DataRow[] searchResult =  variableTable.Select("Path LIKE '%" + variableName.Replace("'", "") + "%'");
             variableNumber = searchResult.Count();
 
-            //variableResult.Clear();
+
+            variableResult = new DataTable();
+            variableResult.Columns.Add(PATH, typeof(string));
+            variableResult.Columns.Add(VARIABLE, typeof(string));
+            variableResult.Columns.Add(VALUE, typeof(string));
+            variableResult.Columns.Add(TIMESTAMP, typeof(string));
+            variableResult.Clear();
 
             ///On vérifie si on a bien une connexion à U-test
             if (connectionOK)
@@ -197,11 +199,7 @@ namespace VSObserver
                                 break;
                             ///=================================================================================================
                             default:
-                                Console.WriteLine(completeVariable + " ==> Type : " + typeVS);
-                                /*Console.WriteLine("Vector DOUBLE " + VS_Type.VECTOR_DOUBLE);
-                                Console.WriteLine("Vector INTEGER " + VS_Type.VECTOR_INTEGER);
-                                Console.WriteLine("Vector INVALID " + VS_Type.INVALID);
-                                Console.WriteLine("Vector OPAQUE " + VS_Type.OPAQUE);*/
+                                //Console.WriteLine(completeVariable + " ==> Type : " + typeVS);
                                 variableResult.Rows.Add(completeVariable, System.IO.Path.GetFileName(completeVariable), "Undefined", "");
                                 break;
                         }
@@ -220,6 +218,35 @@ namespace VSObserver
             }
 
             return variableResult;
+        }
+
+        /// <summary>
+        /// Rafraichit les valeurs en fonction de l'ancien Datatable
+        /// </summary>
+        /// <param name="dataTable"></param>
+        public void refreshValues(string variableName, DataTable oldVariableTable)
+        {
+            int nb;
+            DataTable newVariableTable = readValue(variableName, out nb);
+
+            foreach (DataRow newRow in newVariableTable.Rows)
+            {
+                foreach(DataRow oldRow in oldVariableTable.Rows)
+                {
+                    if (newRow[PATH] == oldRow[PATH])
+                    {
+                        if (newRow[VALUE].ToString() != oldRow[VALUE].ToString())
+                        {
+                            oldRow[VALUE] = newRow[VALUE];
+                        }
+
+                        if (newRow[TIMESTAMP].ToString() != oldRow[TIMESTAMP].ToString())
+                        {
+                            oldRow[TIMESTAMP] = newRow[TIMESTAMP];
+                        }
+                    }
+                }                
+            }
         }
 
         private string tableToString(IntegerVector vector)
