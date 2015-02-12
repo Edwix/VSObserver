@@ -75,7 +75,7 @@ namespace VSObserver
             DataRow[] searchResult =  variableTable.Select("Path LIKE '%" + variableName.Replace("'", "") + "%'");
             variableNumber = searchResult.Count();
 
-            variableResult.Clear();
+            //variableResult.Clear();
 
             ///On vérifie si on a bien une connexion à U-test
             if (connectionOK)
@@ -161,7 +161,47 @@ namespace VSObserver
                                     }
                                 break;
                             ///=================================================================================================
+                            case 3:
+                                break;
+                            ///=================================================================================================
+                            /// Si le type est égal à 4 alors c'est un Vector Integer (Tableau d'entier)
+                            ///=================================================================================================
+                                case 4:
+                                    VectorIntegerReader vecIntReader = vc.createVectorIntegerReader(completeVariable);
+                                    IntegerVector valVarVecInt = new IntegerVector();
+
+                                    if (vecIntReader != null)
+                                    {
+                                        vecIntReader.setBlocking(1 * 200);
+                                        VariableState t = vecIntReader.waitForConnection();
+
+                                        if (t == VariableState.Ok)
+                                        {
+                                            vecIntReader.get(valVarVecInt, out timeStamp);
+
+                                            variableResult.Rows.Add(completeVariable, System.IO.Path.GetFileName(completeVariable),
+                                                 tableToString(valVarVecInt), DateTime.FromFileTimeUtc(timeStamp).ToString());
+
+                                        }
+                                        else
+                                        {
+                                            //value.Append("ERR3\n");
+                                        }
+
+                                        compt++;
+                                    }
+                                    else
+                                    {
+                                        //value.Append("ERR2\n");
+                                    }
+                                break;
+                            ///=================================================================================================
                             default:
+                                Console.WriteLine(completeVariable + " ==> Type : " + typeVS);
+                                /*Console.WriteLine("Vector DOUBLE " + VS_Type.VECTOR_DOUBLE);
+                                Console.WriteLine("Vector INTEGER " + VS_Type.VECTOR_INTEGER);
+                                Console.WriteLine("Vector INVALID " + VS_Type.INVALID);
+                                Console.WriteLine("Vector OPAQUE " + VS_Type.OPAQUE);*/
                                 variableResult.Rows.Add(completeVariable, System.IO.Path.GetFileName(completeVariable), "Undefined", "");
                                 break;
                         }
@@ -180,6 +220,31 @@ namespace VSObserver
             }
 
             return variableResult;
+        }
+
+        private string tableToString(IntegerVector vector)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Clear();
+            sb.Append("[");
+
+            int i = 0;
+            foreach (int value in vector)
+            {
+                if (i != vector.Count)
+                {
+                    sb.Append(value + ",");
+                }
+                else
+                {
+                    sb.Append(value);
+                }
+
+                i++;
+            }
+
+            sb.Append("]");
+            return sb.ToString();
         }
     }
 }
