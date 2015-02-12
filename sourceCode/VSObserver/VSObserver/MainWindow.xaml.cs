@@ -23,7 +23,7 @@ namespace VSObserver
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const int INTERVAL = 500;
+        private const int INTERVAL = 250;
 
         private string oldClipBoardText;
         private DispatcherTimer clipBoardTimer;
