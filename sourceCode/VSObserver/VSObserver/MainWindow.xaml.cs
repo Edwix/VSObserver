@@ -97,24 +97,30 @@ namespace VSObserver
         /// <param name="e"></param>
         private void clipBoardTimer_Tick(object sender, EventArgs e)
         {
-            string clipBoardText = getTextFromClipBoard();
+            try
+            {
+                string clipBoardText = getTextFromClipBoard();
 
-            if (clipBoardText != "")
-            {
-                ///Suppression des espace blancs au debut et à la fin
-                tb_variableName.Text = clipBoardText.TrimStart().TrimEnd();
-                
-                this.Show();
+                if (clipBoardText != "")
+                {
+                    ///Suppression des espace blancs au debut et à la fin
+                    tb_variableName.Text = clipBoardText.TrimStart().TrimEnd();
+
+                    this.Show();
+                }
+
+                ///Raffraîchissement des variables toutes les secondes (si on a une variable)
+                ///On affiche les variable aussi si la variable copier à une longeur supérieur à 3
+                if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3)
+                {
+                    int variableNumber = 0;
+                    VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
+                    tbl_varNumber.Text = "Variables number : " + variableNumber.ToString();
+                }
             }
-            
-            ///Raffraîchissement des variables toutes les secondes (si on a une variable)
-            ///On affiche les variable aussi si la variable copier à une longeur supérieur à 3
-            if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3)
+            catch (Exception ex)
             {
-                int variableNumber = 0;
-                //tbl_varReader.Text = vo.readValue(tb_variableName.Text, out variableNumber);
-                VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
-                tbl_varNumber.Text = "Variables number : " + variableNumber.ToString();
+                MessageBox.Show("Error :\n" + ex.ToString());
             }
         }
 
