@@ -12,7 +12,7 @@ namespace VSObserver
     class VariableObserver
     {
         private DataTable variableTable;
-        private DataTable variableResult;
+        private List<DataObserver> variableResult;
 
         private const string PATH = "Path";
         private const string VARIABLE = "Variable";
@@ -64,20 +64,14 @@ namespace VSObserver
             }
         }
 
-        public DataTable readValue(string variableName, out int variableNumber)
+        public List<DataObserver> readValue(string variableName, out int variableNumber)
         {
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
             DataRow[] searchResult =  variableTable.Select("Path LIKE '%" + variableName.Replace("'", "") + "%'");
             variableNumber = searchResult.Count();
 
-
-            variableResult = new DataTable();
-            variableResult.Columns.Add(PATH, typeof(string));
-            variableResult.Columns.Add(VARIABLE, typeof(string));
-            variableResult.Columns.Add(VALUE, typeof(string));
-            variableResult.Columns.Add(TIMESTAMP, typeof(string));
-            variableResult.Clear();
+            variableResult = new List<DataObserver>();
 
             ///On vérifie si on a bien une connexion à U-test
             if (connectionOK)
@@ -114,8 +108,12 @@ namespace VSObserver
                                         {
                                             intr.get(out valVarInt, out timeStamp);
 
-                                            variableResult.Rows.Add(completeVariable, System.IO.Path.GetFileName(completeVariable), 
-                                                valVarInt.ToString(), DateTime.FromFileTimeUtc(timeStamp).ToString());
+                                            variableResult.Add(new DataObserver{
+                                                    Path = completeVariable,
+                                                    Variable = System.IO.Path.GetFileName(completeVariable),
+                                                    Value = valVarInt.ToString(),
+                                                    Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
+                                            });
                                         }
                                         else
                                         {
@@ -146,8 +144,13 @@ namespace VSObserver
                                         {
                                             dblr.get(out valVarDbl, out timeStamp);
 
-                                            variableResult.Rows.Add(completeVariable, System.IO.Path.GetFileName(completeVariable), 
-                                                 valVarDbl.ToString("0.00000"), DateTime.FromFileTimeUtc(timeStamp).ToString());
+                                            variableResult.Add(new DataObserver
+                                            {
+                                                Path = completeVariable,
+                                                Variable = System.IO.Path.GetFileName(completeVariable),
+                                                Value = valVarDbl.ToString("0.00000"),
+                                                Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
+                                            });
 
                                         }
                                         else
@@ -181,8 +184,13 @@ namespace VSObserver
                                         {
                                             vecIntReader.get(valVarVecInt, out timeStamp);
 
-                                            variableResult.Rows.Add(completeVariable, System.IO.Path.GetFileName(completeVariable),
-                                                 tableToString(valVarVecInt), DateTime.FromFileTimeUtc(timeStamp).ToString());
+                                            variableResult.Add(new DataObserver
+                                            {
+                                                Path = completeVariable,
+                                                Variable = System.IO.Path.GetFileName(completeVariable),
+                                                Value = tableToString(valVarVecInt),
+                                                Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
+                                            });
 
                                         }
                                         else
@@ -200,7 +208,13 @@ namespace VSObserver
                             ///=================================================================================================
                             default:
                                 //Console.WriteLine(completeVariable + " ==> Type : " + typeVS);
-                                variableResult.Rows.Add(completeVariable, System.IO.Path.GetFileName(completeVariable), "Undefined", "");
+                                variableResult.Add(new DataObserver
+                                {
+                                    Path = completeVariable,
+                                    Variable = System.IO.Path.GetFileName(completeVariable),
+                                    Value = "Undefined",
+                                    Timestamp = ""
+                                });
                                 break;
                         }
                     }
@@ -224,25 +238,26 @@ namespace VSObserver
         /// Rafraichit les valeurs en fonction de l'ancien Datatable
         /// </summary>
         /// <param name="dataTable"></param>
-        public void refreshValues(string variableName, DataTable oldVariableTable)
+        public void refreshValues(string variableName, List<DataObserver> oldVariableTable)
         {
             int nb;
-            DataTable newVariableTable = readValue(variableName, out nb);
+            List<DataObserver> newVariableTable = readValue(variableName, out nb);
 
-            foreach (DataRow newRow in newVariableTable.Rows)
+            foreach (DataObserver newRow in newVariableTable)
             {
-                foreach(DataRow oldRow in oldVariableTable.Rows)
+                foreach(DataObserver oldRow in oldVariableTable)
                 {
-                    if (newRow[PATH] == oldRow[PATH])
+                    if (newRow.Path == oldRow.Path)
                     {
-                        if (newRow[VALUE].ToString() != oldRow[VALUE].ToString())
+                        if (newRow.Value != oldRow.Value)
                         {
-                            oldRow[VALUE] = newRow[VALUE];
+                            oldRow.Value = newRow.Value;
+                            oldRow.ValueHasChanged = true;
                         }
 
-                        if (newRow[TIMESTAMP].ToString() != oldRow[TIMESTAMP].ToString())
+                        if (newRow.Timestamp != oldRow.Timestamp)
                         {
-                            oldRow[TIMESTAMP] = newRow[TIMESTAMP];
+                            oldRow.Timestamp = newRow.Timestamp;
                         }
                     }
                 }                
