@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>VSObserver_Icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="gc_services_dotnet, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5da1520d4db57f8e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -107,6 +110,9 @@
   <ItemGroup>
     <Resource Include="Icons\Error.ico" />
     <Resource Include="Icons\Inactive.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="VSObserver_Icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
