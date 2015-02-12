@@ -30,6 +30,7 @@ namespace VSObserver
         private DispatcherTimer clipBoardTimer;
         private VariableObserver vo;
         private Forms.NotifyIcon notifyIcon;
+        private CollectionViewSource variableCollectionViewSource;
 
         public MainWindow()
         {
@@ -61,6 +62,8 @@ namespace VSObserver
 
             clipBoardTimer.Start();
             Clipboard.Clear();
+
+            variableCollectionViewSource = (CollectionViewSource)(FindResource("VariableCollectionViewSource"));
 
             vo = new VariableObserver();
         }
@@ -115,8 +118,9 @@ namespace VSObserver
                 {
                     
                     //VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
-                    
-                    vo.refreshValues(tb_variableName.Text, ((DataView)VariableList.ItemsSource).Table);
+                    int nb;
+                    variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out nb);
+                    //vo.refreshValues(tb_variableName.Text, (List<DataObserver>)variableCollectionViewSource.Source);
                 }
             }
             catch (Exception ex)
@@ -141,7 +145,7 @@ namespace VSObserver
             if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3)
             {
                 int variableNumber = 0;
-                VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
+                variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
                 tbl_varNumber.Text = "Variables number : " + variableNumber.ToString();
             }
         }

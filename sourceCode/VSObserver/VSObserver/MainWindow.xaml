@@ -27,17 +27,12 @@
             ItemsSource="{Binding}"
             AutoGenerateColumns="False"
             CanUserAddRows="False">
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow" >
-                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=Item.Quantity, Converter={StaticResource QuantityToBackgroundConverter}}" />
-                </Style>
-            </DataGrid.RowStyle>
 
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path=Path}" Header="Path and Name"/>
                 <DataGridTextColumn Binding="{Binding Path=Variable}" Header="Variable name"/>
-                <DataGridTextColumn Binding="{Binding Path=Value}" Header="Value"/>
-                <DataGridTextColumn Binding="{Binding Path=Timestamp}" Header="Timestamp"/>
+                <DataGridTextColumn Binding="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Header="Value"/>
+                <DataGridTextColumn Binding="{Binding Path=Timestamp, UpdateSourceTrigger=PropertyChanged}" Header="Timestamp"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
