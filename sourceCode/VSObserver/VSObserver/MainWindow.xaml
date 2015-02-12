@@ -31,7 +31,7 @@
 
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" >
-                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=Item.Value, Converter={StaticResource ValueToBackgroundConverter}}" />
+                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=Item.ValueHasChanged, Converter={StaticResource ValueToBackgroundConverter}}" />
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>
