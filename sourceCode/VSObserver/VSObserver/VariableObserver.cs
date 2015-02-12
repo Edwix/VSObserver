@@ -254,6 +254,10 @@ namespace VSObserver
                             oldRow.Value = newRow.Value;
                             oldRow.ValueHasChanged = true;
                         }
+                        else
+                        {
+                            oldRow.ValueHasChanged = false;
+                        }
 
                         if (newRow.Timestamp != oldRow.Timestamp)
                         {

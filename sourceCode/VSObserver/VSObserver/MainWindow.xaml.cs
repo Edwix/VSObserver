@@ -118,9 +118,9 @@ namespace VSObserver
                 {
                     
                     //VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
-                    int nb;
-                    variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out nb);
-                    //vo.refreshValues(tb_variableName.Text, (List<DataObserver>)variableCollectionViewSource.Source);
+                    //int nb;
+                    //variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out nb);
+                    vo.refreshValues(tb_variableName.Text, (List<DataObserver>)variableCollectionViewSource.Source);
                 }
             }
             catch (Exception ex)
