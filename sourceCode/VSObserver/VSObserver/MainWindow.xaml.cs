@@ -13,6 +13,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
+using Forms = System.Windows.Forms;
+using Draw = System.Drawing;
 
 namespace VSObserver
 {
@@ -26,27 +28,35 @@ namespace VSObserver
         private string oldClipBoardText;
         private DispatcherTimer clipBoardTimer;
         private VariableObserver vo;
+        private Forms.NotifyIcon notifyIcon;
 
         public MainWindow()
         {
             InitializeComponent();
 
+            //Icone de notification
+                notifyIcon = new Forms.NotifyIcon();
+                this.notifyIcon.Text = "VSObserver";
+                notifyIcon.Icon = Properties.Resources.VSObserver_Icon;
+                this.notifyIcon.Visible = true;
+            
+
             //Création du timer pour récupérer la valeur du presse papier
             //Initialisation de l'ancienne valeur du presse papier
-            oldClipBoardText = "";
-            clipBoardTimer = new DispatcherTimer();
-            clipBoardTimer.Tick += new EventHandler(clipBoardTimer_Tick);
-            clipBoardTimer.Interval = new TimeSpan(0, 0, SECOND_INTERVAL);
+                oldClipBoardText = "";
+                clipBoardTimer = new DispatcherTimer();
+                clipBoardTimer.Tick += new EventHandler(clipBoardTimer_Tick);
+                clipBoardTimer.Interval = new TimeSpan(0, 0, SECOND_INTERVAL);
 
             this.Hide();
 
             //Affichage en premier de l'application
-            this.Topmost = true;
+                this.Topmost = true;
 
             //Affichage de la fenêtre en bas à droite
-            var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
-            this.Left = desktopWorkingArea.Right - this.Width;
-            this.Top = desktopWorkingArea.Bottom - this.Height;
+                var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
+                this.Left = desktopWorkingArea.Right - this.Width;
+                this.Top = desktopWorkingArea.Bottom - this.Height;
 
             clipBoardTimer.Start();
             Clipboard.Clear();
