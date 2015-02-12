@@ -86,36 +86,84 @@ namespace VSObserver
                 {
                     string completeVariable = (string)row[PATH];
                     VariableController vc = Vs.getVariableController();
-                    int importOk = vc.importVariable(completeVariable, VS_Type.INTEGER);
+                    int importOk = vc.importVariable(completeVariable);
+                    int typeVS;
+                    long timeStamp;
+                    vc.getType(completeVariable, out typeVS);
+                    //Console.WriteLine(completeVariable + " ==> Type : " + typeVS);
 
                     if (importOk != 0)
                     {
-                        IntegerReader intr = vc.createIntegerReader(completeVariable);
-                        int valVar;
-                        long timeStamp;
-                        if (intr != null)
+                        switch (typeVS)
                         {
-                            intr.setBlocking(1 * 200);
-                            VariableState t = intr.waitForConnection();
+                            ///=================================================================================================
+                            /// Si le type est égal à 1 alors c'est un entier
+                            ///=================================================================================================
+                                case 1:
+                                    IntegerReader intr = vc.createIntegerReader(completeVariable);
+                                    int valVarInt;
+                        
+                                    if (intr != null)
+                                    {
+                                        intr.setBlocking(1 * 200);
+                                        VariableState t = intr.waitForConnection();
 
-                            if (t == VariableState.Ok)
-                            {
-                                intr.get(out valVar, out timeStamp);
+                                        if (t == VariableState.Ok)
+                                        {
+                                            intr.get(out valVarInt, out timeStamp);
 
-                                variableResult.Rows.Add(completeVariable, System.IO.Path.GetFileName(completeVariable), valVar.ToString(), DateTime.FromFileTimeUtc(timeStamp).ToString());
-                                //value.Append(completeVariable + " | " + valVar.ToString() + "\n");
+                                            variableResult.Rows.Add(completeVariable, System.IO.Path.GetFileName(completeVariable), 
+                                                valVarInt.ToString(), DateTime.FromFileTimeUtc(timeStamp).ToString());
+                                        }
+                                        else
+                                        {
+                                            //value.Append("ERR3\n");
+                                        }
 
-                            }
-                            else
-                            {
-                                //value.Append("ERR3\n");
-                            }
+                                        compt++;
+                                    }
+                                    else
+                                    {
+                                        //value.Append("ERR2\n");
+                                    }
+                                break;
+                            ///=================================================================================================
+                            ///=================================================================================================
+                            /// Si le type est égal à 2 alors c'est un double
+                            ///=================================================================================================
+                                case 2:
+                                    DoubleReader dblr = vc.createDoubleReader(completeVariable);
+                                    double valVarDbl;
 
-                            compt++;
-                        }
-                        else
-                        {
-                            //value.Append("ERR2\n");
+                                    if (dblr != null)
+                                    {
+                                        dblr.setBlocking(1 * 200);
+                                        VariableState t = dblr.waitForConnection();
+
+                                        if (t == VariableState.Ok)
+                                        {
+                                            dblr.get(out valVarDbl, out timeStamp);
+
+                                            variableResult.Rows.Add(completeVariable, System.IO.Path.GetFileName(completeVariable), 
+                                                 valVarDbl.ToString("0.00000"), DateTime.FromFileTimeUtc(timeStamp).ToString());
+
+                                        }
+                                        else
+                                        {
+                                            //value.Append("ERR3\n");
+                                        }
+
+                                        compt++;
+                                    }
+                                    else
+                                    {
+                                        //value.Append("ERR2\n");
+                                    }
+                                break;
+                            ///=================================================================================================
+                            default:
+                                variableResult.Rows.Add(completeVariable, System.IO.Path.GetFileName(completeVariable), "Undefined", "");
+                                break;
                         }
                     }
                     else
