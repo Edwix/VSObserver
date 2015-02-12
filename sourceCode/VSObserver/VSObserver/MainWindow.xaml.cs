@@ -112,7 +112,8 @@ namespace VSObserver
             if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3)
             {
                 int variableNumber = 0;
-                tbl_varReader.Text = vo.readValue(tb_variableName.Text, out variableNumber);
+                //tbl_varReader.Text = vo.readValue(tb_variableName.Text, out variableNumber);
+                VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
                 tbl_varNumber.Text = "Variables number : " + variableNumber.ToString();
             }
         }

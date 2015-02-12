@@ -12,10 +12,13 @@ namespace VSObserver
     class VariableObserver
     {
         private DataTable variableTable;
+        private DataTable variableResult;
+
         private const string PATH = "Path";
         private const string VARIABLE = "Variable";
         private const string TYPE = "Type";
         private const string VALUE = "Value";
+        private const string TIMESTAMP = "Timestamp";
         private const int SHOW_NUMBER = 40;
         private bool connectionOK;
 
@@ -26,6 +29,12 @@ namespace VSObserver
             variableTable.Columns.Add(VARIABLE, typeof(string));
             variableTable.Columns.Add(TYPE, typeof(string));
             variableTable.Columns.Add(VALUE, typeof(string));
+
+            variableResult = new DataTable();
+            variableResult.Columns.Add(PATH, typeof(string));
+            variableResult.Columns.Add(VARIABLE, typeof(string));
+            variableResult.Columns.Add(VALUE, typeof(string));
+            variableResult.Columns.Add(TIMESTAMP, typeof(string));
 
             loadVariableList();
         }
@@ -59,14 +68,14 @@ namespace VSObserver
             }
         }
 
-        public string readValue(string variableName, out int variableNumber)
+        public DataTable readValue(string variableName, out int variableNumber)
         {
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
             DataRow[] searchResult =  variableTable.Select("Path LIKE '%" + variableName + "%'");
             variableNumber = searchResult.Count();
 
-            StringBuilder value = new StringBuilder();
+            variableResult.Clear();
 
             ///On vérifie si on a bien une connexion à U-test
             if (connectionOK)
@@ -93,23 +102,25 @@ namespace VSObserver
                             {
                                 intr.get(out valVar, out timeStamp);
 
-                                value.Append(completeVariable + " | " + valVar.ToString() + "\n");
+                                variableResult.Rows.Add(completeVariable, System.IO.Path.GetFileName(completeVariable), valVar.ToString(), DateTime.FromFileTimeUtc(timeStamp).ToString());
+                                //value.Append(completeVariable + " | " + valVar.ToString() + "\n");
+
                             }
                             else
                             {
-                                value.Append("ERR3\n");
+                                //value.Append("ERR3\n");
                             }
 
                             compt++;
                         }
                         else
                         {
-                            value.Append("ERR2\n");
+                            //value.Append("ERR2\n");
                         }
                     }
                     else
                     {
-                        value.Append("ERR1\n");
+                        //value.Append("ERR1\n");
                     }
 
                     //Si on a atteint le nombre d'affichage max on arrête la boucle
@@ -120,7 +131,7 @@ namespace VSObserver
                 }
             }
 
-            return value.ToString();
+            return variableResult;
         }
     }
 }

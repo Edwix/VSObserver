@@ -125,10 +125,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Error.ico" />
-    <Resource Include="Icons\Inactive.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="VSObserver_Icon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
