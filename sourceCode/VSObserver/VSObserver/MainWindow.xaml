@@ -4,6 +4,9 @@
         xmlns:tb="http://www.hardcodet.net/taskbar"
         Title="VSObserver" Height="350" Width="525"
         Style="{x:Null}">
+    <Window.Resources>
+        <CollectionViewSource x:Key="VariableCollectionViewSource" CollectionViewType="ListCollectionView"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -17,8 +20,25 @@
         <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Grid.Column="1" Grid.Row="0"/>
         <TextBox Name="tb_variableName" Height="20" Grid.Column="0" Grid.Row="0" TextChanged="tb_variableName_TextChanged"/>
         <TextBlock HorizontalAlignment="Left" Name="tbl_varNumber" Text="TextBlock" VerticalAlignment="Top" Height="20" Width="248" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" />
-        <DataGrid Height="250" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Name="VariableList" AutoGenerateColumns="True">
-            
+        <DataGrid
+            Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"
+            Name="dg_variableList"
+            DataContext="{StaticResource VariableCollectionViewSource}"
+            ItemsSource="{Binding}"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" >
+                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=Item.Quantity, Converter={StaticResource QuantityToBackgroundConverter}}" />
+                </Style>
+            </DataGrid.RowStyle>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=Path}" Header="Path and Name"/>
+                <DataGridTextColumn Binding="{Binding Path=Variable}" Header="Variable name"/>
+                <DataGridTextColumn Binding="{Binding Path=Value}" Header="Value"/>
+                <DataGridTextColumn Binding="{Binding Path=Timestamp}" Header="Timestamp"/>
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </Window>
