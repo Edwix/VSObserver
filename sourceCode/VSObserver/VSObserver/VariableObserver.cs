@@ -81,11 +81,11 @@ namespace VSObserver
             if (connectionOK)
             {
                 int compt = 0;
+                VariableController vc = Vs.getVariableController();
 
                 foreach (DataRow row in searchResult)
                 {
                     string completeVariable = (string)row[PATH];
-                    VariableController vc = Vs.getVariableController();
                     int importOk = vc.importVariable(completeVariable);
                     int typeVS;
                     long timeStamp;

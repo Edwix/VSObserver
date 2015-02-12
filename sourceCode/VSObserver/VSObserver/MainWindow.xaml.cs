@@ -23,7 +23,7 @@ namespace VSObserver
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const int SECOND_INTERVAL = 1;
+        private const int INTERVAL = 500;
 
         private string oldClipBoardText;
         private DispatcherTimer clipBoardTimer;
@@ -46,7 +46,7 @@ namespace VSObserver
                 oldClipBoardText = "";
                 clipBoardTimer = new DispatcherTimer();
                 clipBoardTimer.Tick += new EventHandler(clipBoardTimer_Tick);
-                clipBoardTimer.Interval = new TimeSpan(0, 0, SECOND_INTERVAL);
+                clipBoardTimer.Interval = new TimeSpan(0, 0, 0, 0, INTERVAL);
 
             this.Hide();
 
@@ -121,6 +121,7 @@ namespace VSObserver
             catch (Exception ex)
             {
                 MessageBox.Show("Error :\n" + ex.ToString());
+                this.Close();
             }
         }
 
