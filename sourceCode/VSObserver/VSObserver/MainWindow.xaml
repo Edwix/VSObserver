@@ -15,7 +15,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Grid.Column="1" Grid.Row="0"/>
-        <TextBox Name="tb_variableName" Height="20" Grid.Column="0" Grid.Row="0"/>
+        <TextBox Name="tb_variableName" Height="20" Grid.Column="0" Grid.Row="0" TextChanged="tb_variableName_TextChanged"/>
         <TextBlock HorizontalAlignment="Left" Name="tbl_varNumber" Text="TextBlock" VerticalAlignment="Top" Height="20" Width="248" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" />
         <DataGrid Height="250" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Name="VariableList" AutoGenerateColumns="True">
             

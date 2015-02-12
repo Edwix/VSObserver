@@ -106,9 +106,6 @@ namespace VSObserver
                 {
                     ///Suppression des espace blancs au debut et à la fin
                     tb_variableName.Text = clipBoardText.TrimStart().TrimEnd();
-                    int variableNumber = 0;
-                    VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
-                    tbl_varNumber.Text = "Variables number : " + variableNumber.ToString();
                     this.Show();
                 }
 
@@ -137,6 +134,16 @@ namespace VSObserver
         private void btn_hideDialog_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
+        }
+
+        private void tb_variableName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3)
+            {
+                int variableNumber = 0;
+                VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
+                tbl_varNumber.Text = "Variables number : " + variableNumber.ToString();
+            }
         }
     }
 }
