@@ -6,6 +6,7 @@ using System.Data;
 using U_TEST;
 using VS;
 using System.Windows;
+using System.Text.RegularExpressions;
 
 namespace VSObserver
 {
@@ -19,8 +20,10 @@ namespace VSObserver
         private const string TYPE = "Type";
         private const string VALUE = "Value";
         private const string TIMESTAMP = "Timestamp";
+        private const string REGEX_SEARCH = @"[^0-9a-zA-Z_]+";
         private const int SHOW_NUMBER = 40;
         private bool connectionOK;
+        private Regex reg_var;
 
         public VariableObserver()
         {
@@ -30,7 +33,7 @@ namespace VSObserver
             variableTable.Columns.Add(TYPE, typeof(string));
             variableTable.Columns.Add(VALUE, typeof(string));
 
-            
+            reg_var = new Regex(REGEX_SEARCH);
 
             loadVariableList();
         }
@@ -68,168 +71,172 @@ namespace VSObserver
         {
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
-            
-
-
-            DataRow[] searchResult =  variableTable.Select("Path LIKE '%" + variableName.Replace("'", "") + "%'");
-            variableNumber = searchResult.Count();
-
             variableResult = new List<DataObserver>();
+            variableNumber = 0;
 
-            ///On vérifie si on a bien une connexion à U-test
-            if (connectionOK)
+            ///Si la regex ne match pas alors on cherche les variable
+            ///La regex interdit tous les caractères normal
+            ///Donc en faisant l'inverse de cette Regex, on ignore tous les caractères spéciaux
+            if(!reg_var.Match(variableName).Success)
             {
-                int compt = 0;
-                VariableController vc = Vs.getVariableController();
+                DataRow[] searchResult =  variableTable.Select("Path LIKE '%" + variableName + "%'");
+                variableNumber = searchResult.Count();
 
-                foreach (DataRow row in searchResult)
+                ///On vérifie si on a bien une connexion à U-test
+                if (connectionOK)
                 {
-                    string completeVariable = (string)row[PATH];
-                    int importOk = vc.importVariable(completeVariable);
-                    int typeVS;
-                    long timeStamp;
-                    vc.getType(completeVariable, out typeVS);
-                    //Console.WriteLine(completeVariable + " ==> Type : " + typeVS);
+                    int compt = 0;
+                    VariableController vc = Vs.getVariableController();
 
-                    if (importOk != 0)
+                    foreach (DataRow row in searchResult)
                     {
-                        switch (typeVS)
+                        string completeVariable = (string)row[PATH];
+                        int importOk = vc.importVariable(completeVariable);
+                        int typeVS;
+                        long timeStamp;
+                        vc.getType(completeVariable, out typeVS);
+                        //Console.WriteLine(completeVariable + " ==> Type : " + typeVS);
+
+                        if (importOk != 0)
                         {
-                            ///=================================================================================================
-                            /// Si le type est égal à 1 alors c'est un entier
-                            ///=================================================================================================
-                                case 1:
-                                    IntegerReader intr = vc.createIntegerReader(completeVariable);
-                                    int valVarInt;
+                            switch (typeVS)
+                            {
+                                ///=================================================================================================
+                                /// Si le type est égal à 1 alors c'est un entier
+                                ///=================================================================================================
+                                    case 1:
+                                        IntegerReader intr = vc.createIntegerReader(completeVariable);
+                                        int valVarInt;
                         
-                                    if (intr != null)
-                                    {
-                                        intr.setBlocking(1 * 200);
-                                        VariableState t = intr.waitForConnection();
-
-                                        if (t == VariableState.Ok)
+                                        if (intr != null)
                                         {
-                                            intr.get(out valVarInt, out timeStamp);
+                                            intr.setBlocking(1 * 200);
+                                            VariableState t = intr.waitForConnection();
 
-                                            variableResult.Add(new DataObserver{
+                                            if (t == VariableState.Ok)
+                                            {
+                                                intr.get(out valVarInt, out timeStamp);
+
+                                                variableResult.Add(new DataObserver{
+                                                        Path = completeVariable,
+                                                        Variable = System.IO.Path.GetFileName(completeVariable),
+                                                        Value = valVarInt.ToString(),
+                                                        Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
+                                                });
+                                            }
+                                            else
+                                            {
+                                                //value.Append("ERR3\n");
+                                            }
+
+                                            compt++;
+                                        }
+                                        else
+                                        {
+                                            //value.Append("ERR2\n");
+                                        }
+                                    break;
+                                ///=================================================================================================
+                                ///=================================================================================================
+                                /// Si le type est égal à 2 alors c'est un double
+                                ///=================================================================================================
+                                    case 2:
+                                        DoubleReader dblr = vc.createDoubleReader(completeVariable);
+                                        double valVarDbl;
+
+                                        if (dblr != null)
+                                        {
+                                            dblr.setBlocking(1 * 200);
+                                            VariableState t = dblr.waitForConnection();
+
+                                            if (t == VariableState.Ok)
+                                            {
+                                                dblr.get(out valVarDbl, out timeStamp);
+
+                                                variableResult.Add(new DataObserver
+                                                {
                                                     Path = completeVariable,
                                                     Variable = System.IO.Path.GetFileName(completeVariable),
-                                                    Value = valVarInt.ToString(),
+                                                    Value = valVarDbl.ToString("0.00000"),
                                                     Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
-                                            });
-                                        }
-                                        else
-                                        {
-                                            //value.Append("ERR3\n");
-                                        }
+                                                });
 
-                                        compt++;
-                                    }
-                                    else
-                                    {
-                                        //value.Append("ERR2\n");
-                                    }
-                                break;
-                            ///=================================================================================================
-                            ///=================================================================================================
-                            /// Si le type est égal à 2 alors c'est un double
-                            ///=================================================================================================
-                                case 2:
-                                    DoubleReader dblr = vc.createDoubleReader(completeVariable);
-                                    double valVarDbl;
-
-                                    if (dblr != null)
-                                    {
-                                        dblr.setBlocking(1 * 200);
-                                        VariableState t = dblr.waitForConnection();
-
-                                        if (t == VariableState.Ok)
-                                        {
-                                            dblr.get(out valVarDbl, out timeStamp);
-
-                                            variableResult.Add(new DataObserver
+                                            }
+                                            else
                                             {
-                                                Path = completeVariable,
-                                                Variable = System.IO.Path.GetFileName(completeVariable),
-                                                Value = valVarDbl.ToString("0.00000"),
-                                                Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
-                                            });
+                                                //value.Append("ERR3\n");
+                                            }
 
+                                            compt++;
                                         }
                                         else
                                         {
-                                            //value.Append("ERR3\n");
+                                            //value.Append("ERR2\n");
                                         }
+                                    break;
+                                ///=================================================================================================
+                                case 3:
+                                    break;
+                                ///=================================================================================================
+                                /// Si le type est égal à 4 alors c'est un Vector Integer (Tableau d'entier)
+                                ///=================================================================================================
+                                    case 4:
+                                        VectorIntegerReader vecIntReader = vc.createVectorIntegerReader(completeVariable);
+                                        IntegerVector valVarVecInt = new IntegerVector();
 
-                                        compt++;
-                                    }
-                                    else
-                                    {
-                                        //value.Append("ERR2\n");
-                                    }
-                                break;
-                            ///=================================================================================================
-                            case 3:
-                                break;
-                            ///=================================================================================================
-                            /// Si le type est égal à 4 alors c'est un Vector Integer (Tableau d'entier)
-                            ///=================================================================================================
-                                case 4:
-                                    VectorIntegerReader vecIntReader = vc.createVectorIntegerReader(completeVariable);
-                                    IntegerVector valVarVecInt = new IntegerVector();
-
-                                    if (vecIntReader != null)
-                                    {
-                                        vecIntReader.setBlocking(1 * 200);
-                                        VariableState t = vecIntReader.waitForConnection();
-
-                                        if (t == VariableState.Ok)
+                                        if (vecIntReader != null)
                                         {
-                                            vecIntReader.get(valVarVecInt, out timeStamp);
+                                            vecIntReader.setBlocking(1 * 200);
+                                            VariableState t = vecIntReader.waitForConnection();
 
-                                            variableResult.Add(new DataObserver
+                                            if (t == VariableState.Ok)
                                             {
-                                                Path = completeVariable,
-                                                Variable = System.IO.Path.GetFileName(completeVariable),
-                                                Value = tableToString(valVarVecInt),
-                                                Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
-                                            });
+                                                vecIntReader.get(valVarVecInt, out timeStamp);
 
+                                                variableResult.Add(new DataObserver
+                                                {
+                                                    Path = completeVariable,
+                                                    Variable = System.IO.Path.GetFileName(completeVariable),
+                                                    Value = tableToString(valVarVecInt),
+                                                    Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
+                                                });
+
+                                            }
+                                            else
+                                            {
+                                                //value.Append("ERR3\n");
+                                            }
+
+                                            compt++;
                                         }
                                         else
                                         {
-                                            //value.Append("ERR3\n");
+                                            //value.Append("ERR2\n");
                                         }
-
-                                        compt++;
-                                    }
-                                    else
+                                    break;
+                                ///=================================================================================================
+                                default:
+                                    //Console.WriteLine(completeVariable + " ==> Type : " + typeVS);
+                                    variableResult.Add(new DataObserver
                                     {
-                                        //value.Append("ERR2\n");
-                                    }
-                                break;
-                            ///=================================================================================================
-                            default:
-                                //Console.WriteLine(completeVariable + " ==> Type : " + typeVS);
-                                variableResult.Add(new DataObserver
-                                {
-                                    Path = completeVariable,
-                                    Variable = System.IO.Path.GetFileName(completeVariable),
-                                    Value = "Undefined",
-                                    Timestamp = ""
-                                });
-                                break;
+                                        Path = completeVariable,
+                                        Variable = System.IO.Path.GetFileName(completeVariable),
+                                        Value = "Undefined",
+                                        Timestamp = ""
+                                    });
+                                    break;
+                            }
                         }
-                    }
-                    else
-                    {
-                        //value.Append("ERR1\n");
-                    }
+                        else
+                        {
+                            //value.Append("ERR1\n");
+                        }
 
-                    //Si on a atteint le nombre d'affichage max on arrête la boucle
-                    if (compt == SHOW_NUMBER)
-                    {
-                        break;
+                        //Si on a atteint le nombre d'affichage max on arrête la boucle
+                        if (compt == SHOW_NUMBER)
+                        {
+                            break;
+                        }
                     }
                 }
             }
