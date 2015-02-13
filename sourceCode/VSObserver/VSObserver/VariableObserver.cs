@@ -20,7 +20,7 @@ namespace VSObserver
         private const string TYPE = "Type";
         private const string VALUE = "Value";
         private const string TIMESTAMP = "Timestamp";
-        private const string REGEX_SEARCH = @"[^0-9a-zA-Z_/]+";
+        private const string REGEX_SEARCH = @"[^0-9a-zA-Z_/\-:]+";
         private const int SHOW_NUMBER = 40;
         private bool connectionOK;
         private Regex reg_var;
