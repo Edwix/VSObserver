@@ -68,6 +68,9 @@ namespace VSObserver
         {
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
+            
+
+
             DataRow[] searchResult =  variableTable.Select("Path LIKE '%" + variableName.Replace("'", "") + "%'");
             variableNumber = searchResult.Count();
 
