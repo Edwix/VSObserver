@@ -50,8 +50,6 @@ namespace VSObserver
                 clipBoardTimer.Tick += new EventHandler(clipBoardTimer_Tick);
                 clipBoardTimer.Interval = new TimeSpan(0, 0, 0, 0, INTERVAL);
 
-            this.Hide();
-
             //Affichage en premier de l'application
                 this.Topmost = true;
 
