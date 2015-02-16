@@ -40,10 +40,8 @@
                 <DataGridTextColumn Binding="{Binding Path=Path}" Header="Path and Name"/>
                 <DataGridTextColumn Binding="{Binding Path=Variable}" Header="Variable name"/>
                 <DataGridTextColumn Binding="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Header="Value">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="{x:Type TextBlock}" >
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" >
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=ValueHasChanged}" Value="True">
                                     <Setter Property="Background" Value="LightBlue" />
@@ -52,6 +50,12 @@
                                     <Setter Property="Background" Value="Transparent" />
                                 </DataTrigger>
                             </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}" >
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
