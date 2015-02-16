@@ -13,6 +13,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
+using System.Threading;
+using System.ComponentModel;
 using Forms = System.Windows.Forms;
 using Draw = System.Drawing;
 using System.Data;
@@ -31,6 +33,8 @@ namespace VSObserver
         private VariableObserver vo;
         private Forms.NotifyIcon notifyIcon;
         private CollectionViewSource variableCollectionViewSource;
+        private DataApplication dataApp;
+        private BackgroundWorker refreshWorker;
 
         public MainWindow()
         {
@@ -65,6 +69,19 @@ namespace VSObserver
 
             tbl_varNumber.Text = "";
             vo = new VariableObserver();
+            dataApp = new DataApplication();
+            //this.DataContext = dataApp;
+            //btn_refresh.DataContext = dataApp;
+            img_refresh.DataContext = dataApp;
+            //tbl_varNumber.DataContext = dataApp;
+            dataApp.LoadDone = true;
+
+            //Création de la tâche de fond qui va rafraichir la liste des varaibles
+            refreshWorker = new BackgroundWorker();
+
+            //Association des évènement aux méthodes à appliquer
+            refreshWorker.DoWork += refreshWorker_DoWork;
+            refreshWorker.RunWorkerCompleted += refreshWorker_RunWorkerCompleted;
         }
 
         /// <summary>
@@ -152,6 +169,39 @@ namespace VSObserver
                 tbl_varNumber.Text = "The variable should have more than 2 characters";
                 variableCollectionViewSource.Source = new List<DataObserver>();
             }
+        }
+
+        private void refresh_ClickDown(object sender, MouseButtonEventArgs e)
+        {
+            //On dit que le chargement des variable n'est pas fini
+            //Le bouton refresh va commencer à trouner
+            dataApp.LoadDone = false;
+
+            //On lance la tâche asynchrone refreshWorker_DoWork
+            refreshWorker.RunWorkerAsync();
+        }
+
+        /// <summary>
+        /// Evènement qui réalise une opération longue
+        /// En l'occurence on charge toutes la liste des variables
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void refreshWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            vo.loadVariableList();
+        }
+
+        /// <summary>
+        /// Evènement qui se déclenche lorsque la tâche asynchrone (BackgoundWorker) à terminer
+        /// En l'occurance on met à True LoadDone pour indiquer que l'on peut arrêter la rotation
+        /// de l'icône de rafarichissement
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void refreshWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            dataApp.LoadDone = true;
         }
     }
 }

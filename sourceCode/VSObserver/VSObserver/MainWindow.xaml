@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:nspace="clr-namespace:VSObserver" 
         Title="VSObserver" Height="350" Width="525"
-        Style="{x:Null}">
+        >
     <Window.Resources>
         <CollectionViewSource x:Key="VariableCollectionViewSource" CollectionViewType="ListCollectionView"/>
         <nspace:ValueToBackgroundConverter x:Key="ValueToBackgroundConverter"/>
@@ -11,6 +11,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
+            <ColumnDefinition Width="25"/>
             <ColumnDefinition Width="40"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -18,12 +19,52 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
-        <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Grid.Column="1" Grid.Row="0"/>
+        <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Grid.Column="2" Grid.Row="0"/>
+        <Image Name="img_refresh" Source="Resources/Refresh.png" RenderTransformOrigin=".5,.5" Grid.Column="1" Grid.Row="0" MouseLeftButtonDown="refresh_ClickDown"
+                ToolTip="Refresh all variables">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Setter Property="Image.RenderTransform">
+                        <Setter.Value>
+                            <RotateTransform CenterX="0" CenterY="0" />
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <!-- Quand on a la variable à FALSE alors le chargmenent n'est pas terminé
+                        Le ExitAction indique que lorsqu'on à fini l'action (LoadDone = True) on arrête l'animation-->
+                        <DataTrigger Binding="{Binding Path=LoadDone}" Value="False">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.Angle"
+                                            From="0"
+                                            To="-360"
+                                            Duration="0:0:1"
+                                            RepeatBehavior="Forever" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                                Storyboard.TargetProperty="RenderTransform.Angle"
+                                                From="0"
+                                                To="0" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
         <TextBox Name="tb_variableName" Height="20" Grid.Column="0" Grid.Row="0" TextChanged="tb_variableName_TextChanged"/>
-        <TextBlock HorizontalAlignment="Left" Name="tbl_varNumber" Text="TextBlock" VerticalAlignment="Top" Height="20" Width="248" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" />
+        <TextBlock HorizontalAlignment="Left" Name="tbl_varNumber" Text="{Binding Path=LoadDone, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="20" Width="248" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" />
         <DataGrid
             VerticalAlignment="Stretch"
-            Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"
+            Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3"
             Name="dg_variableList"
             ScrollViewer.VerticalScrollBarVisibility="Visible"
             DataContext="{StaticResource VariableCollectionViewSource}"

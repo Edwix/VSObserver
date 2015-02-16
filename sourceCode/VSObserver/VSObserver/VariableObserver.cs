@@ -27,12 +27,6 @@ namespace VSObserver
 
         public VariableObserver()
         {
-            variableTable = new DataTable();
-            variableTable.Columns.Add(PATH, typeof(string));
-            variableTable.Columns.Add(VARIABLE, typeof(string));
-            variableTable.Columns.Add(TYPE, typeof(string));
-            variableTable.Columns.Add(VALUE, typeof(string));
-
             reg_var = new Regex(REGEX_SEARCH);
 
             loadVariableList();
@@ -41,6 +35,11 @@ namespace VSObserver
         public void loadVariableList()
         {
             IControl control = IControl.create();
+            variableTable = new DataTable();
+            variableTable.Columns.Add(PATH, typeof(string));
+            variableTable.Columns.Add(VARIABLE, typeof(string));
+            variableTable.Columns.Add(TYPE, typeof(string));
+            variableTable.Columns.Add(VALUE, typeof(string));
 
             try
             {
@@ -121,7 +120,7 @@ namespace VSObserver
                                                         Path = completeVariable,
                                                         Variable = System.IO.Path.GetFileName(completeVariable),
                                                         Value = valVarInt.ToString(),
-                                                        Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
+                                                        Timestamp = timeStamp.ToString()
                                                 });
                                             }
                                             else
