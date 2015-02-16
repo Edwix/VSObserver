@@ -177,6 +177,9 @@ namespace VSObserver
             //Le bouton refresh va commencer à trouner
             dataApp.LoadDone = false;
 
+            //On arrête le timer
+            clipBoardTimer.Stop();
+
             //On lance la tâche asynchrone refreshWorker_DoWork
             refreshWorker.RunWorkerAsync();
         }
@@ -202,6 +205,9 @@ namespace VSObserver
         private void refreshWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             dataApp.LoadDone = true;
+
+            //On redémarre le timer
+            clipBoardTimer.Start();
         }
     }
 }

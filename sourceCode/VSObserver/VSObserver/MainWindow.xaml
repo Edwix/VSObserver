@@ -11,7 +11,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="25"/>
+            <ColumnDefinition Width="35"/>
             <ColumnDefinition Width="40"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -19,9 +19,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
-        <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Grid.Column="2" Grid.Row="0"/>
+        <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Margin="5,5,5,5" Grid.Column="2" Grid.Row="0"/>
         <Image Name="img_refresh" Source="Resources/Refresh.png" RenderTransformOrigin=".5,.5" Grid.Column="1" Grid.Row="0" MouseLeftButtonDown="refresh_ClickDown"
-                ToolTip="Refresh all variables">
+                ToolTip="Refresh all variables" Margin="5,5,5,5">
             <Image.Style>
                 <Style TargetType="Image">
                     <Setter Property="Image.RenderTransform">
@@ -60,8 +60,8 @@
                 </Style>
             </Image.Style>
         </Image>
-        <TextBox Name="tb_variableName" Height="20" Grid.Column="0" Grid.Row="0" TextChanged="tb_variableName_TextChanged"/>
-        <TextBlock HorizontalAlignment="Left" Name="tbl_varNumber" Text="{Binding Path=LoadDone, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="20" Width="248" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" />
+        <TextBox Name="tb_variableName" Margin="5,5,5,5" Height="25" Grid.Column="0" Grid.Row="0" TextChanged="tb_variableName_TextChanged"/>
+        <TextBlock HorizontalAlignment="Left" Name="tbl_varNumber" Text="{Binding Path=LoadDone, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" />
         <DataGrid
             VerticalAlignment="Stretch"
             Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3"
