@@ -177,11 +177,14 @@ namespace VSObserver
             //Le bouton refresh va commencer à trouner
             dataApp.LoadDone = false;
 
-            //On arrête le timer
-            clipBoardTimer.Stop();
+            if (!refreshWorker.IsBusy)
+            {
+                //On arrête le timer
+                clipBoardTimer.Stop();
 
-            //On lance la tâche asynchrone refreshWorker_DoWork
-            refreshWorker.RunWorkerAsync();
+                //On lance la tâche asynchrone refreshWorker_DoWork
+                refreshWorker.RunWorkerAsync();
+            }
         }
 
         /// <summary>
