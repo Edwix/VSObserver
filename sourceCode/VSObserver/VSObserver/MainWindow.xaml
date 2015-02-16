@@ -30,12 +30,6 @@
             ItemsSource="{Binding}"
             AutoGenerateColumns="False"
             CanUserAddRows="False">
-
-            <!--<DataGrid.RowStyle>
-               <Style TargetType="DataGridRow" >
-                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=Item.ValueHasChanged, Converter={StaticResource ValueToBackgroundConverter}}" />
-                </Style>
-            </DataGrid.RowStyle>-->
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path=Path}" Header="Path and Name"/>
                 <DataGridTextColumn Binding="{Binding Path=Variable}" Header="Variable name"/>
@@ -47,19 +41,16 @@
                                     <DataTrigger.EnterActions>
                                         <BeginStoryboard x:Name="tt" >
                                             <Storyboard Storyboard.TargetProperty="(DataGridCell.Background).(SolidColorBrush.Color)">
-                                                <ColorAnimation  RepeatBehavior="Forever"                                                                  
+                                                <ColorAnimation                                                                  
                                                      FillBehavior="Stop"                                                                  
                                                      From="LightBlue"                                                                  
                                                      To="Transparent"                                                                  
                                                      By="Blue"                                                                  
-                                                     Duration="0:0:0.5" />
+                                                     Duration="0:0:2" />
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </DataTrigger.EnterActions>
                                 </DataTrigger>
-                                <!--<DataTrigger Binding="{Binding Path=ValueHasChanged}" Value="False">
-                                    <Setter Property="Background" Value="Transparent" />
-                                </DataTrigger>-->
                             </Style.Triggers>
                         </Style>
                     </DataGridTextColumn.CellStyle>
