@@ -31,17 +31,32 @@
             AutoGenerateColumns="False"
             CanUserAddRows="False">
 
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow" >
+            <!--<DataGrid.RowStyle>
+               <Style TargetType="DataGridRow" >
                     <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=Item.ValueHasChanged, Converter={StaticResource ValueToBackgroundConverter}}" />
                 </Style>
-            </DataGrid.RowStyle>
+            </DataGrid.RowStyle>-->
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path=Path}" Header="Path and Name"/>
                 <DataGridTextColumn Binding="{Binding Path=Variable}" Header="Variable name"/>
-                <DataGridTextColumn Binding="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Header="Value"/>
+                <DataGridTextColumn Binding="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Header="Value">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}" >
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=ValueHasChanged}" Value="True">
+                                    <Setter Property="Background" Value="LightBlue" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=ValueHasChanged}" Value="False">
+                                    <Setter Property="Background" Value="Transparent" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding Path=Timestamp, UpdateSourceTrigger=PropertyChanged}" Header="Timestamp"/>
-                <DataGridTextColumn Binding="{Binding Path=ValueHasChanged, UpdateSourceTrigger=PropertyChanged}" Header="Change"/>
+                <DataGridTextColumn Binding="{Binding Path=ValueHasChanged, UpdateSourceTrigger=PropertyChanged}" Header="Change" Visibility="Collapsed"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
