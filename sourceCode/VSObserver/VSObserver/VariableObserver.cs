@@ -117,10 +117,11 @@ namespace VSObserver
                                                 intr.get(out valVarInt, out timeStamp);
 
                                                 variableResult.Add(new DataObserver{
-                                                        Path = completeVariable,
+                                                        //On remplace le backslash par un slash, car windows met des backslash
+                                                        Path = System.IO.Path.GetDirectoryName(completeVariable).Replace("\\", "/"),
                                                         Variable = System.IO.Path.GetFileName(completeVariable),
                                                         Value = valVarInt.ToString(),
-                                                        Timestamp = timeStamp.ToString()
+                                                        Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
                                                 });
                                             }
                                             else
@@ -154,12 +155,11 @@ namespace VSObserver
 
                                                 variableResult.Add(new DataObserver
                                                 {
-                                                    Path = completeVariable,
+                                                    Path = System.IO.Path.GetDirectoryName(completeVariable).Replace("\\", "/"),
                                                     Variable = System.IO.Path.GetFileName(completeVariable),
                                                     Value = valVarDbl.ToString("0.00000"),
                                                     Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
                                                 });
-
                                             }
                                             else
                                             {
@@ -194,7 +194,7 @@ namespace VSObserver
 
                                                 variableResult.Add(new DataObserver
                                                 {
-                                                    Path = completeVariable,
+                                                    Path = System.IO.Path.GetDirectoryName(completeVariable).Replace("\\", "/"),
                                                     Variable = System.IO.Path.GetFileName(completeVariable),
                                                     Value = tableToString(valVarVecInt),
                                                     Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()

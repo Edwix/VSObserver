@@ -158,7 +158,7 @@ namespace VSObserver
 
         private void tb_variableName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3)
+            if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3 && !refreshWorker.IsBusy)
             {
                 int variableNumber = 0;
                 variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
