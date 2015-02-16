@@ -44,11 +44,22 @@
                         <Style TargetType="{x:Type DataGridCell}" >
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=ValueHasChanged}" Value="True">
-                                    <Setter Property="Background" Value="LightBlue" />
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard x:Name="tt" >
+                                            <Storyboard Storyboard.TargetProperty="(DataGridCell.Background).(SolidColorBrush.Color)">
+                                                <ColorAnimation  RepeatBehavior="Forever"                                                                  
+                                                     FillBehavior="Stop"                                                                  
+                                                     From="LightBlue"                                                                  
+                                                     To="Transparent"                                                                  
+                                                     By="Blue"                                                                  
+                                                     Duration="0:0:0.5" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path=ValueHasChanged}" Value="False">
+                                <!--<DataTrigger Binding="{Binding Path=ValueHasChanged}" Value="False">
                                     <Setter Property="Background" Value="Transparent" />
-                                </DataTrigger>
+                                </DataTrigger>-->
                             </Style.Triggers>
                         </Style>
                     </DataGridTextColumn.CellStyle>
