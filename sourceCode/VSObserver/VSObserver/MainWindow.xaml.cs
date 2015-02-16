@@ -63,6 +63,7 @@ namespace VSObserver
 
             variableCollectionViewSource = (CollectionViewSource)(FindResource("VariableCollectionViewSource"));
 
+            tbl_varNumber.Text = "";
             vo = new VariableObserver();
         }
 
@@ -145,6 +146,11 @@ namespace VSObserver
                 int variableNumber = 0;
                 variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
                 tbl_varNumber.Text = "Variables number : " + variableNumber.ToString();
+            }
+            else
+            {
+                tbl_varNumber.Text = "The variable should have more than 2 characters";
+                variableCollectionViewSource.Source = new List<DataObserver>();
             }
         }
     }
