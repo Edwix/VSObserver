@@ -16,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
         <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Margin="5,5,5,5" Grid.Column="2" Grid.Row="0"/>
@@ -60,10 +61,11 @@
             </Image.Style>
         </Image>
         <TextBox Name="tb_variableName" Margin="5,5,5,5" Height="25" Grid.Column="0" Grid.Row="0" TextChanged="tb_variableName_TextChanged"/>
-        <TextBlock HorizontalAlignment="Left" Name="tbl_varNumber" Text="{Binding Path=LoadDone, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" />
+        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" />
+        <TextBlock Margin="5,0,0,0" Visibility="Collapsed" HorizontalAlignment="Left" Name="tbl_message" Text="{Binding Path=LoadDone, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" />
         <DataGrid
             VerticalAlignment="Stretch"
-            Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3"
+            Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3"
             Name="dg_variableList"
             ScrollViewer.VerticalScrollBarVisibility="Visible"
             DataContext="{StaticResource VariableCollectionViewSource}"

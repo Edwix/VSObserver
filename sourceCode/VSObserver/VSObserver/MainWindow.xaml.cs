@@ -35,6 +35,8 @@ namespace VSObserver
         private CollectionViewSource variableCollectionViewSource;
         private DataApplication dataApp;
         private BackgroundWorker refreshWorker;
+        private int totalNumberOfVariables = 0;
+        private int variableNumber = 0;
 
         public MainWindow()
         {
@@ -69,6 +71,9 @@ namespace VSObserver
 
             tbl_varNumber.Text = "";
             vo = new VariableObserver();
+            totalNumberOfVariables = vo.loadVariableList();
+            changeVariableIndication();
+
             dataApp = new DataApplication();
             //this.DataContext = dataApp;
             //btn_refresh.DataContext = dataApp;
@@ -160,9 +165,8 @@ namespace VSObserver
         {
             if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3 && !refreshWorker.IsBusy)
             {
-                int variableNumber = 0;
                 variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
-                tbl_varNumber.Text = "Variables number : " + variableNumber.ToString();
+                changeVariableIndication();
             }
             else
             {
@@ -195,7 +199,7 @@ namespace VSObserver
         /// <param name="e"></param>
         private void refreshWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            vo.loadVariableList();
+            totalNumberOfVariables = vo.loadVariableList();
         }
 
         /// <summary>
@@ -208,9 +212,19 @@ namespace VSObserver
         private void refreshWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             dataApp.LoadDone = true;
+            changeVariableIndication();
 
             //On redémarre le timer
             clipBoardTimer.Start();
+        }
+
+        /// <summary>
+        /// Met à jour le texte qui affiche le nombre de variable trouvé sur le 
+        /// nombre de variable total
+        /// </summary>
+        private void changeVariableIndication()
+        {
+            tbl_varNumber.Text = "Variables number : " + variableNumber.ToString() + " / " + totalNumberOfVariables.ToString();
         }
     }
 }

@@ -28,11 +28,13 @@ namespace VSObserver
         public VariableObserver()
         {
             reg_var = new Regex(REGEX_SEARCH);
-
-            loadVariableList();
         }
 
-        public void loadVariableList()
+        /// <summary>
+        /// Charge toutes les variables de la configuration et returne le nombre total
+        /// </summary>
+        /// <returns></returns>
+        public int loadVariableList()
         {
             IControl control = IControl.create();
             variableTable = new DataTable();
@@ -64,6 +66,8 @@ namespace VSObserver
                     }
                 }
             }
+
+            return variableTable.Rows.Count;
         }
 
         public List<DataObserver> readValue(string variableName, out int variableNumber)
