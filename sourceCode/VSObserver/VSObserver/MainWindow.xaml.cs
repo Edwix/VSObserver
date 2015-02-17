@@ -167,10 +167,11 @@ namespace VSObserver
             {
                 variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
                 changeVariableIndication();
+                changeInformationMessage("");
             }
             else
             {
-                tbl_varNumber.Text = "The variable should have more than 2 characters";
+                changeInformationMessage("The variable should have more than 2 characters");
                 variableCollectionViewSource.Source = new List<DataObserver>();
             }
         }
@@ -225,6 +226,24 @@ namespace VSObserver
         private void changeVariableIndication()
         {
             tbl_varNumber.Text = "Variables number : " + variableNumber.ToString() + " / " + totalNumberOfVariables.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        private void changeInformationMessage(string value)
+        {
+            tbl_message.Text = value;
+
+            if (value == "")
+            {
+                tbl_message.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                tbl_message.Visibility = Visibility.Visible;
+            }
         }
     }
 }
