@@ -6,7 +6,6 @@
         >
     <Window.Resources>
         <CollectionViewSource x:Key="VariableCollectionViewSource" CollectionViewType="ListCollectionView"/>
-        <nspace:ValueToBackgroundConverter x:Key="ValueToBackgroundConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
