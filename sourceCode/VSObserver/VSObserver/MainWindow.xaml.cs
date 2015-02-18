@@ -70,16 +70,17 @@ namespace VSObserver
             variableCollectionViewSource = (CollectionViewSource)(FindResource("VariableCollectionViewSource"));
 
             tbl_varNumber.Text = "";
-            vo = new VariableObserver();
-            totalNumberOfVariables = vo.loadVariableList();
-            changeVariableIndication();
 
             dataApp = new DataApplication();
             //this.DataContext = dataApp;
             //btn_refresh.DataContext = dataApp;
             img_refresh.DataContext = dataApp;
-            //tbl_varNumber.DataContext = dataApp;
+            tbl_message.DataContext = dataApp;
             dataApp.LoadDone = true;
+
+            vo = new VariableObserver(dataApp);
+            totalNumberOfVariables = vo.loadVariableList();
+            changeVariableIndication();
 
             //Création de la tâche de fond qui va rafraichir la liste des varaibles
             refreshWorker = new BackgroundWorker();
@@ -167,11 +168,10 @@ namespace VSObserver
             {
                 variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
                 changeVariableIndication();
-                changeInformationMessage("");
             }
             else
             {
-                changeInformationMessage("The variable should have more than 2 characters");
+                dataApp.InformationMessage = "The variable should have more than 2 characters";
                 variableCollectionViewSource.Source = new List<DataObserver>();
             }
         }
@@ -226,24 +226,6 @@ namespace VSObserver
         private void changeVariableIndication()
         {
             tbl_varNumber.Text = "Variables number : " + variableNumber.ToString() + " / " + totalNumberOfVariables.ToString();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        private void changeInformationMessage(string value)
-        {
-            tbl_message.Text = value;
-
-            if (value == "")
-            {
-                tbl_message.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                tbl_message.Visibility = Visibility.Visible;
-            }
         }
     }
 }

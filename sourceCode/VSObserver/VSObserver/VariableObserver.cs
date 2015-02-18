@@ -25,10 +25,12 @@ namespace VSObserver
         private const int SHOW_NUMBER = 40;
         private bool connectionOK;
         private Regex reg_var;
+        private DataApplication dataApp;
 
-        public VariableObserver()
+        public VariableObserver(DataApplication dataApp)
         {
             reg_var = new Regex(REGEX_SEARCH);
+            this.dataApp = dataApp;
         }
 
         /// <summary>
@@ -48,11 +50,13 @@ namespace VSObserver
             {
                 control.connect("10.23.154.180", 9090);
                 connectionOK = true;
+                dataApp.InformationMessage = null;
             }
             catch (Exception)
             {
                 //Connexion impossible
                 connectionOK = false;
+                dataApp.InformationMessage = "Connection to RTC server isn't possible !";
             }
 
             if (connectionOK)
@@ -82,11 +86,19 @@ namespace VSObserver
             //Par exemple si on a Live%bit la fonction retourne Livebit
             string variableName = Regex.Replace(rawVariableName, REGEX_REMPLACE, "");
 
+            if (!reg_var.IsMatch(rawVariableName))
+            {
+                dataApp.InformationMessage = "The variable name has been remplaced by " + variableName + ".";
+            }
+            else
+            {
+                dataApp.InformationMessage = null;
+            }
+
             ///Si la regex ne match pas alors on cherche les variable
             ///La regex interdit tous les caractères spéciaux
             if(reg_var.IsMatch(variableName))
             {
-                Console.WriteLine("READ");
                 DataRow[] searchResult =  variableTable.Select("Path LIKE '%" + variableName + "%'");
                 variableNumber = searchResult.Count();
 

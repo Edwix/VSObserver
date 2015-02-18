@@ -62,7 +62,17 @@
         </Image>
         <TextBox Name="tb_variableName" Margin="5,5,5,5" Height="25" Grid.Column="0" Grid.Row="0" TextChanged="tb_variableName_TextChanged"/>
         <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" />
-        <TextBlock Margin="5,0,0,0" Visibility="Collapsed" HorizontalAlignment="Left" Name="tbl_message" Text="{Binding Path=LoadDone, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" />
+        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_message" Text="{Binding Path=InformationMessage, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=InformationMessage}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
         <DataGrid
             VerticalAlignment="Stretch"
             Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3"
