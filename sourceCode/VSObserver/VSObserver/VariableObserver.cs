@@ -20,7 +20,8 @@ namespace VSObserver
         private const string TYPE = "Type";
         private const string VALUE = "Value";
         private const string TIMESTAMP = "Timestamp";
-        private const string REGEX_SEARCH = @"[^0-9a-zA-Z_/\-:]+";
+        private const string REGEX_SEARCH = @"^[0-9a-zA-Z_/\-:]+$";
+        private const string REGEX_REMPLACE = @"[^0-9a-zA-Z_/\-:]";
         private const int SHOW_NUMBER = 40;
         private bool connectionOK;
         private Regex reg_var;
@@ -70,18 +71,22 @@ namespace VSObserver
             return variableTable.Rows.Count;
         }
 
-        public List<DataObserver> readValue(string variableName, out int variableNumber)
+        public List<DataObserver> readValue(string rawVariableName, out int variableNumber)
         {
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
             variableResult = new List<DataObserver>();
             variableNumber = 0;
 
+            //On remplace le nom de variable en entrée par une variable enlevé de tout caractère spéciaux
+            //Par exemple si on a Live%bit la fonction retourne Livebit
+            string variableName = Regex.Replace(rawVariableName, REGEX_REMPLACE, "");
+
             ///Si la regex ne match pas alors on cherche les variable
-            ///La regex interdit tous les caractères normal
-            ///Donc en faisant l'inverse de cette Regex, on ignore tous les caractères spéciaux
-            if(!reg_var.Match(variableName).Success)
+            ///La regex interdit tous les caractères spéciaux
+            if(reg_var.IsMatch(variableName))
             {
+                Console.WriteLine("READ");
                 DataRow[] searchResult =  variableTable.Select("Path LIKE '%" + variableName + "%'");
                 variableNumber = searchResult.Count();
 
