@@ -10,6 +10,7 @@ namespace VSObserver
     /// </summary>
     class DataObserver : ViewModelBase
     {
+        private const string PATH_NAME = "PathName";
         private const string PATH = "Path";
         private const string VARIABLE = "Variable";
         private const string TYPE = "Type";
@@ -17,12 +18,19 @@ namespace VSObserver
         private const string TIMESTAMP = "Timestamp";
         private const string HAS_CHANGED = "ValueHasChanged";
 
+        private string _pathName;
         private string _path;
         private string _var;
         private string _ts;
         private string _val;
         private bool _hasChanged;
 
+        public string PathName
+        {
+            get { return _pathName; }
+            set { _pathName = value; OnPropertyChanged(PATH_NAME); }
+        }
+        
         public string Path
         { 
             get { return _path; } 

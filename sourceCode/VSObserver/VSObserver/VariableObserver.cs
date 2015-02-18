@@ -241,6 +241,7 @@ namespace VSObserver
         private DataObserver createDataObserver(string path, string value, long timeStamp)
         {
             DataObserver dObs = new DataObserver {
+                PathName = path,
                 Path = System.IO.Path.GetDirectoryName(path).Replace("\\", "/"),
                 Variable = System.IO.Path.GetFileName(path),
                 Value = value,
@@ -263,7 +264,7 @@ namespace VSObserver
             {
                 foreach(DataObserver oldRow in oldVariableTable)
                 {
-                    if (newRow.Path == oldRow.Path)
+                    if (newRow.PathName == oldRow.PathName)
                     {
                         if (newRow.Value != oldRow.Value)
                         {
