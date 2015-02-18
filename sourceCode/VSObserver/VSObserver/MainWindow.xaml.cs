@@ -18,6 +18,7 @@ using System.ComponentModel;
 using Forms = System.Windows.Forms;
 using Draw = System.Drawing;
 using System.Data;
+using System.Configuration;
 
 namespace VSObserver
 {
@@ -54,7 +55,7 @@ namespace VSObserver
                 oldClipBoardText = "";
                 clipBoardTimer = new DispatcherTimer();
                 clipBoardTimer.Tick += new EventHandler(clipBoardTimer_Tick);
-                clipBoardTimer.Interval = new TimeSpan(0, 0, 0, 0, INTERVAL);
+                clipBoardTimer.Interval = new TimeSpan(0, 0, 0, 0, Convert.ToInt32(ConfigurationManager.AppSettings["RefreshRate"]));
 
             //Affichage en premier de l'application
                 this.Topmost = true;
