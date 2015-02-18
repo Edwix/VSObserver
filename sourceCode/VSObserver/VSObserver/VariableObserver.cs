@@ -125,13 +125,7 @@ namespace VSObserver
                                             {
                                                 intr.get(out valVarInt, out timeStamp);
 
-                                                variableResult.Add(new DataObserver{
-                                                        //On remplace le backslash par un slash, car windows met des backslash
-                                                        Path = System.IO.Path.GetDirectoryName(completeVariable).Replace("\\", "/"),
-                                                        Variable = System.IO.Path.GetFileName(completeVariable),
-                                                        Value = valVarInt.ToString(),
-                                                        Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
-                                                });
+                                                variableResult.Add(createDataObserver(completeVariable, valVarInt.ToString(), timeStamp));                                                
                                             }
                                             else
                                             {
@@ -162,13 +156,7 @@ namespace VSObserver
                                             {
                                                 dblr.get(out valVarDbl, out timeStamp);
 
-                                                variableResult.Add(new DataObserver
-                                                {
-                                                    Path = System.IO.Path.GetDirectoryName(completeVariable).Replace("\\", "/"),
-                                                    Variable = System.IO.Path.GetFileName(completeVariable),
-                                                    Value = valVarDbl.ToString("0.00000"),
-                                                    Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
-                                                });
+                                                variableResult.Add(createDataObserver(completeVariable, valVarDbl.ToString("0.00000"), timeStamp));
                                             }
                                             else
                                             {
@@ -201,14 +189,7 @@ namespace VSObserver
                                             {
                                                 vecIntReader.get(valVarVecInt, out timeStamp);
 
-                                                variableResult.Add(new DataObserver
-                                                {
-                                                    Path = System.IO.Path.GetDirectoryName(completeVariable).Replace("\\", "/"),
-                                                    Variable = System.IO.Path.GetFileName(completeVariable),
-                                                    Value = tableToString(valVarVecInt),
-                                                    Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
-                                                });
-
+                                                variableResult.Add(createDataObserver(completeVariable, tableToString(valVarVecInt), timeStamp));
                                             }
                                             else
                                             {
@@ -224,14 +205,7 @@ namespace VSObserver
                                     break;
                                 ///=================================================================================================
                                 default:
-                                    //Console.WriteLine(completeVariable + " ==> Type : " + typeVS);
-                                    variableResult.Add(new DataObserver
-                                    {
-                                        Path = completeVariable,
-                                        Variable = System.IO.Path.GetFileName(completeVariable),
-                                        Value = "Undefined",
-                                        Timestamp = ""
-                                    });
+                                    variableResult.Add(createDataObserver(completeVariable, "Undefined", 0L));
                                     break;
                             }
                         }
@@ -250,6 +224,18 @@ namespace VSObserver
             }
 
             return variableResult;
+        }
+
+        private DataObserver createDataObserver(string path, string value, long timeStamp)
+        {
+            DataObserver dObs = new DataObserver {
+                Path = System.IO.Path.GetDirectoryName(path).Replace("\\", "/"),
+                Variable = System.IO.Path.GetFileName(path),
+                Value = value,
+                Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
+            };
+
+            return dObs;
         }
 
         /// <summary>
