@@ -45,7 +45,6 @@ namespace VSObserver
         public MainWindow()
         {
             loadConfiguration();
-            this.Resources.Add("colorAnim_valueChanged", Colors.DarkGreen);
             InitializeComponent();
 
             //Icone de notification
@@ -96,6 +95,11 @@ namespace VSObserver
             refreshWorker.RunWorkerCompleted += refreshWorker_RunWorkerCompleted;
         }
 
+        /// <summary>
+        /// Charge les données rentrées dans le fichier de configuration
+        /// En même temps cette fonction vérifie que les paramètres rentrés soient correctes
+        /// Sinon on prend une valeur par défaut
+        /// </summary>
         public void loadConfiguration()
         {
             try
@@ -106,6 +110,19 @@ namespace VSObserver
             {
                 refreshRate = 250;
             }
+
+            try
+            {
+                byte R = Convert.ToByte(ConfigurationManager.AppSettings["RedValue"]);
+                byte G = Convert.ToByte(ConfigurationManager.AppSettings["GreenValue"]);
+                byte B = Convert.ToByte(ConfigurationManager.AppSettings["BlueValue"]);
+                this.Resources.Add("colorAnim_valueChanged", Color.FromArgb(255, R, G, B));
+            }
+            catch
+            {
+                this.Resources.Add("colorAnim_valueChanged", Colors.LightBlue);
+            }
+            
 
         }
 
