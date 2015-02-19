@@ -27,7 +27,10 @@ namespace VSObserver
     /// </summary>
     public partial class MainWindow : Window
     {
+
         private const int INTERVAL = 250;
+
+        private int refreshRate;
 
         private string oldClipBoardText;
         private DispatcherTimer clipBoardTimer;
@@ -41,6 +44,8 @@ namespace VSObserver
 
         public MainWindow()
         {
+            loadConfiguration();
+            this.Resources.Add("colorAnim_valueChanged", Colors.DarkGreen);
             InitializeComponent();
 
             //Icone de notification
@@ -55,7 +60,7 @@ namespace VSObserver
                 oldClipBoardText = "";
                 clipBoardTimer = new DispatcherTimer();
                 clipBoardTimer.Tick += new EventHandler(clipBoardTimer_Tick);
-                clipBoardTimer.Interval = new TimeSpan(0, 0, 0, 0, Convert.ToInt32(ConfigurationManager.AppSettings["RefreshRate"]));
+                clipBoardTimer.Interval = new TimeSpan(0, 0, 0, 0, refreshRate);
 
             //Affichage en premier de l'application
                 this.Topmost = true;
@@ -89,6 +94,19 @@ namespace VSObserver
             //Association des évènement aux méthodes à appliquer
             refreshWorker.DoWork += refreshWorker_DoWork;
             refreshWorker.RunWorkerCompleted += refreshWorker_RunWorkerCompleted;
+        }
+
+        public void loadConfiguration()
+        {
+            try
+            {
+                refreshRate = Convert.ToInt32(ConfigurationManager.AppSettings["RefreshRate"]);
+            }
+            catch
+            {
+                refreshRate = 250;
+            }
+
         }
 
         /// <summary>
