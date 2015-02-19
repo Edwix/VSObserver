@@ -122,7 +122,16 @@ namespace VSObserver
             {
                 this.Resources.Add("colorAnim_valueChanged", Colors.LightBlue);
             }
-            
+
+            try
+            {
+                int sec = Convert.ToInt32(ConfigurationManager.AppSettings["DurationColor"]);
+                this.Resources.Add("durationColor", new Duration(new TimeSpan(0,0,sec)));
+            }
+            catch
+            {
+                this.Resources.Add("durationColor", new Duration(new TimeSpan(0, 0, 2)));
+            }
 
         }
 

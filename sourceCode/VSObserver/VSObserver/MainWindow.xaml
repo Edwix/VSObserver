@@ -98,7 +98,7 @@
                                                      From="{StaticResource colorAnim_valueChanged}"                                                                  
                                                      To="Transparent"                                                                  
                                                      By="Blue"                                                                  
-                                                     Duration="0:0:2" />
+                                                     Duration="{StaticResource durationColor}" />
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </DataTrigger.EnterActions>
