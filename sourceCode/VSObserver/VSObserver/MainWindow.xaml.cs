@@ -36,7 +36,6 @@ namespace VSObserver
         private DispatcherTimer clipBoardTimer;
         private VariableObserver vo;
         private Forms.NotifyIcon notifyIcon;
-        private CollectionViewSource variableCollectionViewSource;
         private DataApplication dataApp;
         private BackgroundWorker refreshWorker;
         private int totalNumberOfVariables = 0;
@@ -72,8 +71,6 @@ namespace VSObserver
             clipBoardTimer.Start();
             Clipboard.Clear();
 
-            variableCollectionViewSource = (CollectionViewSource)(FindResource("VariableCollectionViewSource"));
-
             tbl_varNumber.Text = "";
 
             dataApp = new DataApplication();
@@ -86,6 +83,9 @@ namespace VSObserver
             vo = new VariableObserver(dataApp);
             totalNumberOfVariables = vo.loadVariableList();
             changeVariableIndication();
+
+            tb_variableName.DataContext = vo;
+            dg_variableList.DataContext = vo;
 
             //Création de la tâche de fond qui va rafraichir la liste des varaibles
             refreshWorker = new BackgroundWorker();
@@ -187,7 +187,7 @@ namespace VSObserver
                     //VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
                     //int nb;
                     //variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out nb);
-                    vo.refreshValues(tb_variableName.Text, (List<DataObserver>)variableCollectionViewSource.Source);
+                    vo.refreshValues(tb_variableName.Text);
                 }
             }
             catch (Exception ex)
@@ -207,7 +207,7 @@ namespace VSObserver
             this.Hide();
         }
 
-        private void tb_variableName_TextChanged(object sender, TextChangedEventArgs e)
+        /*private void tb_variableName_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3 && !refreshWorker.IsBusy)
             {
@@ -219,7 +219,7 @@ namespace VSObserver
                 dataApp.InformationMessage = "The variable should have more than 2 characters";
                 variableCollectionViewSource.Source = new List<DataObserver>();
             }
-        }
+        }*/
 
         private void refresh_ClickDown(object sender, MouseButtonEventArgs e)
         {

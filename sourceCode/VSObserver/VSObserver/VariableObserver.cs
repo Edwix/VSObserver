@@ -7,13 +7,18 @@ using U_TEST;
 using VS;
 using System.Windows;
 using System.Text.RegularExpressions;
+using System.Collections.ObjectModel;
 
 namespace VSObserver
 {
-    class VariableObserver
+    class VariableObserver : ViewModelBase
     {
         private DataTable variableTable;
-        private List<DataObserver> variableResult;
+        private ObservableCollection<DataObserver> _variableList;
+        private string _searchText;
+
+        private const string VARIABLE_LIST = "VariableList";
+        private const string SEARCH_TEXT = "SearchText";
 
         private const string PATH = "Path";
         private const string VARIABLE = "Variable";
@@ -30,7 +35,39 @@ namespace VSObserver
         public VariableObserver(DataApplication dataApp)
         {
             reg_var = new Regex(REGEX_SEARCH);
+            _variableList = new ObservableCollection<DataObserver>();
+
             this.dataApp = dataApp;
+        }
+
+        public ObservableCollection<DataObserver> VariableList
+        {
+            get { return _variableList; }
+            set { _variableList = value; OnPropertyChanged(VARIABLE_LIST);}
+        }
+
+        public string SearchText
+        {
+            get { return _searchText; }
+            set 
+            { 
+                _searchText = value; 
+                OnPropertyChanged(SEARCH_TEXT);
+
+                if (_searchText != "" && _searchText.Length >= 3)
+                {
+                    int nb = 0;
+                    VariableList = readValue(value, out nb);
+                    //variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
+                    //changeVariableIndication();
+                }
+                else
+                {
+                    dataApp.InformationMessage = "The variable should have more than 2 characters";
+                    //variableCollectionViewSource.Source = new List<DataObserver>();
+                    VariableList = new ObservableCollection<DataObserver>();
+                }
+            }
         }
 
         /// <summary>
@@ -42,9 +79,6 @@ namespace VSObserver
             IControl control = IControl.create();
             variableTable = new DataTable();
             variableTable.Columns.Add(PATH, typeof(string));
-            variableTable.Columns.Add(VARIABLE, typeof(string));
-            variableTable.Columns.Add(TYPE, typeof(string));
-            variableTable.Columns.Add(VALUE, typeof(string));
 
             try
             {
@@ -67,7 +101,7 @@ namespace VSObserver
                 {
                     for (int i = 0; i < listeUT.size(); i++)
                     {
-                        variableTable.Rows.Add(listeUT.get(i), "", "", "");
+                        variableTable.Rows.Add(listeUT.get(i));
                     }
                 }
             }
@@ -75,11 +109,11 @@ namespace VSObserver
             return variableTable.Rows.Count;
         }
 
-        public List<DataObserver> readValue(string rawVariableName, out int variableNumber)
+        public ObservableCollection<DataObserver> readValue(string rawVariableName, out int variableNumber)
         {
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
-            variableResult = new List<DataObserver>();
+            ObservableCollection<DataObserver> variableResult = new ObservableCollection<DataObserver>();
             variableNumber = 0;
 
             //On remplace le nom de variable en entrée par une variable enlevé de tout caractère spéciaux
@@ -255,10 +289,11 @@ namespace VSObserver
         /// Rafraichit les valeurs en fonction de l'ancien Datatable
         /// </summary>
         /// <param name="dataTable"></param>
-        public void refreshValues(string variableName, List<DataObserver> oldVariableTable)
+        public void refreshValues(string variableName)
         {
             int nb;
-            List<DataObserver> newVariableTable = readValue(variableName, out nb);
+            ObservableCollection<DataObserver> oldVariableTable = VariableList;
+            ObservableCollection<DataObserver> newVariableTable = readValue(variableName, out nb);
 
             foreach (DataObserver newRow in newVariableTable)
             {

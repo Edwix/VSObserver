@@ -4,9 +4,6 @@
         xmlns:nspace="clr-namespace:VSObserver" 
         Title="VSObserver" Height="350" Width="525"
         >
-    <Window.Resources>
-        <CollectionViewSource x:Key="VariableCollectionViewSource" CollectionViewType="ListCollectionView"/>
-    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -60,7 +57,7 @@
                 </Style>
             </Image.Style>
         </Image>
-        <TextBox Name="tb_variableName" Margin="5,5,5,5" Height="25" Grid.Column="0" Grid.Row="0" TextChanged="tb_variableName_TextChanged"/>
+        <TextBox Name="tb_variableName" Margin="5,5,5,5" Height="25" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" />
         <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_message" Text="{Binding Path=InformationMessage, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3">
             <TextBlock.Style>
@@ -78,8 +75,7 @@
             Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3"
             Name="dg_variableList"
             ScrollViewer.VerticalScrollBarVisibility="Visible"
-            DataContext="{StaticResource VariableCollectionViewSource}"
-            ItemsSource="{Binding}"
+            ItemsSource="{Binding Path=VariableList, UpdateSourceTrigger=PropertyChanged}"
             AutoGenerateColumns="False"
             CanUserAddRows="False">
             <DataGrid.Columns>
