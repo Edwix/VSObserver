@@ -79,6 +79,7 @@
             AutoGenerateColumns="False"
             CanUserAddRows="False">
             <DataGrid.Columns>
+                <DataGridCheckBoxColumn Binding="{Binding Path=IsLocked}" Header="Locking"/>
                 <DataGridTextColumn Binding="{Binding Path=Path}" Header="Path and Name"/>
                 <DataGridTextColumn Binding="{Binding Path=Variable}" Header="Variable name"/>
                 <DataGridTextColumn Binding="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Header="Value">

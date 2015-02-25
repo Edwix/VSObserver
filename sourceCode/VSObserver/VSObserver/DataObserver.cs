@@ -17,6 +17,7 @@ namespace VSObserver
         private const string VALUE = "Value";
         private const string TIMESTAMP = "Timestamp";
         private const string HAS_CHANGED = "ValueHasChanged";
+        private const string IS_LOCKED = "IsLocked";
 
         private string _pathName;
         private string _path;
@@ -24,6 +25,12 @@ namespace VSObserver
         private string _ts;
         private string _val;
         private bool _hasChanged;
+        private bool _loocked;
+
+        public DataObserver()
+        {
+            _loocked = false;
+        }
 
         public string PathName
         {
@@ -59,6 +66,12 @@ namespace VSObserver
         {
             get { return _hasChanged; }
             set { _hasChanged = value; OnPropertyChanged(HAS_CHANGED); }
+        }
+
+        public bool IsLocked
+        {
+            get { return _loocked; }
+            set { _loocked = value; OnPropertyChanged(IS_LOCKED); }
         }
     }
 }

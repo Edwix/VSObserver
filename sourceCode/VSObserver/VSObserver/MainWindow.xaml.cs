@@ -39,7 +39,6 @@ namespace VSObserver
         private DataApplication dataApp;
         private BackgroundWorker refreshWorker;
         private int totalNumberOfVariables = 0;
-        private int variableNumber = 0;
 
         public MainWindow()
         {
@@ -232,8 +231,12 @@ namespace VSObserver
                 //On arrête le timer
                 clipBoardTimer.Stop();
 
+                //On desactive la saisie de variable
+                tb_variableName.IsEnabled = false;
+
                 //On lance la tâche asynchrone refreshWorker_DoWork
                 refreshWorker.RunWorkerAsync();
+
             }
         }
 
@@ -259,6 +262,7 @@ namespace VSObserver
         {
             dataApp.LoadDone = true;
             changeVariableIndication();
+            tb_variableName.IsEnabled = true;
 
             //On redémarre le timer
             clipBoardTimer.Start();
@@ -270,7 +274,7 @@ namespace VSObserver
         /// </summary>
         private void changeVariableIndication()
         {
-            tbl_varNumber.Text = "Variables number : " + variableNumber.ToString() + " / " + totalNumberOfVariables.ToString();
+            tbl_varNumber.Text = "Variables number : " + vo.VarNumberFound + " / " + totalNumberOfVariables.ToString();
         }
     }
 }

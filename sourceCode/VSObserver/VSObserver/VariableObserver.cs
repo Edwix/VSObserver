@@ -17,6 +17,8 @@ namespace VSObserver
         private ObservableCollection<DataObserver> _variableList;
         private string _searchText;
 
+        VariableController vc;
+
         private const string VARIABLE_LIST = "VariableList";
         private const string SEARCH_TEXT = "SearchText";
 
@@ -36,8 +38,15 @@ namespace VSObserver
         {
             reg_var = new Regex(REGEX_SEARCH);
             _variableList = new ObservableCollection<DataObserver>();
+            vc = Vs.getVariableController();
 
             this.dataApp = dataApp;
+        }
+
+        public int VarNumberFound
+        {
+            get;
+            set;
         }
 
         public ObservableCollection<DataObserver> VariableList
@@ -57,7 +66,8 @@ namespace VSObserver
                 if (_searchText != "" && _searchText.Length >= 3)
                 {
                     int nb = 0;
-                    VariableList = readValue(value, out nb);
+                    VariableList = searchVariables(value, out nb);
+                    VarNumberFound = nb;
                     //variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
                     //changeVariableIndication();
                 }
@@ -65,7 +75,7 @@ namespace VSObserver
                 {
                     dataApp.InformationMessage = "The variable should have more than 2 characters";
                     //variableCollectionViewSource.Source = new List<DataObserver>();
-                    VariableList = new ObservableCollection<DataObserver>();
+                    VariableList = getLockedVariables();
                 }
             }
         }
@@ -76,6 +86,7 @@ namespace VSObserver
         /// <returns></returns>
         public int loadVariableList()
         {
+            vc = Vs.getVariableController();
             IControl control = IControl.create();
             variableTable = new DataTable();
             variableTable.Columns.Add(PATH, typeof(string));
@@ -109,11 +120,11 @@ namespace VSObserver
             return variableTable.Rows.Count;
         }
 
-        public ObservableCollection<DataObserver> readValue(string rawVariableName, out int variableNumber)
+        public ObservableCollection<DataObserver> searchVariables(string rawVariableName, out int variableNumber)
         {
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
-            ObservableCollection<DataObserver> variableResult = new ObservableCollection<DataObserver>();
+            ObservableCollection<DataObserver> variableResult = getLockedVariables();
             variableNumber = 0;
 
             //On remplace le nom de variable en entrée par une variable enlevé de tout caractère spéciaux
@@ -140,124 +151,19 @@ namespace VSObserver
                 if (connectionOK)
                 {
                     int compt = 0;
-                    VariableController vc = Vs.getVariableController();
+                    
 
                     foreach (DataRow row in searchResult)
                     {
                         string completeVariable = (string)row[PATH];
-                        int importOk = vc.importVariable(completeVariable);
-                        int typeVS;
-                        long timeStamp;
-                        vc.getType(completeVariable, out typeVS);
-                        //Console.WriteLine(completeVariable + " ==> Type : " + typeVS);
 
-                        if (importOk != 0)
+                        DataObserver dobs = readValue(completeVariable);
+
+                        //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer, donc on l'ajoute
+                        if (dobs != null)
                         {
-                            switch (typeVS)
-                            {
-                                ///=================================================================================================
-                                /// Si le type est égal à 1 alors c'est un entier
-                                ///=================================================================================================
-                                    case 1:
-                                        IntegerReader intr = vc.createIntegerReader(completeVariable);
-                                        int valVarInt;
-                        
-                                        if (intr != null)
-                                        {
-                                            intr.setBlocking(1 * 200);
-                                            VariableState t = intr.waitForConnection();
-
-                                            if (t == VariableState.Ok)
-                                            {
-                                                intr.get(out valVarInt, out timeStamp);
-
-                                                variableResult.Add(createDataObserver(completeVariable, valVarInt.ToString(), timeStamp));                                                
-                                            }
-                                            else
-                                            {
-                                                //value.Append("ERR3\n");
-                                            }
-
-                                            compt++;
-                                        }
-                                        else
-                                        {
-                                            //value.Append("ERR2\n");
-                                        }
-                                    break;
-                                ///=================================================================================================
-                                ///=================================================================================================
-                                /// Si le type est égal à 2 alors c'est un double
-                                ///=================================================================================================
-                                    case 2:
-                                        DoubleReader dblr = vc.createDoubleReader(completeVariable);
-                                        double valVarDbl;
-
-                                        if (dblr != null)
-                                        {
-                                            dblr.setBlocking(1 * 200);
-                                            VariableState t = dblr.waitForConnection();
-
-                                            if (t == VariableState.Ok)
-                                            {
-                                                dblr.get(out valVarDbl, out timeStamp);
-
-                                                variableResult.Add(createDataObserver(completeVariable, valVarDbl.ToString("0.00000"), timeStamp));
-                                            }
-                                            else
-                                            {
-                                                //value.Append("ERR3\n");
-                                            }
-
-                                            compt++;
-                                        }
-                                        else
-                                        {
-                                            //value.Append("ERR2\n");
-                                        }
-                                    break;
-                                ///=================================================================================================
-                                case 3:
-                                    break;
-                                ///=================================================================================================
-                                /// Si le type est égal à 4 alors c'est un Vector Integer (Tableau d'entier)
-                                ///=================================================================================================
-                                    case 4:
-                                        VectorIntegerReader vecIntReader = vc.createVectorIntegerReader(completeVariable);
-                                        IntegerVector valVarVecInt = new IntegerVector();
-
-                                        if (vecIntReader != null)
-                                        {
-                                            vecIntReader.setBlocking(1 * 200);
-                                            VariableState t = vecIntReader.waitForConnection();
-
-                                            if (t == VariableState.Ok)
-                                            {
-                                                vecIntReader.get(valVarVecInt, out timeStamp);
-
-                                                variableResult.Add(createDataObserver(completeVariable, tableToString(valVarVecInt), timeStamp));
-                                            }
-                                            else
-                                            {
-                                                //value.Append("ERR3\n");
-                                            }
-
-                                            compt++;
-                                        }
-                                        else
-                                        {
-                                            //value.Append("ERR2\n");
-                                        }
-                                    break;
-                                ///=================================================================================================
-                                default:
-                                    variableResult.Add(createDataObserver(completeVariable, "Undefined", 0L));
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            //value.Append("ERR1\n");
+                            variableResult.Add(dobs);
+                            compt++;
                         }
 
                         //Si on a atteint le nombre d'affichage max on arrête la boucle
@@ -270,6 +176,120 @@ namespace VSObserver
             }
 
             return variableResult;
+        }
+
+        private DataObserver readValue(string completeVariable)
+        {
+            DataObserver dataObserver = null;
+            int importOk = vc.importVariable(completeVariable);
+            int typeVS;
+            long timeStamp;
+            vc.getType(completeVariable, out typeVS);
+
+            if (importOk != 0)
+            {
+                switch (typeVS)
+                {
+                    ///=================================================================================================
+                    /// Si le type est égal à 1 alors c'est un entier
+                    ///=================================================================================================
+                    case 1:
+                        IntegerReader intr = vc.createIntegerReader(completeVariable);
+                        int valVarInt;
+
+                        if (intr != null)
+                        {
+                            intr.setBlocking(1 * 200);
+                            VariableState t = intr.waitForConnection();
+
+                            if (t == VariableState.Ok)
+                            {
+                                intr.get(out valVarInt, out timeStamp);
+
+                                dataObserver = createDataObserver(completeVariable, valVarInt.ToString(), timeStamp);
+                            }
+                            else
+                            {
+                                //value.Append("ERR3\n");
+                            }
+                        }
+                        else
+                        {
+                            //value.Append("ERR2\n");
+                        }
+                        break;
+                    ///=================================================================================================
+                    ///=================================================================================================
+                    /// Si le type est égal à 2 alors c'est un double
+                    ///=================================================================================================
+                    case 2:
+                        DoubleReader dblr = vc.createDoubleReader(completeVariable);
+                        double valVarDbl;
+
+                        if (dblr != null)
+                        {
+                            dblr.setBlocking(1 * 200);
+                            VariableState t = dblr.waitForConnection();
+
+                            if (t == VariableState.Ok)
+                            {
+                                dblr.get(out valVarDbl, out timeStamp);
+
+                                dataObserver = createDataObserver(completeVariable, valVarDbl.ToString("0.00000"), timeStamp);
+                            }
+                            else
+                            {
+                                //value.Append("ERR3\n");
+                            }
+                        }
+                        else
+                        {
+                            //value.Append("ERR2\n");
+                        }
+                        break;
+                    ///=================================================================================================
+                    case 3:
+                        break;
+                    ///=================================================================================================
+                    /// Si le type est égal à 4 alors c'est un Vector Integer (Tableau d'entier)
+                    ///=================================================================================================
+                    case 4:
+                        VectorIntegerReader vecIntReader = vc.createVectorIntegerReader(completeVariable);
+                        IntegerVector valVarVecInt = new IntegerVector();
+
+                        if (vecIntReader != null)
+                        {
+                            vecIntReader.setBlocking(1 * 200);
+                            VariableState t = vecIntReader.waitForConnection();
+
+                            if (t == VariableState.Ok)
+                            {
+                                vecIntReader.get(valVarVecInt, out timeStamp);
+
+                                dataObserver = createDataObserver(completeVariable, tableToString(valVarVecInt), timeStamp);
+                            }
+                            else
+                            {
+                                //value.Append("ERR3\n");
+                            }
+                        }
+                        else
+                        {
+                            //value.Append("ERR2\n");
+                        }
+                        break;
+                    ///=================================================================================================
+                    default:
+                        dataObserver = createDataObserver(completeVariable, "Undefined", 0L);
+                        break;
+                }
+            }
+            else
+            {
+                //value.Append("ERR1\n");
+            }
+
+            return dataObserver;
         }
 
         private DataObserver createDataObserver(string path, string value, long timeStamp)
@@ -285,38 +305,51 @@ namespace VSObserver
             return dObs;
         }
 
+        private ObservableCollection<DataObserver> getLockedVariables()
+        {
+            ObservableCollection<DataObserver> lockedVars = new ObservableCollection<DataObserver>();
+
+            foreach (DataObserver dObs in VariableList)
+            {
+                if (dObs.IsLocked)
+                {
+                    lockedVars.Add(dObs);
+                }
+            }
+
+            return lockedVars;
+        }
+
         /// <summary>
         /// Rafraichit les valeurs en fonction de l'ancien Datatable
         /// </summary>
         /// <param name="dataTable"></param>
         public void refreshValues(string variableName)
         {
-            int nb;
             ObservableCollection<DataObserver> oldVariableTable = VariableList;
-            ObservableCollection<DataObserver> newVariableTable = readValue(variableName, out nb);
 
-            foreach (DataObserver newRow in newVariableTable)
+            foreach(DataObserver rowObserver in oldVariableTable)
             {
-                foreach(DataObserver oldRow in oldVariableTable)
-                {
-                    if (newRow.PathName == oldRow.PathName)
-                    {
-                        if (newRow.Value != oldRow.Value)
-                        {
-                            oldRow.Value = newRow.Value;
-                            oldRow.ValueHasChanged = true;
-                        }
-                        else
-                        {
-                            oldRow.ValueHasChanged = false;
-                        }
+                string oldValue = rowObserver.Value;
+                DataObserver dObs = readValue(rowObserver.PathName);
 
-                        if (newRow.Timestamp != oldRow.Timestamp)
-                        {
-                            oldRow.Timestamp = newRow.Timestamp;
-                        }
+                if (dObs != null)
+                {
+                    if (rowObserver.Value != dObs.Value)
+                    {
+                        rowObserver.Value = dObs.Value;
+                        rowObserver.ValueHasChanged = true;
                     }
-                }                
+                    else
+                    {
+                        rowObserver.ValueHasChanged = false;
+                    }
+
+                    if (rowObserver.Timestamp != dObs.Timestamp)
+                    {
+                        rowObserver.Timestamp = dObs.Timestamp;
+                    }
+                }
             }
         }
 
