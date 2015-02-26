@@ -82,7 +82,8 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ToggleButton Content="" Foreground="Black" IsChecked="{Binding Path=IsLocked, UpdateSourceTrigger=PropertyChanged}">
+                            <ToggleButton Content="" Foreground="Black" IsChecked="{Binding Path=IsLocked, UpdateSourceTrigger=PropertyChanged}"
+                                          HorizontalAlignment="Center">
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="{x:Type ToggleButton}">
                                         <StackPanel Orientation="Horizontal">
@@ -90,7 +91,8 @@
                                                 <Image.Style>
                                                     <Style>
                                                         <Setter Property="Image.Source" Value="Resources/Lock_open.png" />
-                                                        <Setter Property="Image.Width" Value="24" />
+                                                        <Setter Property="Image.Width" Value="20" />
+                                                        <Setter Property="Image.HorizontalAlignment" Value="Center" />
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsChecked, 
                                                              RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}" Value="True">
