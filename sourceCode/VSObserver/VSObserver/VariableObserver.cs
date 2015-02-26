@@ -8,6 +8,7 @@ using VS;
 using System.Windows;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
+using System.Data.SQLite;
 
 namespace VSObserver
 {
@@ -17,13 +18,17 @@ namespace VSObserver
         private ObservableCollection<DataObserver> _variableList;
         private string _searchText;
         private string ipAddr;
+        private string pathDataBase;
 
         VariableController vc;
+
+        private const string QUERY_MAPPING = "SELECT V1.Name AS Path, V2.Name AS Mapping FROM Variable AS V1, Variable AS V2 WHERE  V1.variableId = V2.parentId";
 
         private const string VARIABLE_LIST = "VariableList";
         private const string SEARCH_TEXT = "SearchText";
 
         private const string PATH = "Path";
+        private const string MAPPING = "Mapping";
         private const string VARIABLE = "Variable";
         private const string TYPE = "Type";
         private const string VALUE = "Value";
@@ -34,10 +39,12 @@ namespace VSObserver
         private bool connectionOK;
         private Regex reg_var;
         private DataApplication dataApp;
+        SQLiteConnection sqliteConn;
 
-        public VariableObserver(DataApplication dataApp, string ipAddr)
+        public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase)
         {
             this.ipAddr = ipAddr;
+            this.pathDataBase = pathDataBase;
             reg_var = new Regex(REGEX_SEARCH);
             _variableList = new ObservableCollection<DataObserver>();
             vc = Vs.getVariableController();
@@ -69,7 +76,7 @@ namespace VSObserver
                     int nb = 0;
                     VariableList = searchVariables(value, out nb);
                     VarNumberFound = nb;
-                    //variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
+                    //  vvariableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
                     //changeVariableIndication();
                 }
                 else
@@ -87,14 +94,27 @@ namespace VSObserver
         /// <returns></returns>
         public int loadVariableList()
         {
+            string dataSource = @"Data Source=" + pathDataBase;
+            sqliteConn = new SQLiteConnection(dataSource);
+            
+            SQLiteDataAdapter sqliteAdapter;
+
             vc = Vs.getVariableController();
             IControl control = IControl.create();
             variableTable = new DataTable();
             variableTable.Columns.Add(PATH, typeof(string));
+            variableTable.Columns.Add(MAPPING, typeof(string));
 
             try
             {
                 control.connect(this.ipAddr, 9090);
+                SQLiteCommand cmd;
+                sqliteConn.Open();
+                cmd = sqliteConn.CreateCommand();
+                cmd.CommandText = QUERY_MAPPING;
+                sqliteAdapter = new SQLiteDataAdapter(cmd);
+                sqliteAdapter.Fill(variableTable);
+
                 connectionOK = true;
                 dataApp.InformationMessage = null;
             }
@@ -105,6 +125,12 @@ namespace VSObserver
                 dataApp.InformationMessage = "Connection to RTC server isn't possible !";
             }
 
+            /*foreach (DataRow row in variableTable.Rows)
+            {
+                // ... Write value of first field as integer.
+                Console.WriteLine(row.Field<string>(0) + " => " + row.Field<string>(1));
+            }*/
+
             if (connectionOK)
             {
                 NameList listeUT = control.getVariableList();
@@ -113,10 +139,13 @@ namespace VSObserver
                 {
                     for (int i = 0; i < listeUT.size(); i++)
                     {
-                        variableTable.Rows.Add(listeUT.get(i));
+                        //if(variableTable.Rows.Contains(new string[]{listeUT.get(i), ""}))
+                            variableTable.Rows.Add(listeUT.get(i), "");
                     }
                 }
             }
+
+            sqliteConn.Close();
 
             return variableTable.Rows.Count;
         }
@@ -164,9 +193,10 @@ namespace VSObserver
                     foreach (DataRow row in searchResult)
                     {
                         string completeVariable = (string)row[PATH];
+                        string mapping = (string)row[MAPPING];
 
                         //La lecture de variable retourne un DataObserver avec toutes les informations
-                        DataObserver dobs = readValue(completeVariable);
+                        DataObserver dobs = readValue(completeVariable, mapping);
 
                         //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer
                         //Et si le tableau des variables blocké ne contient pas l'élément on l'ajoute
@@ -195,7 +225,7 @@ namespace VSObserver
         /// </summary>
         /// <param name="completeVariable"></param>
         /// <returns></returns>
-        private DataObserver readValue(string completeVariable)
+        private DataObserver readValue(string completeVariable, string mapping)
         {
             DataObserver dataObserver = null;
             int importOk = vc.importVariable(completeVariable);
@@ -223,7 +253,7 @@ namespace VSObserver
                             {
                                 intr.get(out valVarInt, out timeStamp);
 
-                                dataObserver = createDataObserver(completeVariable, valVarInt.ToString(), timeStamp);
+                                dataObserver = createDataObserver(completeVariable, valVarInt.ToString(), timeStamp, mapping);
                             }
                             else
                             {
@@ -252,7 +282,7 @@ namespace VSObserver
                             {
                                 dblr.get(out valVarDbl, out timeStamp);
 
-                                dataObserver = createDataObserver(completeVariable, valVarDbl.ToString("0.00000"), timeStamp);
+                                dataObserver = createDataObserver(completeVariable, valVarDbl.ToString("0.00000"), timeStamp, mapping);
                             }
                             else
                             {
@@ -283,7 +313,7 @@ namespace VSObserver
                             {
                                 vecIntReader.get(valVarVecInt, out timeStamp);
 
-                                dataObserver = createDataObserver(completeVariable, tableToString(valVarVecInt), timeStamp);
+                                dataObserver = createDataObserver(completeVariable, tableToString(valVarVecInt), timeStamp, mapping);
                             }
                             else
                             {
@@ -297,7 +327,7 @@ namespace VSObserver
                         break;
                     ///=================================================================================================
                     default:
-                        dataObserver = createDataObserver(completeVariable, "Undefined", 0L);
+                        dataObserver = createDataObserver(completeVariable, "Undefined", 0L, mapping);
                         break;
                 }
             }
@@ -341,13 +371,14 @@ namespace VSObserver
         /// <param name="value"></param>
         /// <param name="timeStamp"></param>
         /// <returns></returns>
-        private DataObserver createDataObserver(string path, string value, long timeStamp)
+        private DataObserver createDataObserver(string path, string value, long timeStamp, string mapping)
         {
             DataObserver dObs = new DataObserver {
                 PathName = path,
                 Path = System.IO.Path.GetDirectoryName(path).Replace("\\", "/"),
                 Variable = System.IO.Path.GetFileName(path),
                 Value = value,
+                Mapping = mapping,
                 Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
             };
 
@@ -383,7 +414,7 @@ namespace VSObserver
             foreach(DataObserver rowObserver in oldVariableTable)
             {
                 string oldValue = rowObserver.Value;
-                DataObserver dObs = readValue(rowObserver.PathName);
+                DataObserver dObs = readValue(rowObserver.PathName, rowObserver.Mapping);
 
                 if (dObs != null)
                 {

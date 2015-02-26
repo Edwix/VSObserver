@@ -32,6 +32,7 @@ namespace VSObserver
 
         private int refreshRate;
         private string ipAddresseRTCServer;
+        private string sqlLiteDataBase;
 
         private string oldClipBoardText;
         private DispatcherTimer clipBoardTimer;
@@ -80,7 +81,7 @@ namespace VSObserver
             tbl_message.DataContext = dataApp;
             dataApp.LoadDone = true;
 
-            vo = new VariableObserver(dataApp, ipAddresseRTCServer);
+            vo = new VariableObserver(dataApp, ipAddresseRTCServer, sqlLiteDataBase);
             totalNumberOfVariables = vo.loadVariableList();
             changeVariableIndication();
 
@@ -134,6 +135,7 @@ namespace VSObserver
             }
 
             ipAddresseRTCServer = ConfigurationManager.AppSettings["IpAddrRTC"];
+            sqlLiteDataBase = ConfigurationManager.AppSettings["PathDataBase"];
 
         }
 

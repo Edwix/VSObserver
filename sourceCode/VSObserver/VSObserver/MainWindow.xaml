@@ -140,6 +140,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}" Header="Mapping"/>
                 <DataGridTextColumn Binding="{Binding Path=Timestamp, UpdateSourceTrigger=PropertyChanged}" Header="Timestamp"/>
                 <DataGridTextColumn Binding="{Binding Path=ValueHasChanged, UpdateSourceTrigger=PropertyChanged}" Header="Change" Visibility="Collapsed"/>
             </DataGrid.Columns>

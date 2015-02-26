@@ -18,12 +18,14 @@ namespace VSObserver
         private const string TIMESTAMP = "Timestamp";
         private const string HAS_CHANGED = "ValueHasChanged";
         private const string IS_LOCKED = "IsLocked";
+        private const string MAPPING = "Mapping";
 
         private string _pathName;
         private string _path;
         private string _var;
         private string _ts;
         private string _val;
+        private string _map;
         private bool _hasChanged;
         private bool _loocked;
 
@@ -54,6 +56,12 @@ namespace VSObserver
         {
             get { return _val; }
             set { _val = value; OnPropertyChanged(VALUE); }
+        }
+
+        public string Mapping
+        {
+            get { return _map; }
+            set { _map = value; OnPropertyChanged(MAPPING); }
         }
 
         public string Timestamp
