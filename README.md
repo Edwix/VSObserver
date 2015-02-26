@@ -12,6 +12,12 @@ VSObserver is a software allow to check the VS variables on train network.
 * U-test libraries
 * SQLite dotnet libraries
 
+### Brainstorming
+
+Please put any idea, even though it is crazy.
+
+* idea
+
 ### Todo's
 
  - Mapping of variables : Removes the duplicates
