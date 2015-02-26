@@ -31,6 +31,7 @@ namespace VSObserver
         private const int INTERVAL = 250;
 
         private int refreshRate;
+        private string ipAddresseRTCServer;
 
         private string oldClipBoardText;
         private DispatcherTimer clipBoardTimer;
@@ -79,7 +80,7 @@ namespace VSObserver
             tbl_message.DataContext = dataApp;
             dataApp.LoadDone = true;
 
-            vo = new VariableObserver(dataApp);
+            vo = new VariableObserver(dataApp, ipAddresseRTCServer);
             totalNumberOfVariables = vo.loadVariableList();
             changeVariableIndication();
 
@@ -131,6 +132,8 @@ namespace VSObserver
             {
                 this.Resources.Add("durationColor", new Duration(new TimeSpan(0, 0, 2)));
             }
+
+            ipAddresseRTCServer = ConfigurationManager.AppSettings["IpAddrRTC"];
 
         }
 

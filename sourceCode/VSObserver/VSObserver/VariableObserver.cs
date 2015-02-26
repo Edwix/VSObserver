@@ -16,6 +16,7 @@ namespace VSObserver
         private DataTable variableTable;
         private ObservableCollection<DataObserver> _variableList;
         private string _searchText;
+        private string ipAddr;
 
         VariableController vc;
 
@@ -34,12 +35,12 @@ namespace VSObserver
         private Regex reg_var;
         private DataApplication dataApp;
 
-        public VariableObserver(DataApplication dataApp)
+        public VariableObserver(DataApplication dataApp, string ipAddr)
         {
+            this.ipAddr = ipAddr;
             reg_var = new Regex(REGEX_SEARCH);
             _variableList = new ObservableCollection<DataObserver>();
             vc = Vs.getVariableController();
-
             this.dataApp = dataApp;
         }
 
@@ -93,7 +94,7 @@ namespace VSObserver
 
             try
             {
-                control.connect("10.23.154.180", 9090);
+                control.connect(this.ipAddr, 9090);
                 connectionOK = true;
                 dataApp.InformationMessage = null;
             }
