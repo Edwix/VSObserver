@@ -178,16 +178,9 @@ namespace VSObserver
                     this.Show();
                 }
 
-                ///Raffraîchissement des variables toutes les secondes (si on a une variable)
-                ///On affiche les variable aussi si la variable copier à une longeur supérieur à 3
-                if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3)
-                {
-                    
-                    //VariableList.ItemsSource = vo.readValue(tb_variableName.Text, out variableNumber).DefaultView;
-                    //int nb;
-                    //variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out nb);
-                    vo.refreshValues(tb_variableName.Text);
-                }
+                ///Raffraîchissement des valeurs des variables à chaque interval du timer
+                vo.refreshValues();
+
             }
             catch (Exception ex)
             {

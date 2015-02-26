@@ -120,10 +120,18 @@ namespace VSObserver
             return variableTable.Rows.Count;
         }
 
+        /// <summary>
+        /// Méthode qui cherche les correspondance avec la variable entrée dans la textbox
+        /// elle retourne un tableau avec toutes les variable trouvés
+        /// </summary>
+        /// <param name="rawVariableName"></param>
+        /// <param name="variableNumber"></param>
+        /// <returns></returns>
         public ObservableCollection<DataObserver> searchVariables(string rawVariableName, out int variableNumber)
         {
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
+            ObservableCollection<DataObserver> lockVars = getLockedVariables();
             ObservableCollection<DataObserver> variableResult = getLockedVariables();
             variableNumber = 0;
 
@@ -152,15 +160,17 @@ namespace VSObserver
                 {
                     int compt = 0;
                     
-
                     foreach (DataRow row in searchResult)
                     {
                         string completeVariable = (string)row[PATH];
 
+                        //La lecture de variable retourne un DataObserver avec toutes les informations
                         DataObserver dobs = readValue(completeVariable);
 
-                        //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer, donc on l'ajoute
-                        if (dobs != null)
+                        //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer
+                        //Et si le tableau des variables blocké ne contient pas l'élément on l'ajoute
+                        //Cela permet d'éviter des doublons
+                        if (dobs != null && !containsDatatObserver(lockVars, dobs))
                         {
                             variableResult.Add(dobs);
                             compt++;
@@ -178,6 +188,12 @@ namespace VSObserver
             return variableResult;
         }
 
+        /// <summary>
+        /// Lecture d'une variable VS. Cette méthode retourne un DataObserver avec tous les 
+        /// paramètres de la variable VS (nom et chemin, nom, valeur timestamp...)
+        /// </summary>
+        /// <param name="completeVariable"></param>
+        /// <returns></returns>
         private DataObserver readValue(string completeVariable)
         {
             DataObserver dataObserver = null;
@@ -292,6 +308,38 @@ namespace VSObserver
             return dataObserver;
         }
 
+        /// <summary>
+        /// Fonction qui permet de voir si une liste de DataObserver contient un élément DataObserver
+        /// </summary>
+        /// <param name="listOfDobs"></param>
+        /// <param name="dObs"></param>
+        /// <returns></returns>
+        private bool containsDatatObserver(ObservableCollection<DataObserver> listOfDobs, DataObserver dObs)
+        {
+            bool containObserver = false;
+
+            foreach (DataObserver observer in listOfDobs)
+            {
+                ///Si on les deux DataObserver on le même nom, ça veut dire que le tableau le contient
+                if (observer.PathName == dObs.PathName)
+                {
+                    containObserver = true;
+                    //On s'arrête car pas besoin d'utiliser de l'espace mémoire en plus
+                    //Puisque on à trouvé notre correspondance
+                    break;
+                }
+            }
+
+            return containObserver;
+        }
+
+        /// <summary>
+        /// Méthode qui permet de créer un DataObser à partir des données de VS
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="value"></param>
+        /// <param name="timeStamp"></param>
+        /// <returns></returns>
         private DataObserver createDataObserver(string path, string value, long timeStamp)
         {
             DataObserver dObs = new DataObserver {
@@ -305,6 +353,10 @@ namespace VSObserver
             return dObs;
         }
 
+        /// <summary>
+        /// Méthode qui récupère la liste des variables bloqués
+        /// </summary>
+        /// <returns></returns>
         private ObservableCollection<DataObserver> getLockedVariables()
         {
             ObservableCollection<DataObserver> lockedVars = new ObservableCollection<DataObserver>();
@@ -321,10 +373,9 @@ namespace VSObserver
         }
 
         /// <summary>
-        /// Rafraichit les valeurs en fonction de l'ancien Datatable
+        /// Rafraichit les valeurs. On ne fait que lire les valeurs existante dans la liste de variable
         /// </summary>
-        /// <param name="dataTable"></param>
-        public void refreshValues(string variableName)
+        public void refreshValues()
         {
             ObservableCollection<DataObserver> oldVariableTable = VariableList;
 
