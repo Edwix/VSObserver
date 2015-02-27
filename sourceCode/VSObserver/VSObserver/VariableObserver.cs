@@ -40,7 +40,6 @@ namespace VSObserver
         private bool connectionOK;
         private Regex reg_var;
         private DataApplication dataApp;
-        SQLiteConnection sqliteConn;
 
         public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase)
         {
@@ -95,11 +94,12 @@ namespace VSObserver
         /// <returns></returns>
         public int loadVariableList()
         {
+            //On crée un dictionnaire qui va contenire le chemin + nom (clé unique) et le mapping associé
             Dictionary<string, string> dic = new Dictionary<string, string>();
+
+            //Création de la connexion SQLite
             string dataSource = @"Data Source=" + pathDataBase;
-            sqliteConn = new SQLiteConnection(dataSource);
-            
-            SQLiteDataAdapter sqliteAdapter;
+            SQLiteConnection sqliteConn = new SQLiteConnection(dataSource);
 
             vc = Vs.getVariableController();
             IControl control = IControl.create();
@@ -117,6 +117,9 @@ namespace VSObserver
 
                 
                 StringBuilder sb = new StringBuilder();
+
+                ///Lecture des données contenu dans la base de données SQLite
+                ///On met la clé et la valeur dans le dictionnaire
                 SQLiteDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
@@ -124,19 +127,6 @@ namespace VSObserver
                     if (!dic.ContainsKey(reader[PATH].ToString()))
                         dic.Add(reader[PATH].ToString(), reader[MAPPING].ToString());
                 }
-
-                /*cmd.CommandText = QUERY_MAPPING;
-
-                sqliteAdapter = new SQLiteDataAdapter(cmd);
-                //sqlTable.BeginLoadData(); // Turns off notifications, index maintenance, and constraints while loading data
-                sqliteAdapter.Fill(sqlTable);
-                Console.WriteLine("NAM " + sqlTable.PrimaryKey[0].ColumnName);
-                
-                
-
-                sqlTable.PrimaryKey = new DataColumn[] { sqlTable.Columns[PATH] };
-                variableTable.Merge(sqlTable);*/
-                //sqlTable.EndLoadData();
 
                 sqliteConn.Close();
 
@@ -162,12 +152,15 @@ namespace VSObserver
 
             if (connectionOK)
             {
+                ///Récupération de toutes les variables U-test
                 NameList listeUT = control.getVariableList();
 
                 if (listeUT.size() > 0)
                 {                    
                     for (int i = 0; i < listeUT.size(); i++)
                     {
+                        ///Si la clé primaire existe déjà dans le dictionnaire alors on rajoute le mapping
+                        ///Si elle n'existe pas on met un mapping vide
                         if (!dic.ContainsKey(listeUT.get(i)))
                         {
                             variableTable.Rows.Add(listeUT.get(i), "");
@@ -186,27 +179,14 @@ namespace VSObserver
                 sqliteConn.Open();
                 cmd = new SQLiteCommand(QUERY_MAPPING, sqliteConn);
                 
-                StringBuilder sb = new StringBuilder();
                 SQLiteDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
+                    //On vérifie si la clé n'existe pas
                    if(!dic.ContainsKey(reader[PATH].ToString()))
                         dic.Add(reader[PATH].ToString(), reader[MAPPING].ToString());
                 }
-
-                /*cmd.CommandText = QUERY_MAPPING;
-
-                sqliteAdapter = new SQLiteDataAdapter(cmd);
-                //sqlTable.BeginLoadData(); // Turns off notifications, index maintenance, and constraints while loading data
-                sqliteAdapter.Fill(sqlTable);
-                Console.WriteLine("NAM " + sqlTable.PrimaryKey[0].ColumnName);
-                
-                
-
-                sqlTable.PrimaryKey = new DataColumn[] { sqlTable.Columns[PATH] };
-                variableTable.Merge(sqlTable);*/
-                //sqlTable.EndLoadData();
 
                 sqliteConn.Close();
 
@@ -254,7 +234,7 @@ namespace VSObserver
             ///La regex interdit tous les caractères spéciaux
             if(reg_var.IsMatch(variableName))
             {
-                DataRow[] searchResult =  variableTable.Select("Path LIKE '%" + variableName + "%'");
+                DataRow[] searchResult =  variableTable.Select("Path LIKE '%" + variableName + "%' OR Mapping LIKE '%" + variableName + "%'");
                 variableNumber = searchResult.Count();
 
                 ///On vérifie si on a bien une connexion à U-test
