@@ -3,7 +3,7 @@
 VSObserver is a software allow to check the VS variables on train network.
 
 ### Version
-1.2.5
+1.2.7
 
 ### Tech
 
