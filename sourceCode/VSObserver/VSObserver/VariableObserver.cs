@@ -18,6 +18,7 @@ namespace VSObserver
         private DataTable variableTable;
         private ObservableCollection<DataObserver> _variableList;
         private string _searchText;
+        private int _varNbFound;
         private string ipAddr;
         private string pathDataBase;
 
@@ -33,6 +34,7 @@ namespace VSObserver
         private const string VARIABLE = "Variable";
         private const string TYPE = "Type";
         private const string VALUE = "Value";
+        private const string VARNUMBER_FOUND = "VarNumberFound";
         private const string TIMESTAMP = "Timestamp";
         private const string REGEX_SEARCH = @"^[0-9a-zA-Z_/\-:]+$";
         private const string REGEX_REMPLACE = @"[^0-9a-zA-Z_/\-:]";
@@ -51,42 +53,43 @@ namespace VSObserver
             this.dataApp = dataApp;
         }
 
-        public int VarNumberFound
-        {
-            get;
-            set;
-        }
+        #region Properties
 
-        public ObservableCollection<DataObserver> VariableList
-        {
-            get { return _variableList; }
-            set { _variableList = value; OnPropertyChanged(VARIABLE_LIST);}
-        }
+            public int VarNumberFound
+            {
+                get { return _varNbFound; }
+                set { _varNbFound = value; OnPropertyChanged(VARNUMBER_FOUND); }
+            }
 
-        public string SearchText
-        {
-            get { return _searchText; }
-            set 
-            { 
-                _searchText = value; 
-                OnPropertyChanged(SEARCH_TEXT);
+            public ObservableCollection<DataObserver> VariableList
+            {
+                get { return _variableList; }
+                set { _variableList = value; OnPropertyChanged(VARIABLE_LIST);}
+            }
 
-                if (_searchText != "" && _searchText.Length >= 3)
-                {
-                    int nb = 0;
-                    VariableList = searchVariables(value, out nb);
-                    VarNumberFound = nb;
-                    //  vvariableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
-                    //changeVariableIndication();
-                }
-                else
-                {
-                    dataApp.InformationMessage = "The variable should have more than 2 characters";
-                    //variableCollectionViewSource.Source = new List<DataObserver>();
-                    VariableList = getLockedVariables();
+            public string SearchText
+            {
+                get { return _searchText; }
+                set 
+                { 
+                    _searchText = value; 
+                    OnPropertyChanged(SEARCH_TEXT);
+
+                    if (_searchText != "" && _searchText.Length >= 3)
+                    {
+                        int nb = 0;
+                        VariableList = searchVariables(value, out nb);
+                        VarNumberFound = nb;
+                    }
+                    else
+                    {
+                        dataApp.InformationMessage = "The variable should have more than 2 characters";
+                        VariableList = getLockedVariables();
+                    }
                 }
             }
-        }
+
+        #endregion
 
         /// <summary>
         /// Charge toutes les variables de la configuration et returne le nombre total

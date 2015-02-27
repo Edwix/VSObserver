@@ -72,17 +72,18 @@ namespace VSObserver
             clipBoardTimer.Start();
             Clipboard.Clear();
 
-            tbl_varNumber.Text = "";
 
             dataApp = new DataApplication();
-            //this.DataContext = dataApp;
-            //btn_refresh.DataContext = dataApp;
             img_refresh.DataContext = dataApp;
             tbl_message.DataContext = dataApp;
+            
             dataApp.LoadDone = true;
 
             vo = new VariableObserver(dataApp, ipAddresseRTCServer, sqlLiteDataBase);
             totalNumberOfVariables = vo.loadVariableList();
+
+            //Datacontext pour lier le nombre de variable trouvés
+            tbl_varNumber.DataContext = vo;
             changeVariableIndication();
 
             tb_variableName.DataContext = vo;
@@ -204,20 +205,6 @@ namespace VSObserver
             this.Hide();
         }
 
-        /*private void tb_variableName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (tb_variableName.Text != "" && tb_variableName.Text.Length >= 3 && !refreshWorker.IsBusy)
-            {
-                variableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
-                changeVariableIndication();
-            }
-            else
-            {
-                dataApp.InformationMessage = "The variable should have more than 2 characters";
-                variableCollectionViewSource.Source = new List<DataObserver>();
-            }
-        }*/
-
         private void refresh_ClickDown(object sender, MouseButtonEventArgs e)
         {
             //On dit que le chargement des variable n'est pas fini
@@ -272,7 +259,7 @@ namespace VSObserver
         /// </summary>
         private void changeVariableIndication()
         {
-            tbl_varNumber.Text = "Variables number : " + vo.VarNumberFound + " / " + totalNumberOfVariables.ToString();
+            run_varTotal.Text = totalNumberOfVariables.ToString();
         }
     }
 }
