@@ -9,6 +9,7 @@ using System.Windows;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
+using System.Data.Common;
 
 namespace VSObserver
 {
@@ -94,6 +95,7 @@ namespace VSObserver
         /// <returns></returns>
         public int loadVariableList()
         {
+            Dictionary<string, string> dic = new Dictionary<string, string>();
             string dataSource = @"Data Source=" + pathDataBase;
             sqliteConn = new SQLiteConnection(dataSource);
             
@@ -105,16 +107,49 @@ namespace VSObserver
             variableTable.Columns.Add(PATH, typeof(string));
             variableTable.Columns.Add(MAPPING, typeof(string));
 
+            variableTable.PrimaryKey = new DataColumn[] { variableTable.Columns[PATH] };
+
+            try
+            {
+                SQLiteCommand cmd;
+                sqliteConn.Open();
+                cmd = new SQLiteCommand(QUERY_MAPPING, sqliteConn);
+
+                
+                StringBuilder sb = new StringBuilder();
+                SQLiteDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    if (!dic.ContainsKey(reader[PATH].ToString()))
+                        dic.Add(reader[PATH].ToString(), reader[MAPPING].ToString());
+                }
+
+                /*cmd.CommandText = QUERY_MAPPING;
+
+                sqliteAdapter = new SQLiteDataAdapter(cmd);
+                //sqlTable.BeginLoadData(); // Turns off notifications, index maintenance, and constraints while loading data
+                sqliteAdapter.Fill(sqlTable);
+                Console.WriteLine("NAM " + sqlTable.PrimaryKey[0].ColumnName);
+                
+                
+
+                sqlTable.PrimaryKey = new DataColumn[] { sqlTable.Columns[PATH] };
+                variableTable.Merge(sqlTable);*/
+                //sqlTable.EndLoadData();
+
+                sqliteConn.Close();
+
+                dataApp.InformationMessage = null;
+            }
+            catch (Exception)
+            {
+                dataApp.InformationMessage = "Error on SQLite data base !";
+            }
+
             try
             {
                 control.connect(this.ipAddr, 9090);
-                SQLiteCommand cmd;
-                sqliteConn.Open();
-                cmd = sqliteConn.CreateCommand();
-                cmd.CommandText = QUERY_MAPPING;
-                sqliteAdapter = new SQLiteDataAdapter(cmd);
-                sqliteAdapter.Fill(variableTable);
-
                 connectionOK = true;
                 dataApp.InformationMessage = null;
             }
@@ -125,27 +160,64 @@ namespace VSObserver
                 dataApp.InformationMessage = "Connection to RTC server isn't possible !";
             }
 
-            /*foreach (DataRow row in variableTable.Rows)
-            {
-                // ... Write value of first field as integer.
-                Console.WriteLine(row.Field<string>(0) + " => " + row.Field<string>(1));
-            }*/
-
             if (connectionOK)
             {
                 NameList listeUT = control.getVariableList();
 
                 if (listeUT.size() > 0)
-                {
+                {                    
                     for (int i = 0; i < listeUT.size(); i++)
                     {
-                        //if(variableTable.Rows.Contains(new string[]{listeUT.get(i), ""}))
+                        if (!dic.ContainsKey(listeUT.get(i)))
+                        {
                             variableTable.Rows.Add(listeUT.get(i), "");
+                        }
+                        else
+                        {
+                            variableTable.Rows.Add(listeUT.get(i), dic[listeUT.get(i)].ToString());
+                        }
                     }
                 }
             }
 
-            sqliteConn.Close();
+            try
+            {
+                SQLiteCommand cmd;
+                sqliteConn.Open();
+                cmd = new SQLiteCommand(QUERY_MAPPING, sqliteConn);
+                
+                StringBuilder sb = new StringBuilder();
+                SQLiteDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                   if(!dic.ContainsKey(reader[PATH].ToString()))
+                        dic.Add(reader[PATH].ToString(), reader[MAPPING].ToString());
+                }
+
+                /*cmd.CommandText = QUERY_MAPPING;
+
+                sqliteAdapter = new SQLiteDataAdapter(cmd);
+                //sqlTable.BeginLoadData(); // Turns off notifications, index maintenance, and constraints while loading data
+                sqliteAdapter.Fill(sqlTable);
+                Console.WriteLine("NAM " + sqlTable.PrimaryKey[0].ColumnName);
+                
+                
+
+                sqlTable.PrimaryKey = new DataColumn[] { sqlTable.Columns[PATH] };
+                variableTable.Merge(sqlTable);*/
+                //sqlTable.EndLoadData();
+
+                sqliteConn.Close();
+
+                dataApp.InformationMessage = null;
+            }
+            catch (Exception)
+            {
+                dataApp.InformationMessage = "Error on SQLite data base !";
+            }
+
+            
 
             return variableTable.Rows.Count;
         }
