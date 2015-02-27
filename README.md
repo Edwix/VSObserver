@@ -16,7 +16,7 @@ VSObserver is a software allow to check the VS variables on train network.
 
 Please put any idea, even though it is crazy.
 
-* idea
+* Put a color on path when it is a variable mapped
 
 ### Todo's
 
