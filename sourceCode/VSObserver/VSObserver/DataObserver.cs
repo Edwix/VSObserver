@@ -18,6 +18,7 @@ namespace VSObserver
         private const string TIMESTAMP = "Timestamp";
         private const string HAS_CHANGED = "ValueHasChanged";
         private const string IS_LOCKED = "IsLocked";
+        private const string IS_FORCED = "IsForced";
         private const string MAPPING = "Mapping";
 
         private string _pathName;
@@ -28,10 +29,12 @@ namespace VSObserver
         private string _map;
         private bool _hasChanged;
         private bool _loocked;
+        private bool _isForced;
 
         public DataObserver()
         {
             _loocked = false;
+            _isForced = false;
         }
 
         public string PathName
@@ -67,7 +70,7 @@ namespace VSObserver
         public string Timestamp
         {
             get { return _ts; }
-            set { _ts = value; OnPropertyChanged(Timestamp); }
+            set { _ts = value; OnPropertyChanged(TIMESTAMP); }
         }
 
         public bool ValueHasChanged
@@ -80,6 +83,12 @@ namespace VSObserver
         {
             get { return _loocked; }
             set { _loocked = value; OnPropertyChanged(IS_LOCKED); }
+        }
+
+        public bool IsForced
+        {
+            get { return _isForced; }
+            set { _isForced = value; OnPropertyChanged(IS_FORCED); }
         }
     }
 }

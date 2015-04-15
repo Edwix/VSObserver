@@ -27,6 +27,7 @@ namespace VSObserver
 
         private const string VARIABLE_LIST = "VariableList";
         private const string SEARCH_TEXT = "SearchText";
+        private const string SELECTED_VARIABLE = "SelectedVariable";
 
         private const string PATH = "Path";
         private const string MAPPING = "Mapping";
@@ -40,6 +41,7 @@ namespace VSObserver
         private bool connectionOK;
         private Regex reg_var;
         private DataApplication dataApp;
+        private DataObserver _selVar;
 
         public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase)
         {
@@ -61,6 +63,12 @@ namespace VSObserver
         {
             get { return _variableList; }
             set { _variableList = value; OnPropertyChanged(VARIABLE_LIST);}
+        }
+
+        public DataObserver SelectedVariable
+        {
+            get { return _selVar; }
+            set { _selVar = value; OnPropertyChanged(SELECTED_VARIABLE); }
         }
 
         public string SearchText
@@ -285,6 +293,12 @@ namespace VSObserver
             long timeStamp;
             vc.getType(completeVariable, out typeVS);
 
+            //Récupération du status d'une variable
+            InjectionVariableStatus status = new InjectionVariableStatus();
+            vc.getInjectionStatus(completeVariable, status);
+
+            Console.WriteLine("STATUS : " + status.state.ToString());
+
             if (importOk != 0)
             {
                 switch (typeVS)
@@ -486,6 +500,13 @@ namespace VSObserver
                     }
                 }
             }
+        }
+
+        public void forceValue(DataObserver variable)
+        {
+            /*MapStrStr mapStr = new MapStrStr();
+            mapStr.*/
+            vc.configureInjection(variable.PathName, "Force", null);
         }
 
         private string tableToString(IntegerVector vector)

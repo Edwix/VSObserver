@@ -137,7 +137,6 @@ namespace VSObserver
 
             ipAddresseRTCServer = ConfigurationManager.AppSettings["IpAddrRTC"];
             sqlLiteDataBase = ConfigurationManager.AppSettings["PathDataBase"];
-
         }
 
         /// <summary>
