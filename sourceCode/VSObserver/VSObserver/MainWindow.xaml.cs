@@ -175,6 +175,7 @@ namespace VSObserver
             try
             {
                 string clipBoardText = getTextFromClipBoard();
+                Console.WriteLine("Clip");
 
                 if (clipBoardText != "")
                 {

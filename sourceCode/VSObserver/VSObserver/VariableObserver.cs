@@ -10,6 +10,8 @@ using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.Data.Common;
+using System.Timers;
+using System.ComponentModel;
 
 namespace VSObserver
 {
@@ -20,6 +22,7 @@ namespace VSObserver
         private string _searchText;
         private string ipAddr;
         private string pathDataBase;
+        private int _varNb;
 
         VariableController vc;
 
@@ -28,6 +31,7 @@ namespace VSObserver
         private const string VARIABLE_LIST = "VariableList";
         private const string SEARCH_TEXT = "SearchText";
         private const string SELECTED_VARIABLE = "SelectedVariable";
+        private const string VAR_NUMBER_FOUND = "VarNumberFound";
 
         private const string PATH = "Path";
         private const string MAPPING = "Mapping";
@@ -38,10 +42,13 @@ namespace VSObserver
         private const string REGEX_SEARCH = @"^[0-9a-zA-Z_/\-:]+$";
         private const string REGEX_REMPLACE = @"[^0-9a-zA-Z_/\-:]";
         private const int SHOW_NUMBER = 40;
+        private const int INTERVAL_SEARCH = 500;
         private bool connectionOK;
         private Regex reg_var;
         private DataApplication dataApp;
         private DataObserver _selVar;
+
+        private Timer timerWaitSearch;
 
         public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase)
         {
@@ -51,12 +58,14 @@ namespace VSObserver
             _variableList = new ObservableCollection<DataObserver>();
             vc = Vs.getVariableController();
             this.dataApp = dataApp;
+            timerWaitSearch = new Timer(INTERVAL_SEARCH);
+            timerWaitSearch.Elapsed += new ElapsedEventHandler(timerWaitSearch_Elapsed);
         }
 
         public int VarNumberFound
         {
-            get;
-            set;
+            get { return _varNb; }
+            set { _varNb = value; OnPropertyChanged(VAR_NUMBER_FOUND); }    
         }
 
         public ObservableCollection<DataObserver> VariableList
@@ -81,9 +90,12 @@ namespace VSObserver
 
                 if (_searchText != "" && _searchText.Length >= 3)
                 {
-                    int nb = 0;
-                    VariableList = searchVariables(value, out nb);
-                    VarNumberFound = nb;
+                    timerWaitSearch.Stop();
+                    timerWaitSearch.Start();
+
+                    //int nb = 0;
+                    //VariableList = searchVariables(value, out nb);
+                    //VarNumberFound = nb;
                     //  vvariableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
                     //changeVariableIndication();
                 }
@@ -217,6 +229,7 @@ namespace VSObserver
         /// <returns></returns>
         public ObservableCollection<DataObserver> searchVariables(string rawVariableName, out int variableNumber)
         {
+            Console.WriteLine("SEARCH !!!");
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
             ObservableCollection<DataObserver> lockVars = getLockedVariables();
@@ -295,7 +308,7 @@ namespace VSObserver
             InjectionVariableStatus status = new InjectionVariableStatus();
             vc.getInjectionStatus(completeVariable, status);
 
-            Console.WriteLine(completeVariable +  " ==> STATUS : " + status.state.ToString());
+            //Console.WriteLine(completeVariable +  " ==> STATUS : " + status.state.ToString());
 
             if (importOk != 0)
             {
@@ -547,6 +560,13 @@ namespace VSObserver
             /*POUR l'écriture
              * IntegerWriter iw = vc.createIntegerWriter(SelectedVariable.PathName);
             iw.set(Convert.ToInt32(SelectedVariable.Value));*/
+        }
+
+        public void timerWaitSearch_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            int varNb = 0;
+            VariableList = searchVariables(SearchText, out varNb);
+            VarNumberFound = varNb;
         }
     }
 }

@@ -57,7 +57,7 @@
                 </Style>
             </Image.Style>
         </Image>
-        <TextBox Name="tb_variableName" Margin="5,5,5,5" Height="25" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Name="tb_variableName" Margin="5,5,5,5" Height="25" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" >
             <Run Text="Variables number : " />
             <Run Text="{Binding VarNumberFound, UpdateSourceTrigger=PropertyChanged}" />
