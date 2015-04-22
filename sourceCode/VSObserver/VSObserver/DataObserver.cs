@@ -19,6 +19,7 @@ namespace VSObserver
         private const string HAS_CHANGED = "ValueHasChanged";
         private const string IS_LOCKED = "IsLocked";
         private const string IS_FORCED = "IsForced";
+        private const string IS_CHANGING = "IsChanging";
         private const string MAPPING = "Mapping";
 
         private string _pathName;
@@ -30,6 +31,7 @@ namespace VSObserver
         private bool _hasChanged;
         private bool _loocked;
         private bool _isForced;
+        private bool _isChanging;
 
         public DataObserver()
         {
@@ -78,6 +80,13 @@ namespace VSObserver
             get { return _hasChanged; }
             set { _hasChanged = value; OnPropertyChanged(HAS_CHANGED); }
         }
+
+        public bool IsChanging
+        {
+            get { return _isChanging; }
+            set { _isChanging = value; OnPropertyChanged(IS_CHANGING); }
+        }
+        
 
         public bool IsLocked
         {

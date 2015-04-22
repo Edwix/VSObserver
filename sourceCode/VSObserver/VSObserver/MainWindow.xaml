@@ -118,7 +118,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Path=Path}" Header="Path and Name"/>
                 <DataGridTextColumn Binding="{Binding Path=Variable}" Header="Variable name"/>
-                <DataGridTextColumn Binding="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Header="Value" >
+                <!--<DataGridTextColumn Binding="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Header="Value" >
                     <DataGridTextColumn.CellStyle>
                         <Style TargetType="{x:Type DataGridCell}" >
                             <Style.Triggers>
@@ -145,7 +145,44 @@
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                </DataGridTextColumn>-->
+
+                <DataGridTemplateColumn Header="Value" Selector.IsSelected="{Binding Path=IsChanging, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" GotMouseCapture="TextBox_GotMouseCapture" KeyDown="TextBox_KeyDown">
+                                <TextBox.InputBindings>
+                                    
+                                </TextBox.InputBindings>
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" >
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=ValueHasChanged}" Value="True">
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard x:Name="tt" >
+                                            <Storyboard Storyboard.TargetProperty="(DataGridCell.Background).(SolidColorBrush.Color)">
+                                                <ColorAnimation                                                                  
+                                                     FillBehavior="Stop"                                                                  
+                                                     From="{StaticResource colorAnim_valueChanged}"                                                                  
+                                                     To="Transparent"                                                                  
+                                                     By="Blue"                                                                  
+                                                     Duration="{StaticResource durationColor}" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTemplateColumn.CellStyle>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}" Header="Mapping"/>
                 <DataGridTextColumn Binding="{Binding Path=Timestamp, UpdateSourceTrigger=PropertyChanged}" Header="Timestamp"/>
                 <DataGridTextColumn Binding="{Binding Path=ValueHasChanged, UpdateSourceTrigger=PropertyChanged}" Header="Change" Visibility="Collapsed"/>

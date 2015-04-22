@@ -205,8 +205,6 @@ namespace VSObserver
                 dataApp.InformationMessage = "Error on SQLite data base !";
             }
 
-            
-
             return variableTable.Rows.Count;
         }
 
@@ -297,7 +295,7 @@ namespace VSObserver
             InjectionVariableStatus status = new InjectionVariableStatus();
             vc.getInjectionStatus(completeVariable, status);
 
-            Console.WriteLine("STATUS : " + status.state.ToString());
+            Console.WriteLine(completeVariable +  " ==> STATUS : " + status.state.ToString());
 
             if (importOk != 0)
             {
@@ -484,7 +482,7 @@ namespace VSObserver
 
                 if (dObs != null)
                 {
-                    if (rowObserver.Value != dObs.Value)
+                    if (rowObserver.Value != dObs.Value && !rowObserver.IsChanging)
                     {
                         rowObserver.Value = dObs.Value;
                         rowObserver.ValueHasChanged = true;
@@ -532,6 +530,23 @@ namespace VSObserver
 
             sb.Append("]");
             return sb.ToString();
+        }
+
+        public void stopRefreshOnSelectedElement(bool stop)
+        {
+            SelectedVariable.IsChanging = stop;
+        }
+
+        public void forceSelectedVariable()
+        {
+            MapStrStr mSI = new MapStrStr();
+            mSI["value"] = SelectedVariable.Value;
+            vc.configureInjection(SelectedVariable.PathName, "FixedValue", mSI);
+            vc.waitForInjection(SelectedVariable.PathName, 1);
+            
+            /*POUR l'écriture
+             * IntegerWriter iw = vc.createIntegerWriter(SelectedVariable.PathName);
+            iw.set(Convert.ToInt32(SelectedVariable.Value));*/
         }
     }
 }

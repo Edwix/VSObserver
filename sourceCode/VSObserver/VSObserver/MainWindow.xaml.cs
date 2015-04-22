@@ -185,6 +185,7 @@ namespace VSObserver
 
                 ///Raffraîchissement des valeurs des variables à chaque interval du timer
                 vo.refreshValues();
+                
 
             }
             catch (Exception ex)
@@ -259,6 +260,20 @@ namespace VSObserver
         private void changeVariableIndication()
         {
             run_varTotal.Text = totalNumberOfVariables.ToString();
+        }
+
+        private void TextBox_GotMouseCapture(object sender, MouseEventArgs e)
+        {
+            vo.stopRefreshOnSelectedElement(true);
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                vo.stopRefreshOnSelectedElement(false);
+                vo.forceSelectedVariable();
+            }
         }
     }
 }
