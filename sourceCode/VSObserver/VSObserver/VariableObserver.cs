@@ -90,12 +90,12 @@ namespace VSObserver
 
                 if (_searchText != "" && _searchText.Length >= 3)
                 {
-                    timerWaitSearch.Stop();
-                    timerWaitSearch.Start();
+                    //timerWaitSearch.Stop();
+                    //timerWaitSearch.Start();
 
-                    //int nb = 0;
-                    //VariableList = searchVariables(value, out nb);
-                    //VarNumberFound = nb;
+                    int nb = 0;
+                    VariableList = searchVariables(value, out nb);
+                    VarNumberFound = nb;
                     //  vvariableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
                     //changeVariableIndication();
                 }
@@ -229,7 +229,6 @@ namespace VSObserver
         /// <returns></returns>
         public ObservableCollection<DataObserver> searchVariables(string rawVariableName, out int variableNumber)
         {
-            Console.WriteLine("SEARCH !!!");
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
             ObservableCollection<DataObserver> lockVars = getLockedVariables();
@@ -300,7 +299,7 @@ namespace VSObserver
         {
             DataObserver dataObserver = null;
             int importOk = vc.importVariable(completeVariable);
-            int typeVS;
+            int typeVS = -1;
             long timeStamp;
             vc.getType(completeVariable, out typeVS);
 
@@ -308,7 +307,7 @@ namespace VSObserver
             InjectionVariableStatus status = new InjectionVariableStatus();
             vc.getInjectionStatus(completeVariable, status);
 
-            //Console.WriteLine(completeVariable +  " ==> STATUS : " + status.state.ToString());
+            Console.WriteLine(completeVariable +  " TYPE " + typeVS + " ==> STATUS : " + status.state.ToString());
 
             if (importOk != 0)
             {
