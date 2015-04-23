@@ -10,7 +10,6 @@ using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.Data.Common;
-using System.Timers;
 using System.ComponentModel;
 
 namespace VSObserver
@@ -42,13 +41,11 @@ namespace VSObserver
         private const string REGEX_SEARCH = @"^[0-9a-zA-Z_/\-:]+$";
         private const string REGEX_REMPLACE = @"[^0-9a-zA-Z_/\-:]";
         private const int SHOW_NUMBER = 40;
-        private const int INTERVAL_SEARCH = 500;
+
         private bool connectionOK;
         private Regex reg_var;
         private DataApplication dataApp;
         private DataObserver _selVar;
-
-        private Timer timerWaitSearch;
 
         public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase)
         {
@@ -58,8 +55,6 @@ namespace VSObserver
             _variableList = new ObservableCollection<DataObserver>();
             vc = Vs.getVariableController();
             this.dataApp = dataApp;
-            timerWaitSearch = new Timer(INTERVAL_SEARCH);
-            timerWaitSearch.Elapsed += new ElapsedEventHandler(timerWaitSearch_Elapsed);
         }
 
         public int VarNumberFound
@@ -90,12 +85,13 @@ namespace VSObserver
 
                 if (_searchText != "" && _searchText.Length >= 3)
                 {
-                    //timerWaitSearch.Stop();
+                    //timerWaitSearch.Interval = new TimeSpan(0, 0, 0, INTERVAL_SEARCH);
                     //timerWaitSearch.Start();
 
-                    int nb = 0;
+                    //searchVariables();
+                    /*int nb = 0;
                     VariableList = searchVariables(value, out nb);
-                    VarNumberFound = nb;
+                    VarNumberFound = nb;*/
                     //  vvariableCollectionViewSource.Source = vo.readValue(tb_variableName.Text, out variableNumber);
                     //changeVariableIndication();
                 }
@@ -227,7 +223,7 @@ namespace VSObserver
         /// <param name="rawVariableName"></param>
         /// <param name="variableNumber"></param>
         /// <returns></returns>
-        public ObservableCollection<DataObserver> searchVariables(string rawVariableName, out int variableNumber)
+        /*public ObservableCollection<DataObserver> searchVariables(string rawVariableName, out int variableNumber)
         {
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
@@ -235,59 +231,136 @@ namespace VSObserver
             ObservableCollection<DataObserver> variableResult = getLockedVariables();
             variableNumber = 0;
 
-            //On remplace le nom de variable en entrée par une variable enlevé de tout caractère spéciaux
-            //Par exemple si on a Live%bit la fonction retourne Livebit
-            string variableName = Regex.Replace(rawVariableName, REGEX_REMPLACE, "");
-
-            if (!reg_var.IsMatch(rawVariableName))
+            if (rawVariableName != null)
             {
-                dataApp.InformationMessage = "The variable name has been remplaced by " + variableName + ".";
-            }
-            else
-            {
-                dataApp.InformationMessage = null;
-            }
+                //On remplace le nom de variable en entrée par une variable enlevé de tout caractère spéciaux
+                //Par exemple si on a Live%bit la fonction retourne Livebit
+                string variableName = Regex.Replace(rawVariableName, REGEX_REMPLACE, "");
 
-            ///Si la regex ne match pas alors on cherche les variable
-            ///La regex interdit tous les caractères spéciaux
-            if(reg_var.IsMatch(variableName))
-            {
-                DataRow[] searchResult =  variableTable.Select("Path LIKE '%" + variableName + "%' OR Mapping LIKE '%" + variableName + "%'");
-                variableNumber = searchResult.Count();
-
-                ///On vérifie si on a bien une connexion à U-test
-                if (connectionOK)
+                if (!reg_var.IsMatch(rawVariableName))
                 {
-                    int compt = 0;
-                    
-                    foreach (DataRow row in searchResult)
+                    dataApp.InformationMessage = "The variable name has been remplaced by " + variableName + ".";
+                }
+                else
+                {
+                    dataApp.InformationMessage = null;
+                }
+
+                ///Si la regex ne match pas alors on cherche les variable
+                ///La regex interdit tous les caractères spéciaux
+                if (reg_var.IsMatch(variableName))
+                {
+                    DataRow[] searchResult = variableTable.Select("Path LIKE '%" + variableName + "%' OR Mapping LIKE '%" + variableName + "%'");
+                    variableNumber = searchResult.Count();
+
+                    ///On vérifie si on a bien une connexion à U-test
+                    if (connectionOK)
                     {
-                        string completeVariable = (string)row[PATH];
-                        string mapping = (string)row[MAPPING];
+                        int compt = 0;
 
-                        //La lecture de variable retourne un DataObserver avec toutes les informations
-                        DataObserver dobs = readValue(completeVariable, mapping);
-
-                        //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer
-                        //Et si le tableau des variables blocké ne contient pas l'élément on l'ajoute
-                        //Cela permet d'éviter des doublons
-                        if (dobs != null && !containsDatatObserver(lockVars, dobs))
+                        foreach (DataRow row in searchResult)
                         {
-                            variableResult.Add(dobs);
-                            compt++;
-                        }
+                            string completeVariable = (string)row[PATH];
+                            string mapping = (string)row[MAPPING];
 
-                        //Si on a atteint le nombre d'affichage max on arrête la boucle
-                        if (compt == SHOW_NUMBER)
-                        {
-                            break;
+                            //La lecture de variable retourne un DataObserver avec toutes les informations
+                            DataObserver dobs = readValue(completeVariable, mapping);
+
+                            //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer
+                            //Et si le tableau des variables blocké ne contient pas l'élément on l'ajoute
+                            //Cela permet d'éviter des doublons
+                            if (dobs != null && !containsDatatObserver(lockVars, dobs))
+                            {
+                                variableResult.Add(dobs);
+                                compt++;
+                            }
+
+                            //Si on a atteint le nombre d'affichage max on arrête la boucle
+                            if (compt == SHOW_NUMBER)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
             }
 
             return variableResult;
+        }*/
+
+        public void searchVariables()
+        {
+           
+
+            ///On recherche le nom de la variable à travers la liste des variables
+            ///Cela nous retourne plusieurs en fonction de nom entrée
+            ObservableCollection<DataObserver> lockVars = getLockedVariables();
+            ObservableCollection<DataObserver> variableResult = getLockedVariables();
+            int variableNumber = 0;
+            string rawVariableName = _searchText;
+
+            if (rawVariableName != null)
+            {
+                //On remplace le nom de variable en entrée par une variable enlevé de tout caractère spéciaux
+                //Par exemple si on a Live%bit la fonction retourne Livebit
+                string variableName = Regex.Replace(rawVariableName, REGEX_REMPLACE, "");
+
+                int typeVS = -100;
+                vc.getType(variableName, out typeVS);
+                Console.WriteLine("search : " + variableName + " TYPE " + typeVS );
+
+                if (!reg_var.IsMatch(rawVariableName))
+                {
+                    dataApp.InformationMessage = "The variable name has been remplaced by " + variableName + ".";
+                }
+                else
+                {
+                    dataApp.InformationMessage = null;
+                }
+
+                ///Si la regex ne match pas alors on cherche les variable
+                ///La regex interdit tous les caractères spéciaux
+                if (reg_var.IsMatch(variableName))
+                {
+                    DataRow[] searchResult = variableTable.Select("Path LIKE '%" + variableName + "%' OR Mapping LIKE '%" + variableName + "%'");
+                    variableNumber = searchResult.Count();
+
+                    ///On vérifie si on a bien une connexion à U-test
+                    if (connectionOK)
+                    {
+                        int compt = 0;
+
+                        foreach (DataRow row in searchResult)
+                        {
+                            string completeVariable = (string)row[PATH];
+                            string mapping = (string)row[MAPPING];
+
+                            //La lecture de variable retourne un DataObserver avec toutes les informations
+                            DataObserver dobs = readValue(completeVariable, mapping);
+
+                            //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer
+                            //Et si le tableau des variables blocké ne contient pas l'élément on l'ajoute
+                            //Cela permet d'éviter des doublons
+                            if (dobs != null && !containsDatatObserver(lockVars, dobs))
+                            {
+                                variableResult.Add(dobs);
+                                compt++;
+                            }
+
+                            //Si on a atteint le nombre d'affichage max on arrête la boucle
+                            if (compt == SHOW_NUMBER)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            VarNumberFound = variableNumber;
+            VariableList = variableResult;
         }
+
 
         /// <summary>
         /// Lecture d'une variable VS. Cette méthode retourne un DataObserver avec tous les 
@@ -302,12 +375,13 @@ namespace VSObserver
             int typeVS = -1;
             long timeStamp;
             vc.getType(completeVariable, out typeVS);
+            Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
 
             //Récupération du status d'une variable
-            InjectionVariableStatus status = new InjectionVariableStatus();
-            vc.getInjectionStatus(completeVariable, status);
+            //InjectionVariableStatus status = new InjectionVariableStatus();
+            //vc.getInjectionStatus(completeVariable, status);
 
-            Console.WriteLine(completeVariable +  " TYPE " + typeVS + " ==> STATUS : " + status.state.ToString());
+           //Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " ==> STATUS : " + status.state.ToString());
 
             if (importOk != 0)
             {
@@ -559,13 +633,6 @@ namespace VSObserver
             /*POUR l'écriture
              * IntegerWriter iw = vc.createIntegerWriter(SelectedVariable.PathName);
             iw.set(Convert.ToInt32(SelectedVariable.Value));*/
-        }
-
-        public void timerWaitSearch_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            int varNb = 0;
-            VariableList = searchVariables(SearchText, out varNb);
-            VarNumberFound = varNb;
         }
     }
 }

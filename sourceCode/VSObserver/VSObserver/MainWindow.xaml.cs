@@ -19,6 +19,7 @@ using Forms = System.Windows.Forms;
 using Draw = System.Drawing;
 using System.Data;
 using System.Configuration;
+using SysTime = System.Timers;
 
 namespace VSObserver
 {
@@ -29,6 +30,7 @@ namespace VSObserver
     {
 
         private const int INTERVAL = 250;
+        private const int INTERVAL_SEARCH = 500;
 
         private int refreshRate;
         private string ipAddresseRTCServer;
@@ -41,6 +43,8 @@ namespace VSObserver
         private DataApplication dataApp;
         private BackgroundWorker refreshWorker;
         private int totalNumberOfVariables = 0;
+
+        private DispatcherTimer timerWaitSearch;
 
         public MainWindow()
         {
@@ -61,6 +65,10 @@ namespace VSObserver
                 clipBoardTimer.Tick += new EventHandler(clipBoardTimer_Tick);
                 clipBoardTimer.Interval = new TimeSpan(0, 0, 0, 0, refreshRate);
 
+                timerWaitSearch = new DispatcherTimer();
+                timerWaitSearch.Tick += new EventHandler(timerWaitSearch_Elapsed);
+                timerWaitSearch.Interval = new TimeSpan(0, 0, 0, 0, INTERVAL_SEARCH);
+
             //Affichage en premier de l'application
                 this.Topmost = true;
 
@@ -68,10 +76,9 @@ namespace VSObserver
                 var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
                 this.Left = desktopWorkingArea.Right - this.Width;
                 this.Top = desktopWorkingArea.Bottom - this.Height;
-
-            clipBoardTimer.Start();
+            
             Clipboard.Clear();
-
+            clipBoardTimer.Start();
 
             dataApp = new DataApplication();
             img_refresh.DataContext = dataApp;
@@ -203,7 +210,7 @@ namespace VSObserver
         /// <param name="e"></param>
         private void btn_hideDialog_Click(object sender, RoutedEventArgs e)
         {
-            this.Hide();
+            this.Hide();          
         }
 
         private void refresh_ClickDown(object sender, MouseButtonEventArgs e)
@@ -275,6 +282,18 @@ namespace VSObserver
                 vo.stopRefreshOnSelectedElement(false);
                 vo.forceSelectedVariable();
             }
+        }
+
+        public void timerWaitSearch_Elapsed(object sender, EventArgs e)
+        {
+            timerWaitSearch.Stop();
+            vo.searchVariables();
+        }
+
+        private void tb_variableName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            timerWaitSearch.Interval = new TimeSpan(0, 0, 0, 0, INTERVAL_SEARCH);
+            timerWaitSearch.Start();
         }
     }
 }
