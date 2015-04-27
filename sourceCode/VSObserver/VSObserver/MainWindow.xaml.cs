@@ -182,7 +182,6 @@ namespace VSObserver
             try
             {
                 string clipBoardText = getTextFromClipBoard();
-                Console.WriteLine("Clip");
 
                 if (clipBoardText != "")
                 {
@@ -294,6 +293,18 @@ namespace VSObserver
         {
             timerWaitSearch.Interval = new TimeSpan(0, 0, 0, 0, INTERVAL_SEARCH);
             timerWaitSearch.Start();
+        }
+
+        private void tb_force_icon_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock tb = (TextBlock)sender;
+
+
+            if (tb != null)
+            {
+                //Le tag contient le nom de la variable plus chemin
+                vo.cleanupInjectionSelectedVariable(tb.Tag.ToString());
+            }
         }
     }
 }

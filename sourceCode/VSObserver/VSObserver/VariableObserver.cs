@@ -375,13 +375,23 @@ namespace VSObserver
             int typeVS = -1;
             long timeStamp;
             vc.getType(completeVariable, out typeVS);
-            Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
+            //Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
 
             //Récupération du status d'une variable
-            //InjectionVariableStatus status = new InjectionVariableStatus();
-            //vc.getInjectionStatus(completeVariable, status);
+           InjectionVariableStatus status = new InjectionVariableStatus();
+           vc.getInjectionStatus(completeVariable, status);
 
-           //Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " ==> STATUS : " + status.state.ToString());
+           bool variableForced = false;
+           if (status.state == InjectionStates.InjectionStates_IsSet)
+           {
+               variableForced = true;
+           }
+           else
+           {
+               variableForced = false;
+           }
+
+           Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " ==> STATUS : " + status.state.ToString() + " = " + variableForced);
 
             if (importOk != 0)
             {
@@ -403,7 +413,7 @@ namespace VSObserver
                             {
                                 intr.get(out valVarInt, out timeStamp);
 
-                                dataObserver = createDataObserver(completeVariable, valVarInt.ToString(), timeStamp, mapping);
+                                dataObserver = createDataObserver(completeVariable, valVarInt.ToString(), timeStamp, mapping, variableForced);
                             }
                             else
                             {
@@ -432,7 +442,7 @@ namespace VSObserver
                             {
                                 dblr.get(out valVarDbl, out timeStamp);
 
-                                dataObserver = createDataObserver(completeVariable, valVarDbl.ToString("0.00000"), timeStamp, mapping);
+                                dataObserver = createDataObserver(completeVariable, valVarDbl.ToString("0.00000"), timeStamp, mapping, variableForced);
                             }
                             else
                             {
@@ -463,7 +473,7 @@ namespace VSObserver
                             {
                                 vecIntReader.get(valVarVecInt, out timeStamp);
 
-                                dataObserver = createDataObserver(completeVariable, tableToString(valVarVecInt), timeStamp, mapping);
+                                dataObserver = createDataObserver(completeVariable, tableToString(valVarVecInt), timeStamp, mapping, variableForced);
                             }
                             else
                             {
@@ -477,7 +487,7 @@ namespace VSObserver
                         break;
                     ///=================================================================================================
                     default:
-                        dataObserver = createDataObserver(completeVariable, "Undefined", 0L, mapping);
+                        dataObserver = createDataObserver(completeVariable, "Undefined", 0L, mapping, variableForced);
                         break;
                 }
             }
@@ -521,7 +531,7 @@ namespace VSObserver
         /// <param name="value"></param>
         /// <param name="timeStamp"></param>
         /// <returns></returns>
-        private DataObserver createDataObserver(string path, string value, long timeStamp, string mapping)
+        private DataObserver createDataObserver(string path, string value, long timeStamp, string mapping, bool forced)
         {
             DataObserver dObs = new DataObserver {
                 PathName = path,
@@ -529,7 +539,8 @@ namespace VSObserver
                 Variable = System.IO.Path.GetFileName(path),
                 Value = value,
                 Mapping = mapping,
-                Timestamp = DateTime.FromFileTimeUtc(timeStamp).ToString()
+                IsForced = forced,
+                Timestamp =  DateTime.FromFileTimeUtc(timeStamp).ToString()
             };
 
             return dObs;
@@ -565,6 +576,18 @@ namespace VSObserver
             {
                 string oldValue = rowObserver.Value;
                 DataObserver dObs = readValue(rowObserver.PathName, rowObserver.Mapping);
+
+                InjectionVariableStatus status = new InjectionVariableStatus();
+                vc.getInjectionStatus(dObs.PathName, status);
+
+                if (status.state == InjectionStates.InjectionStates_IsSet)
+                {
+                    rowObserver.IsForced = true;
+                }
+                else
+                {
+                    rowObserver.IsForced = false;
+                }
 
                 if (dObs != null)
                 {
@@ -628,11 +651,16 @@ namespace VSObserver
             MapStrStr mSI = new MapStrStr();
             mSI["value"] = SelectedVariable.Value;
             vc.configureInjection(SelectedVariable.PathName, "FixedValue", mSI);
-            vc.waitForInjection(SelectedVariable.PathName, 1);
+            vc.waitForInjection(SelectedVariable.PathName, 10);
             
             /*POUR l'écriture
              * IntegerWriter iw = vc.createIntegerWriter(SelectedVariable.PathName);
             iw.set(Convert.ToInt32(SelectedVariable.Value));*/
+        }
+
+        public void cleanupInjectionSelectedVariable(string pathName)
+        {
+            vc.cleanupInjection(pathName);
         }
     }
 }

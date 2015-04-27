@@ -15,6 +15,7 @@ namespace VSObserver
         private const string VARIABLE = "Variable";
         private const string TYPE = "Type";
         private const string VALUE = "Value";
+        private const string VALUEF = "ValueF";
         private const string TIMESTAMP = "Timestamp";
         private const string HAS_CHANGED = "ValueHasChanged";
         private const string IS_LOCKED = "IsLocked";
@@ -27,6 +28,7 @@ namespace VSObserver
         private string _var;
         private string _ts;
         private string _val;
+        private string _valF;
         private string _map;
         private bool _hasChanged;
         private bool _loocked;
@@ -61,6 +63,12 @@ namespace VSObserver
         {
             get { return _val; }
             set { _val = value; OnPropertyChanged(VALUE); }
+        }
+
+        public string ValueF
+        {
+            get { return _valF; }
+            set { _valF = value; OnPropertyChanged(VALUEF); }
         }
 
         public string Mapping

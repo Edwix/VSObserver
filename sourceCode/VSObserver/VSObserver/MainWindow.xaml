@@ -4,6 +4,9 @@
         xmlns:nspace="clr-namespace:VSObserver" 
         Title="VSObserver" Height="350" Width="525"
         >
+    <Window.Resources>
+        <nspace:BoolToVisibility x:Key="ConvBoolToVisibility" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -82,6 +85,7 @@
             ScrollViewer.VerticalScrollBarVisibility="Visible"
             ItemsSource="{Binding Path=VariableList, UpdateSourceTrigger=PropertyChanged}"
             SelectedItem="{Binding Path=SelectedVariable, UpdateSourceTrigger=PropertyChanged}"
+            
             AutoGenerateColumns="False"
             CanUserAddRows="False">
             <DataGrid.Columns>
@@ -147,7 +151,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>-->
 
-                <DataGridTemplateColumn Header="Value" Selector.IsSelected="{Binding Path=IsChanging, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTemplateColumn Header="Value" Selector.IsSelected="{Binding Path=IsChanging, UpdateSourceTrigger=PropertyChanged}" >
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" GotMouseCapture="TextBox_GotMouseCapture" KeyDown="TextBox_KeyDown">
@@ -159,7 +163,11 @@
                     </DataGridTemplateColumn.CellEditingTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"/>
+                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Name="tb_force_icon" Text="F" VerticalAlignment="Center" Margin="5,0,5,0" Foreground="Red" FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
+                                           Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" MouseDown="tb_force_icon_MouseDown"/>
+                                <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"/>
+                            </WrapPanel>                            
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellStyle>
