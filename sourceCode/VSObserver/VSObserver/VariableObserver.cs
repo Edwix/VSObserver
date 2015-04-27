@@ -641,21 +641,52 @@ namespace VSObserver
             return sb.ToString();
         }
 
+        /// <summary>
+        /// On fait soit un forçage ou soit une écriture si le texte commence avec =
+        /// </summary>
+        public void makeActionOnValue()
+        {
+            if (SelectedVariable != null)
+            {
+                if (SelectedVariable.Value.StartsWith("="))
+                {
+                    writeSelectedVariable();
+                }
+                else
+                {
+                    forceSelectedVariable();
+                }
+            }
+        }
+
         public void stopRefreshOnSelectedElement(bool stop)
         {
             SelectedVariable.IsChanging = stop;
         }
 
-        public void forceSelectedVariable()
+        private void forceSelectedVariable()
         {
             MapStrStr mSI = new MapStrStr();
             mSI["value"] = SelectedVariable.Value;
             vc.configureInjection(SelectedVariable.PathName, "FixedValue", mSI);
             vc.waitForInjection(SelectedVariable.PathName, 10);
-            
-            /*POUR l'écriture
-             * IntegerWriter iw = vc.createIntegerWriter(SelectedVariable.PathName);
-            iw.set(Convert.ToInt32(SelectedVariable.Value));*/
+        }
+
+        private void writeSelectedVariable()
+        {
+            //Pour l'instant on ne peut qu'écrire un entier
+            try
+            {
+                //On remplace le = par un espace qu'on suprime par la suite
+                string strVal = SelectedVariable.Value.Replace('=', ' ').Trim();
+                int value = Convert.ToInt32(strVal);
+                IntegerWriter iw = vc.createIntegerWriter(SelectedVariable.PathName);
+                iw.set(value);
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         public void cleanupInjectionSelectedVariable(string pathName)

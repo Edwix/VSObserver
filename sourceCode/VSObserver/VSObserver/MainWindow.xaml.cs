@@ -271,6 +271,7 @@ namespace VSObserver
 
         private void TextBox_GotMouseCapture(object sender, MouseEventArgs e)
         {
+            //On arrête le reffraîchissement
             vo.stopRefreshOnSelectedElement(true);
         }
 
@@ -279,18 +280,20 @@ namespace VSObserver
             if (e.Key == Key.Enter)
             {
                 vo.stopRefreshOnSelectedElement(false);
-                vo.forceSelectedVariable();
+                vo.makeActionOnValue();
             }
         }
 
         public void timerWaitSearch_Elapsed(object sender, EventArgs e)
         {
+            //On arrête le timer lorsqu'on à fait une recherche
             timerWaitSearch.Stop();
             vo.searchVariables();
         }
 
         private void tb_variableName_TextChanged(object sender, TextChangedEventArgs e)
         {
+            //On remet à zéro le timer tant qu'on écrit un texte
             timerWaitSearch.Interval = new TimeSpan(0, 0, 0, 0, INTERVAL_SEARCH);
             timerWaitSearch.Start();
         }
