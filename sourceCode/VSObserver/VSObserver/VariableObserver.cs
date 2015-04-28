@@ -533,9 +533,9 @@ namespace VSObserver
         /// <returns></returns>
         private DataObserver createDataObserver(string path, string value, long timeStamp, string mapping, bool forced)
         {
-            //System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
-            //dtDateTime = dtDateTime.AddSeconds(timeStamp);
-            //double epoch = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+            long ts = (timeStamp / 1000) + (2 * 360 * 10000);
+            dtDateTime = dtDateTime.AddMilliseconds(ts);
 
             DataObserver dObs = new DataObserver {
                 PathName = path,
@@ -544,7 +544,7 @@ namespace VSObserver
                 Value = value,
                 Mapping = mapping,
                 IsForced = forced,
-                Timestamp = timeStamp.ToString()
+                Timestamp = dtDateTime.ToString()
             };
 
             return dObs;
