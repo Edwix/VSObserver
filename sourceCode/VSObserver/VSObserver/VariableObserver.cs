@@ -288,10 +288,18 @@ namespace VSObserver
             return variableResult;
         }*/
 
+        public void importAll()
+        {
+            foreach (DataRow dataRow in variableTable.Rows)
+            {
+                vc.importVariable(dataRow[PATH].ToString());
+            }
+
+            dataApp.InformationMessage = "Import all done !";
+        }
+
         public void searchVariables()
         {
-           
-
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
             ObservableCollection<DataObserver> lockVars = getLockedVariables();
@@ -360,7 +368,6 @@ namespace VSObserver
             VarNumberFound = variableNumber;
             VariableList = variableResult;
         }
-
 
         /// <summary>
         /// Lecture d'une variable VS. Cette méthode retourne un DataObserver avec tous les 

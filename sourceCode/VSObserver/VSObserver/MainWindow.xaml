@@ -12,6 +12,7 @@
             <ColumnDefinition />
             <ColumnDefinition Width="35"/>
             <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="40"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -60,8 +61,9 @@
                 </Style>
             </Image.Style>
         </Image>
+        <Button Name="btn_importAll" Content="I" Background="Red" Foreground="White" Height="20" Margin="5,5,5,5" Grid.Column="3" Grid.Row="0" FontWeight="Bold" Click="btn_importAll_Click"/>
         <TextBox Name="tb_variableName" Margin="5,5,5,5" Height="25" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="tb_variableName_TextChanged"/>
-        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" >
+        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="4" >
             <Run Text="Variables number : " />
             <Run Text="{Binding VarNumberFound, UpdateSourceTrigger=PropertyChanged}" />
             <Run Text=" / " />
@@ -80,7 +82,7 @@
         </TextBlock>
         <DataGrid
             VerticalAlignment="Stretch"
-            Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3"
+            Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="4"
             Name="dg_variableList"
             ScrollViewer.VerticalScrollBarVisibility="Visible"
             ItemsSource="{Binding Path=VariableList, UpdateSourceTrigger=PropertyChanged}"
