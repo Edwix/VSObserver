@@ -256,10 +256,6 @@ namespace VSObserver
                 //Par exemple si on a Live%bit la fonction retourne Livebit
                 string variableName = Regex.Replace(rawVariableName, REGEX_REMPLACE, "");
 
-                int typeVS = -100;
-                vc.getType(variableName, out typeVS);
-                Console.WriteLine("search : " + variableName + " TYPE " + typeVS );
-
                 if (!reg_var.IsMatch(rawVariableName))
                 {
                     dataApp.InformationMessage = "The variable name has been remplaced by " + variableName + ".";
@@ -324,6 +320,7 @@ namespace VSObserver
             int importOk = vc.importVariable(completeVariable);
             int typeVS = -1;
             long timeStamp;
+            vc = Vs.getVariableController();
             vc.getType(completeVariable, out typeVS);
             //Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
 
@@ -341,7 +338,7 @@ namespace VSObserver
                variableForced = false;
            }
 
-           Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " ==> STATUS : " + status.state.ToString() + " = " + variableForced);
+           //Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " ==> STATUS : " + status.state.ToString() + " = " + variableForced);
 
             if (importOk != 0)
             {
@@ -437,7 +434,8 @@ namespace VSObserver
                         break;
                     ///=================================================================================================
                     default:
-                        dataObserver = createDataObserver(completeVariable, "Undefined", VS_Type.INVALID, 0L, mapping, variableForced);
+                        Console.WriteLine("READVALUE DEFAULT : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
+                        dataObserver = createDataObserver(completeVariable, "Undefined", VS_Type.VECTOR_DOUBLE, 0L, mapping, variableForced);
                         break;
                 }
             }
@@ -532,6 +530,10 @@ namespace VSObserver
                 string oldValue = rowObserver.Value;
                 DataObserver dObs = readValue(rowObserver.PathName, rowObserver.Mapping);
 
+                //We put the type because the old type is Invalid (the first loadding)
+                rowObserver.Type = dObs.Type;
+                  
+
                 InjectionVariableStatus status = new InjectionVariableStatus();
                 vc.getInjectionStatus(dObs.PathName, status);
 
@@ -546,7 +548,7 @@ namespace VSObserver
 
                 if (dObs != null)
                 {
-                    if (rowObserver.Value != dObs.Value && !rowObserver.IsChanging)
+                    if (!rowObserver.Value.Equals(dObs.Value) && !rowObserver.IsChanging)
                     {
                         rowObserver.Value = dObs.Value;
                         rowObserver.ValueHasChanged = true;
@@ -562,13 +564,6 @@ namespace VSObserver
                     }
                 }
             }
-        }
-
-        public void forceValue(DataObserver variable)
-        {
-            /*MapStrStr mapStr = new MapStrStr();
-            mapStr.*/
-            vc.configureInjection(variable.PathName, "Force", null);
         }
 
         private string tableToString(IntegerVector vector)
@@ -633,14 +628,27 @@ namespace VSObserver
             try
             {
                 //On remplace le = par un espace qu'on suprime par la suite
-                string strVal = SelectedVariable.Value.Replace('=', ' ').Trim();
-                int value = Convert.ToInt32(strVal);
-                IntegerWriter iw = vc.createIntegerWriter(SelectedVariable.PathName);
-                iw.set(value);
-            }
-            catch (Exception)
-            {
+                string strVal = _selVar.Value;
 
+                switch (_selVar.Type)
+                {
+                    case VS_Type.INTEGER:
+                            int valInt = Convert.ToInt32(strVal);
+                            IntegerWriter iw = vc.createIntegerWriter(SelectedVariable.PathName);
+                            iw.set(valInt);
+                        break;
+                    case VS_Type.DOUBLE:
+                        double valDbl = Convert.ToDouble(strVal.Replace('.', ','));
+                        DoubleWriter id = vc.createDoubleWriter(SelectedVariable.PathName);
+                        id.set(valDbl);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROOR : " + e.ToString());
             }
         }
 
