@@ -224,8 +224,6 @@ namespace VSObserver
             {
                 vc.importVariable(dataRow[PATH].ToString());
             }
-
-            dataApp.InformationMessage = "Import all done !";
         }
 
         /// <summary>

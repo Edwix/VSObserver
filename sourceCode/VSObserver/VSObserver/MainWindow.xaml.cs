@@ -309,10 +309,5 @@ namespace VSObserver
                 vo.cleanupInjectionSelectedVariable(tb.Tag.ToString());
             }
         }
-
-        private void btn_importAll_Click(object sender, RoutedEventArgs e)
-        {
-            vo.importAll();
-        }
     }
 }
