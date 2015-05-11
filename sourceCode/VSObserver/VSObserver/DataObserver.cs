@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using VS;
 
 namespace VSObserver
 {
@@ -34,6 +35,7 @@ namespace VSObserver
         private bool _loocked;
         private bool _isForced;
         private bool _isChanging;
+        private VS_Type _type;
 
         public DataObserver()
         {
@@ -93,6 +95,12 @@ namespace VSObserver
         {
             get { return _isChanging; }
             set { _isChanging = value; OnPropertyChanged(IS_CHANGING); }
+        }
+
+        public VS_Type Type
+        {
+            get { return _type; }
+            set { _type = value; OnPropertyChanged(TYPE); }
         }
         
 

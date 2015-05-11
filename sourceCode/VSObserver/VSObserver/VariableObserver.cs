@@ -363,7 +363,7 @@ namespace VSObserver
                             {
                                 intr.get(out valVarInt, out timeStamp);
 
-                                dataObserver = createDataObserver(completeVariable, valVarInt.ToString(), timeStamp, mapping, variableForced);
+                                dataObserver = createDataObserver(completeVariable, valVarInt.ToString(), VS_Type.INTEGER, timeStamp, mapping, variableForced);
                             }
                             else
                             {
@@ -392,7 +392,7 @@ namespace VSObserver
                             {
                                 dblr.get(out valVarDbl, out timeStamp);
 
-                                dataObserver = createDataObserver(completeVariable, valVarDbl.ToString("0.00000"), timeStamp, mapping, variableForced);
+                                dataObserver = createDataObserver(completeVariable, valVarDbl.ToString("0.00000"), VS_Type.DOUBLE, timeStamp, mapping, variableForced);
                             }
                             else
                             {
@@ -423,7 +423,7 @@ namespace VSObserver
                             {
                                 vecIntReader.get(valVarVecInt, out timeStamp);
 
-                                dataObserver = createDataObserver(completeVariable, tableToString(valVarVecInt), timeStamp, mapping, variableForced);
+                                dataObserver = createDataObserver(completeVariable, tableToString(valVarVecInt), VS_Type.VECTOR_INTEGER, timeStamp, mapping, variableForced);
                             }
                             else
                             {
@@ -437,7 +437,7 @@ namespace VSObserver
                         break;
                     ///=================================================================================================
                     default:
-                        dataObserver = createDataObserver(completeVariable, "Undefined", 0L, mapping, variableForced);
+                        dataObserver = createDataObserver(completeVariable, "Undefined", VS_Type.INVALID, 0L, mapping, variableForced);
                         break;
                 }
             }
@@ -481,7 +481,7 @@ namespace VSObserver
         /// <param name="value"></param>
         /// <param name="timeStamp"></param>
         /// <returns></returns>
-        private DataObserver createDataObserver(string path, string value, long timeStamp, string mapping, bool forced)
+        private DataObserver createDataObserver(string path, string value, VS_Type type, long timeStamp, string mapping, bool forced)
         {
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
             long ts = (timeStamp / 1000) + (2 * 360 * 10000);
@@ -492,6 +492,7 @@ namespace VSObserver
                 Path = System.IO.Path.GetDirectoryName(path).Replace("\\", "/"),
                 Variable = System.IO.Path.GetFileName(path),
                 Value = value,
+                Type = type,
                 Mapping = mapping,
                 IsForced = forced,
                 Timestamp = dtDateTime.ToString()
