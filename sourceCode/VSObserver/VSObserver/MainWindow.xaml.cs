@@ -95,6 +95,7 @@ namespace VSObserver
 
             tb_variableName.DataContext = vo;
             dg_variableList.DataContext = vo;
+            btn_typeW.DataContext = vo;
 
             //Création de la tâche de fond qui va rafraichir la liste des varaibles
             refreshWorker = new BackgroundWorker();

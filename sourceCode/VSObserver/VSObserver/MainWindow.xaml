@@ -6,6 +6,7 @@
         >
     <Window.Resources>
         <nspace:BoolToVisibility x:Key="ConvBoolToVisibility" />
+        <nspace:StringToBackground x:Key="ConvStringToBackground" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -62,7 +63,9 @@
             </Image.Style>
         </Image>
         <TextBox Name="tb_variableName" Margin="5,5,5,5" Height="25" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="tb_variableName_TextChanged"/>
-        <!--<Button Name="btn_importAll" Content="I" Background="Red" Foreground="White" Height="20" Margin="5,5,5,5" Grid.Column="3" Grid.Row="0" FontWeight="Bold" Click="btn_importAll_Click"/>-->
+        <Border Name="btn_typeW" BorderBrush="Gray" BorderThickness="1" CornerRadius="20" Background="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToBackground}}" Width="25" Height="25" Margin="0" Grid.Column="3" Grid.Row="0" >
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged}" Foreground="Black" FontWeight="ExtraBold" />
+        </Border>
         <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="4" >
             <Run Text="Variables number : " />
             <Run Text="{Binding VarNumberFound, UpdateSourceTrigger=PropertyChanged}" />

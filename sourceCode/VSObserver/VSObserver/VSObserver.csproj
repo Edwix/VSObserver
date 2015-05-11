@@ -91,6 +91,7 @@
     <Compile Include="BoolToVisibility.cs" />
     <Compile Include="DataApplication.cs" />
     <Compile Include="DataObserver.cs" />
+    <Compile Include="StringToBackground.cs" />
     <Compile Include="VariableObserver.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Page Include="MainWindow.xaml">

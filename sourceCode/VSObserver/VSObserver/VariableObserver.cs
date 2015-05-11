@@ -31,6 +31,7 @@ namespace VSObserver
         private const string SEARCH_TEXT = "SearchText";
         private const string SELECTED_VARIABLE = "SelectedVariable";
         private const string VAR_NUMBER_FOUND = "VarNumberFound";
+        private const string WRITING_TYPE= "WritingType";
 
         private const string PATH = "Path";
         private const string MAPPING = "Mapping";
@@ -46,6 +47,7 @@ namespace VSObserver
         private Regex reg_var;
         private DataApplication dataApp;
         private DataObserver _selVar;
+        private string _writTyp;
 
         public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase)
         {
@@ -55,6 +57,7 @@ namespace VSObserver
             _variableList = new ObservableCollection<DataObserver>();
             vc = Vs.getVariableController();
             this.dataApp = dataApp;
+            _writTyp = "W";
         }
 
         public int VarNumberFound
@@ -73,6 +76,12 @@ namespace VSObserver
         {
             get { return _selVar; }
             set { _selVar = value; OnPropertyChanged(SELECTED_VARIABLE); }
+        }
+
+        public string WritingType
+        {
+            get { return _writTyp; }
+            set { _writTyp = value; OnPropertyChanged(WRITING_TYPE); }
         }
 
         public string SearchText
