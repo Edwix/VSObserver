@@ -216,77 +216,7 @@ namespace VSObserver
             return variableTable.Rows.Count;
         }
 
-        /// <summary>
-        /// Méthode qui cherche les correspondance avec la variable entrée dans la textbox
-        /// elle retourne un tableau avec toutes les variable trouvés
-        /// </summary>
-        /// <param name="rawVariableName"></param>
-        /// <param name="variableNumber"></param>
-        /// <returns></returns>
-        /*public ObservableCollection<DataObserver> searchVariables(string rawVariableName, out int variableNumber)
-        {
-            ///On recherche le nom de la variable à travers la liste des variables
-            ///Cela nous retourne plusieurs en fonction de nom entrée
-            ObservableCollection<DataObserver> lockVars = getLockedVariables();
-            ObservableCollection<DataObserver> variableResult = getLockedVariables();
-            variableNumber = 0;
-
-            if (rawVariableName != null)
-            {
-                //On remplace le nom de variable en entrée par une variable enlevé de tout caractère spéciaux
-                //Par exemple si on a Live%bit la fonction retourne Livebit
-                string variableName = Regex.Replace(rawVariableName, REGEX_REMPLACE, "");
-
-                if (!reg_var.IsMatch(rawVariableName))
-                {
-                    dataApp.InformationMessage = "The variable name has been remplaced by " + variableName + ".";
-                }
-                else
-                {
-                    dataApp.InformationMessage = null;
-                }
-
-                ///Si la regex ne match pas alors on cherche les variable
-                ///La regex interdit tous les caractères spéciaux
-                if (reg_var.IsMatch(variableName))
-                {
-                    DataRow[] searchResult = variableTable.Select("Path LIKE '%" + variableName + "%' OR Mapping LIKE '%" + variableName + "%'");
-                    variableNumber = searchResult.Count();
-
-                    ///On vérifie si on a bien une connexion à U-test
-                    if (connectionOK)
-                    {
-                        int compt = 0;
-
-                        foreach (DataRow row in searchResult)
-                        {
-                            string completeVariable = (string)row[PATH];
-                            string mapping = (string)row[MAPPING];
-
-                            //La lecture de variable retourne un DataObserver avec toutes les informations
-                            DataObserver dobs = readValue(completeVariable, mapping);
-
-                            //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer
-                            //Et si le tableau des variables blocké ne contient pas l'élément on l'ajoute
-                            //Cela permet d'éviter des doublons
-                            if (dobs != null && !containsDatatObserver(lockVars, dobs))
-                            {
-                                variableResult.Add(dobs);
-                                compt++;
-                            }
-
-                            //Si on a atteint le nombre d'affichage max on arrête la boucle
-                            if (compt == SHOW_NUMBER)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return variableResult;
-        }*/
+        
 
         public void importAll()
         {
@@ -298,6 +228,10 @@ namespace VSObserver
             dataApp.InformationMessage = "Import all done !";
         }
 
+        /// <summary>
+        /// Méthode qui cherche les correspondance avec la variable entrée dans la textbox
+        /// elle modifie le tableau de bord avec toutes les variables trouvées
+        /// </summary>
         public void searchVariables()
         {
             ///On recherche le nom de la variable à travers la liste des variables
