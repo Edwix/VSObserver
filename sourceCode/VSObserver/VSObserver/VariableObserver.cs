@@ -33,6 +33,8 @@ namespace VSObserver
         private const string VAR_NUMBER_FOUND = "VarNumberFound";
         private const string WRITING_TYPE= "WritingType";
 
+        public const string F_VAL = "F";
+        public const string W_VAL = "W";
         private const string PATH = "Path";
         private const string MAPPING = "Mapping";
         private const string VARIABLE = "Variable";
@@ -57,7 +59,7 @@ namespace VSObserver
             _variableList = new ObservableCollection<DataObserver>();
             vc = Vs.getVariableController();
             this.dataApp = dataApp;
-            _writTyp = "W";
+            _writTyp = F_VAL;
         }
 
         public int VarNumberFound
@@ -598,15 +600,15 @@ namespace VSObserver
         /// </summary>
         public void makeActionOnValue()
         {
-            if (SelectedVariable != null)
+            if (SelectedVariable != null && _writTyp != null)
             {
-                if (SelectedVariable.Value.StartsWith("="))
+                if (WritingType.Equals(F_VAL))
                 {
-                    writeSelectedVariable();
+                   forceSelectedVariable();
                 }
                 else
                 {
-                    forceSelectedVariable();
+                    writeSelectedVariable();
                 }
             }
         }

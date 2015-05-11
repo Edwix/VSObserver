@@ -310,5 +310,20 @@ namespace VSObserver
                 vo.cleanupInjectionSelectedVariable(tb.Tag.ToString());
             }
         }
+
+        private void btn_typeW_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (vo.WritingType != null)
+            {
+                if (vo.WritingType.Equals(VariableObserver.F_VAL))
+                {
+                    vo.WritingType = VariableObserver.W_VAL;
+                }
+                else
+                {
+                    vo.WritingType = VariableObserver.F_VAL;
+                }
+            }
+        }
     }
 }

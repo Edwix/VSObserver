@@ -23,9 +23,9 @@ namespace VSObserver
                 return new SolidColorBrush(Colors.AliceBlue);
             }
             
-            if (val.Equals("F"))
+            if (val.Equals(VariableObserver.F_VAL))
             {
-                return new SolidColorBrush(Colors.Red);
+                return new SolidColorBrush(Color.FromRgb(254,46,46));
             }
             else
             {
