@@ -43,6 +43,7 @@ namespace VSObserver
         private DataApplication dataApp;
         private BackgroundWorker refreshWorker;
         private int totalNumberOfVariables = 0;
+        private int number_variable;
 
         private DispatcherTimer timerWaitSearch;
 
@@ -86,7 +87,7 @@ namespace VSObserver
             
             dataApp.LoadDone = true;
 
-            vo = new VariableObserver(dataApp, ipAddresseRTCServer, sqlLiteDataBase);
+            vo = new VariableObserver(dataApp, ipAddresseRTCServer, sqlLiteDataBase, number_variable);
             totalNumberOfVariables = vo.loadVariableList();
 
             //Datacontext pour lier le nombre de variable trouvés
@@ -141,6 +142,15 @@ namespace VSObserver
             catch
             {
                 this.Resources.Add("durationColor", new Duration(new TimeSpan(0, 0, 2)));
+            }
+
+            try
+            {
+                number_variable = Convert.ToInt32(ConfigurationManager.AppSettings["NumberVisibleVariable"]);
+            }
+            catch
+            {
+                number_variable = 40;
             }
 
             ipAddresseRTCServer = ConfigurationManager.AppSettings["IpAddrRTC"];

@@ -43,15 +43,15 @@ namespace VSObserver
         private const string TIMESTAMP = "Timestamp";
         private const string REGEX_SEARCH = @"^[0-9a-zA-Z_/\-:]+$";
         private const string REGEX_REMPLACE = @"[^0-9a-zA-Z_/\-:]";
-        private const int SHOW_NUMBER = 40;
 
         private bool connectionOK;
         private Regex reg_var;
         private DataApplication dataApp;
         private DataObserver _selVar;
         private string _writTyp;
+        private int show_number;
 
-        public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase)
+        public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase, int show_number)
         {
             this.ipAddr = ipAddr;
             this.pathDataBase = pathDataBase;
@@ -60,6 +60,7 @@ namespace VSObserver
             vc = Vs.getVariableController();
             this.dataApp = dataApp;
             _writTyp = F_VAL;
+            this.show_number = show_number;
         }
 
         public int VarNumberFound
@@ -295,7 +296,7 @@ namespace VSObserver
                             }
 
                             //Si on a atteint le nombre d'affichage max on arrête la boucle
-                            if (compt == SHOW_NUMBER)
+                            if (compt == show_number)
                             {
                                 break;
                             }
