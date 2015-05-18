@@ -192,13 +192,17 @@ namespace VSObserver
         {
             try
             {
-                string clipBoardText = getTextFromClipBoard();
-
-                if (clipBoardText != "")
+                //Si on a cohcé la cas e vérifier le presse-papier, alors on le vérifie sinon on ne le fait pas
+                if (cb_VerifyClipBoard.IsChecked ==  true)
                 {
-                    ///Suppression des espace blancs au debut et à la fin
-                    tb_variableName.Text = clipBoardText.TrimStart().TrimEnd();
-                    this.Show();
+                    string clipBoardText = getTextFromClipBoard();
+
+                    if (clipBoardText != "")
+                    {
+                        ///Suppression des espace blancs au debut et à la fin
+                        tb_variableName.Text = clipBoardText.TrimStart().TrimEnd();
+                        this.Show();
+                    }
                 }
 
                 ///Raffraîchissement des valeurs des variables à chaque interval du timer

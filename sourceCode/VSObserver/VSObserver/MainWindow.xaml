@@ -19,6 +19,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
         <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Margin="5,5,5,5" Grid.Column="2" Grid.Row="0"/>
@@ -62,17 +63,20 @@
                 </Style>
             </Image.Style>
         </Image>
-        <TextBox Name="tb_variableName" Margin="5,5,5,5" Height="25" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="tb_variableName_TextChanged"/>
+        <TextBox Name="tb_variableName" AcceptsReturn="False" Margin="5,5,5,5" Height="25" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="tb_variableName_TextChanged"/>
         <Border Name="btn_typeW" BorderBrush="Gray" BorderThickness="1" CornerRadius="20" Background="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToBackground}}" Width="25" Height="25" Margin="0" Grid.Column="3" Grid.Row="0" MouseDown="btn_typeW_MouseDown">
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged}" Foreground="Black" FontWeight="ExtraBold" />
         </Border>
-        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="4" >
+        <WrapPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="4" Margin="5,0,5,0">
+            <CheckBox Name="cb_VerifyClipBoard" Content="Check clipboard" IsChecked="True"/>
+        </WrapPanel>
+        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" >
             <Run Text="Variables number : " />
             <Run Text="{Binding VarNumberFound, UpdateSourceTrigger=PropertyChanged}" />
             <Run Text=" / " />
             <Run x:Name="run_varTotal" Text="0" />
         </TextBlock>
-        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_message" Text="{Binding Path=InformationMessage, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3">
+        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_message" Text="{Binding Path=InformationMessage, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Style.Triggers>
@@ -85,7 +89,7 @@
         </TextBlock>
         <DataGrid
             VerticalAlignment="Stretch"
-            Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="4"
+            Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="4"
             Name="dg_variableList"
             ScrollViewer.VerticalScrollBarVisibility="Visible"
             ItemsSource="{Binding Path=VariableList, UpdateSourceTrigger=PropertyChanged}"
@@ -125,8 +129,8 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding Path=Path}" Header="Path and Name"/>
-                <DataGridTextColumn Binding="{Binding Path=Variable}" Header="Variable name"/>
+                <DataGridTextColumn Binding="{Binding Path=Path}" Header="Path and Name" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding Path=Variable}" Header="Variable name" Width="Auto"/>
                 <!--<DataGridTextColumn Binding="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Header="Value" >
                     <DataGridTextColumn.CellStyle>
                         <Style TargetType="{x:Type DataGridCell}" >
@@ -156,7 +160,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>-->
 
-                <DataGridTemplateColumn Header="Value" Selector.IsSelected="{Binding Path=IsChanging, UpdateSourceTrigger=PropertyChanged}" >
+                <DataGridTemplateColumn Header="Value" Selector.IsSelected="{Binding Path=IsChanging, UpdateSourceTrigger=PropertyChanged}" Width="Auto">
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" GotMouseCapture="TextBox_GotMouseCapture" KeyDown="TextBox_KeyDown">
@@ -196,9 +200,9 @@
                         </Style>
                     </DataGridTemplateColumn.CellStyle>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}" Header="Mapping"/>
-                <DataGridTextColumn Binding="{Binding Path=Timestamp, UpdateSourceTrigger=PropertyChanged}" Header="Timestamp"/>
-                <DataGridTextColumn Binding="{Binding Path=ValueHasChanged, UpdateSourceTrigger=PropertyChanged}" Header="Change" Visibility="Collapsed"/>
+                <DataGridTextColumn Binding="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}" Header="Mapping" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding Path=Timestamp, UpdateSourceTrigger=PropertyChanged}" Header="Timestamp" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding Path=ValueHasChanged, UpdateSourceTrigger=PropertyChanged}" Header="Change" Visibility="Collapsed" Width="Auto"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
