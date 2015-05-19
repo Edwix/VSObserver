@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.Data.Common;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace VSObserver
 {
@@ -253,6 +254,11 @@ namespace VSObserver
         /// </summary>
         public void searchVariables()
         {
+            Stopwatch sw = new Stopwatch();
+            Console.WriteLine("====== Seach start =======");
+            sw.Start();
+            
+
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
             ObservableCollection<DataObserver> lockVars = getLockedVariables();
@@ -275,34 +281,29 @@ namespace VSObserver
                     dataApp.InformationMessage = null;
                 }
 
-                DataRow[] classic_search = null;
-                EnumerableRowCollection<DataRow> regex_search = null;
+                EnumerableRowCollection<DataRow> searchResult = null;
+                var source = variableTable.AsEnumerable();
 
                 if (search_regex)
                 {
-                    var source = variableTable.AsEnumerable();
-                    regex_search = from matchI in source
+                    ///RegexOptions.IgnoreCase allows to ignore the case when we make a search
+                    searchResult = from matchI in source
                                    where Regex.IsMatch(matchI.Field<string>(PATH), variableName, RegexOptions.IgnoreCase) || Regex.IsMatch(matchI.Field<string>(MAPPING), variableName, RegexOptions.IgnoreCase)
                                     select matchI;
                 }
                 else if (reg_var.IsMatch(variableName))
                 {
-                    ///Si la regex ne match pas alors on cherche les variable
-                    ///La regex interdit tous les caractères spéciaux
-                    /*variableName = variableName.Replace('*', '%');
-                    classic_search = variableTable.Select("Path LIKE '%" + variableName + "%' OR Mapping LIKE '%" + variableName + "%'");*/
+                    //We elaborate the regex string for a normal search
+                    string regexVarName = "^.*" + variableName.Replace("*", ".*") + ".*$";
 
-                    string varName = "^.*" + variableName.Replace("*", ".*") + ".*$";
-                    var source = variableTable.AsEnumerable();
-                    regex_search = from matchI in source
-                                   where Regex.IsMatch(matchI.Field<string>(PATH), varName, RegexOptions.IgnoreCase) || Regex.IsMatch(matchI.Field<string>(MAPPING), varName, RegexOptions.IgnoreCase)
+                    searchResult = from matchI in source
+                                   where Regex.IsMatch(matchI.Field<string>(PATH), regexVarName, RegexOptions.IgnoreCase) || Regex.IsMatch(matchI.Field<string>(MAPPING), regexVarName, RegexOptions.IgnoreCase)
                                    select matchI;
+
                 }
 
-                if (regex_search != null || classic_search != null)
+                if (searchResult != null)
                 {
-                    var searchResult = (classic_search == null) ? regex_search : classic_search.AsEnumerable();
-
                     variableNumber = searchResult.Count();
 
                     ///On vérifie si on a bien une connexion à U-test
@@ -339,6 +340,9 @@ namespace VSObserver
 
             VarNumberFound = variableNumber;
             VariableList = variableResult;
+
+            sw.Stop();
+            Console.WriteLine("====== Seach END : " + sw.ElapsedMilliseconds + " =======");
         }
 
         /// <summary>
