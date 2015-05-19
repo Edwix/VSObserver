@@ -84,6 +84,7 @@ namespace VSObserver
             dataApp = new DataApplication();
             img_refresh.DataContext = dataApp;
             tbl_message.DataContext = dataApp;
+           
             
             dataApp.LoadDone = true;
 
@@ -97,6 +98,7 @@ namespace VSObserver
             tb_variableName.DataContext = vo;
             dg_variableList.DataContext = vo;
             btn_typeW.DataContext = vo;
+            cb_RegexSearch.DataContext = vo;
 
             //Création de la tâche de fond qui va rafraichir la liste des varaibles
             refreshWorker = new BackgroundWorker();
@@ -205,8 +207,11 @@ namespace VSObserver
                     }
                 }
 
-                ///Raffraîchissement des valeurs des variables à chaque interval du timer
-                vo.refreshValues();
+                if (vo != null)
+                {
+                    ///Raffraîchissement des valeurs des variables à chaque interval du timer
+                    vo.refreshValues();
+                }
                 
 
             }

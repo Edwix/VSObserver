@@ -44,8 +44,8 @@ namespace VSObserver
         private const string TYPE = "Type";
         private const string VALUE = "Value";
         private const string TIMESTAMP = "Timestamp";
-        private const string REGEX_SEARCH = @"^[0-9a-zA-Z_/\-:\*]+$";
-        private const string REGEX_REMPLACE = @"[^0-9a-zA-Z_/\-:\*]";
+        private const string REGEX_SEARCH = @"^[0-9a-zA-Z_/\-:\*\?]+$";
+        private const string REGEX_REMPLACE = @"[^0-9a-zA-Z_/\-:\*\?]";
 
         private bool connectionOK;
         private Regex reg_var;
@@ -65,6 +65,7 @@ namespace VSObserver
             this.dataApp = dataApp;
             _writTyp = F_VAL;
             this.show_number = show_number;
+            search_regex = false;
         }
 
         public int VarNumberFound
@@ -253,12 +254,7 @@ namespace VSObserver
         /// elle modifie le tableau de bord avec toutes les variables trouvées
         /// </summary>
         public void searchVariables()
-        {
-            Stopwatch sw = new Stopwatch();
-            Console.WriteLine("====== Seach start =======");
-            sw.Start();
-            
-
+        {          
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
             ObservableCollection<DataObserver> lockVars = getLockedVariables();
@@ -268,9 +264,19 @@ namespace VSObserver
 
             if (rawVariableName != null)
             {
-                //On remplace le nom de variable en entrée par une variable enlevé de tout caractère spéciaux
-                //Par exemple si on a Live%bit la fonction retourne Livebit
-                string variableName = Regex.Replace(rawVariableName, REGEX_REMPLACE, "");
+                string variableName;
+
+                //If we search with regex then we don't replace the raw variable
+                if(!search_regex)
+                {
+                    //On remplace le nom de variable en entrée par une variable enlevé de tout caractère spéciaux
+                    //Par exemple si on a Live%bit la fonction retourne Livebit
+                    variableName = Regex.Replace(rawVariableName, REGEX_REMPLACE, "");
+                }
+                else
+                {
+                    variableName = rawVariableName;
+                }
 
                 if (!reg_var.IsMatch(rawVariableName) && !search_regex)
                 {
@@ -286,18 +292,28 @@ namespace VSObserver
 
                 if (search_regex)
                 {
-                    ///RegexOptions.IgnoreCase allows to ignore the case when we make a search
-                    searchResult = from matchI in source
-                                   where Regex.IsMatch(matchI.Field<string>(PATH), variableName, RegexOptions.IgnoreCase) || Regex.IsMatch(matchI.Field<string>(MAPPING), variableName, RegexOptions.IgnoreCase)
-                                    select matchI;
+                    try
+                    {
+                        dataApp.InformationMessage = null;
+
+                        ///RegexOptions.IgnoreCase allows to ignore the case when we make a search
+                        searchResult = from matchI in source
+                                       where Regex.IsMatch(matchI.Field<string>(PATH), variableName, RegexOptions.IgnoreCase) || Regex.IsMatch(matchI.Field<string>(MAPPING), variableName, RegexOptions.IgnoreCase)
+                                       select matchI;
+                    }
+                    catch(Exception)
+                    {
+                        dataApp.InformationMessage = "The regular expression is incorrect !";
+                    }
                 }
                 else if (reg_var.IsMatch(variableName))
                 {
                     //We elaborate the regex string for a normal search
-                    string regexVarName = "^.*" + variableName.Replace("*", ".*") + ".*$";
+                    //We remplace * by .* means any more characthers
+                    //We remplace ? by . means any characthers
+                    string regexVarName = "^.*" + variableName.Replace("*", ".*").Replace('?', '.') + ".*$";
 
                     searchResult = source.Where(x => (Regex.IsMatch(x.Field<string>(PATH), regexVarName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Field<string>(MAPPING), regexVarName, RegexOptions.IgnoreCase)));
-
                 }
 
                 if (searchResult != null)
@@ -333,14 +349,12 @@ namespace VSObserver
                             }
                         }
                     }
+
+                    VariableList = variableResult;
                 }
             }
 
-            VarNumberFound = variableNumber;
-            VariableList = variableResult;
-
-            sw.Stop();
-            Console.WriteLine("====== Seach END : " + sw.ElapsedMilliseconds + " =======");
+            VarNumberFound = variableNumber;            
         }
 
         /// <summary>
@@ -560,42 +574,45 @@ namespace VSObserver
         {
             ObservableCollection<DataObserver> oldVariableTable = VariableList;
 
-            foreach(DataObserver rowObserver in oldVariableTable)
+            if (oldVariableTable != null)
             {
-                string oldValue = rowObserver.Value;
-                DataObserver dObs = readValue(rowObserver.PathName, rowObserver.Mapping);
-
-                //We put the type because the old type is Invalid (the first loadding)
-                rowObserver.Type = dObs.Type;
-                  
-
-                InjectionVariableStatus status = new InjectionVariableStatus();
-                vc.getInjectionStatus(dObs.PathName, status);
-
-                if (status.state == InjectionStates.InjectionStates_IsSet)
+                foreach (DataObserver rowObserver in oldVariableTable)
                 {
-                    rowObserver.IsForced = true;
-                }
-                else
-                {
-                    rowObserver.IsForced = false;
-                }
+                    string oldValue = rowObserver.Value;
+                    DataObserver dObs = readValue(rowObserver.PathName, rowObserver.Mapping);
 
-                if (dObs != null)
-                {
-                    if (!rowObserver.Value.Equals(dObs.Value) && !rowObserver.IsChanging)
+                    if (dObs != null)
                     {
-                        rowObserver.Value = dObs.Value;
-                        rowObserver.ValueHasChanged = true;
-                    }
-                    else
-                    {
-                        rowObserver.ValueHasChanged = false;
-                    }
+                        //We put the type because the old type is Invalid (the first loadding)
+                        rowObserver.Type = dObs.Type;
 
-                    if (rowObserver.Timestamp != dObs.Timestamp)
-                    {
-                        rowObserver.Timestamp = dObs.Timestamp;
+
+                        InjectionVariableStatus status = new InjectionVariableStatus();
+                        vc.getInjectionStatus(dObs.PathName, status);
+
+                        if (status.state == InjectionStates.InjectionStates_IsSet)
+                        {
+                            rowObserver.IsForced = true;
+                        }
+                        else
+                        {
+                            rowObserver.IsForced = false;
+                        }
+
+                        if (!rowObserver.Value.Equals(dObs.Value) && !rowObserver.IsChanging)
+                        {
+                            rowObserver.Value = dObs.Value;
+                            rowObserver.ValueHasChanged = true;
+                        }
+                        else
+                        {
+                            rowObserver.ValueHasChanged = false;
+                        }
+
+                        if (rowObserver.Timestamp != dObs.Timestamp)
+                        {
+                            rowObserver.Timestamp = dObs.Timestamp;
+                        }
                     }
                 }
             }

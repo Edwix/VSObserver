@@ -67,8 +67,9 @@
         <Border Name="btn_typeW" BorderBrush="Gray" BorderThickness="1" CornerRadius="20" Background="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToBackground}}" Width="25" Height="25" Margin="0" Grid.Column="3" Grid.Row="0" MouseDown="btn_typeW_MouseDown">
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged}" Foreground="Black" FontWeight="ExtraBold" />
         </Border>
-        <WrapPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="4" Margin="5,0,5,0">
+        <WrapPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="4" Margin="5,0,5,0">
             <CheckBox Name="cb_VerifyClipBoard" Content="Check clipboard" IsChecked="True"/>
+            <CheckBox Margin="10,0,0,0" Name="cb_RegexSearch" Content="Search with regex" IsChecked="{Binding SearchRegex, UpdateSourceTrigger=PropertyChanged}"/>
         </WrapPanel>
         <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" >
             <Run Text="Variables number : " />
@@ -94,7 +95,6 @@
             ScrollViewer.VerticalScrollBarVisibility="Visible"
             ItemsSource="{Binding Path=VariableList, UpdateSourceTrigger=PropertyChanged}"
             SelectedItem="{Binding Path=SelectedVariable, UpdateSourceTrigger=PropertyChanged}"
-            
             AutoGenerateColumns="False"
             CanUserAddRows="False">
             <DataGrid.Columns>
