@@ -31,8 +31,10 @@ namespace VSObserver
         private const string SEARCH_TEXT = "SearchText";
         private const string SELECTED_VARIABLE = "SelectedVariable";
         private const string VAR_NUMBER_FOUND = "VarNumberFound";
-        private const string WRITING_TYPE= "WritingType";
+        private const string WRITING_TYPE = "WritingType";
+        private const string SEARCH_REGEX = "SearchRegex";
 
+        
         public const string F_VAL = "F";
         public const string W_VAL = "W";
         private const string PATH = "Path";
@@ -41,8 +43,8 @@ namespace VSObserver
         private const string TYPE = "Type";
         private const string VALUE = "Value";
         private const string TIMESTAMP = "Timestamp";
-        private const string REGEX_SEARCH = @"^[0-9a-zA-Z_/\-:]+$";
-        private const string REGEX_REMPLACE = @"[^0-9a-zA-Z_/\-:]";
+        private const string REGEX_SEARCH = @"^[0-9a-zA-Z_/\-:\*]+$";
+        private const string REGEX_REMPLACE = @"[^0-9a-zA-Z_/\-:\*]";
 
         private bool connectionOK;
         private Regex reg_var;
@@ -50,6 +52,7 @@ namespace VSObserver
         private DataObserver _selVar;
         private string _writTyp;
         private int show_number;
+        private bool search_regex;
 
         public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase, int show_number)
         {
@@ -114,6 +117,12 @@ namespace VSObserver
                     VariableList = getLockedVariables();
                 }
             }
+        }
+
+        public bool SearchRegex
+        {
+            get { return search_regex; }
+            set { search_regex = value; OnPropertyChanged(SEARCH_REGEX); }
         }
 
         /// <summary>
@@ -257,7 +266,7 @@ namespace VSObserver
                 //Par exemple si on a Live%bit la fonction retourne Livebit
                 string variableName = Regex.Replace(rawVariableName, REGEX_REMPLACE, "");
 
-                if (!reg_var.IsMatch(rawVariableName))
+                if (!reg_var.IsMatch(rawVariableName) && !search_regex)
                 {
                     dataApp.InformationMessage = "The variable name has been remplaced by " + variableName + ".";
                 }
@@ -266,15 +275,38 @@ namespace VSObserver
                     dataApp.InformationMessage = null;
                 }
 
-                ///Si la regex ne match pas alors on cherche les variable
-                ///La regex interdit tous les caractères spéciaux
-                if (reg_var.IsMatch(variableName))
+                DataRow[] classic_search = null;
+                EnumerableRowCollection<DataRow> regex_search = null;
+
+                if (search_regex)
                 {
-                    DataRow[] searchResult = variableTable.Select("Path LIKE '%" + variableName + "%' OR Mapping LIKE '%" + variableName + "%'");
+                    var source = variableTable.AsEnumerable();
+                    regex_search = from matchI in source
+                                   where Regex.IsMatch(matchI.Field<string>(PATH), variableName, RegexOptions.IgnoreCase) || Regex.IsMatch(matchI.Field<string>(MAPPING), variableName, RegexOptions.IgnoreCase)
+                                    select matchI;
+                }
+                else if (reg_var.IsMatch(variableName))
+                {
+                    ///Si la regex ne match pas alors on cherche les variable
+                    ///La regex interdit tous les caractères spéciaux
+                    /*variableName = variableName.Replace('*', '%');
+                    classic_search = variableTable.Select("Path LIKE '%" + variableName + "%' OR Mapping LIKE '%" + variableName + "%'");*/
+
+                    string varName = "^.*" + variableName.Replace("*", ".*") + ".*$";
+                    var source = variableTable.AsEnumerable();
+                    regex_search = from matchI in source
+                                   where Regex.IsMatch(matchI.Field<string>(PATH), varName, RegexOptions.IgnoreCase) || Regex.IsMatch(matchI.Field<string>(MAPPING), varName, RegexOptions.IgnoreCase)
+                                   select matchI;
+                }
+
+                if (regex_search != null || classic_search != null)
+                {
+                    var searchResult = (classic_search == null) ? regex_search : classic_search.AsEnumerable();
+
                     variableNumber = searchResult.Count();
 
                     ///On vérifie si on a bien une connexion à U-test
-                    if (connectionOK)
+                    if (connectionOK && searchResult != null)
                     {
                         int compt = 0;
 
