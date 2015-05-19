@@ -296,9 +296,7 @@ namespace VSObserver
                     //We elaborate the regex string for a normal search
                     string regexVarName = "^.*" + variableName.Replace("*", ".*") + ".*$";
 
-                    searchResult = from matchI in source
-                                   where Regex.IsMatch(matchI.Field<string>(PATH), regexVarName, RegexOptions.IgnoreCase) || Regex.IsMatch(matchI.Field<string>(MAPPING), regexVarName, RegexOptions.IgnoreCase)
-                                   select matchI;
+                    searchResult = source.Where(x => (Regex.IsMatch(x.Field<string>(PATH), regexVarName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Field<string>(MAPPING), regexVarName, RegexOptions.IgnoreCase)));
 
                 }
 
