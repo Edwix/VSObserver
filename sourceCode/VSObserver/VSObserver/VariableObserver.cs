@@ -292,7 +292,9 @@ namespace VSObserver
 
                 if (search_regex)
                 {
-                    try
+                    bool isValidRegex = IsValidRegex(variableName);
+
+                    if(isValidRegex)
                     {
                         dataApp.InformationMessage = null;
 
@@ -301,7 +303,7 @@ namespace VSObserver
                                        where Regex.IsMatch(matchI.Field<string>(PATH), variableName, RegexOptions.IgnoreCase) || Regex.IsMatch(matchI.Field<string>(MAPPING), variableName, RegexOptions.IgnoreCase)
                                        select matchI;
                     }
-                    catch(Exception)
+                    else
                     {
                         dataApp.InformationMessage = "The regular expression is incorrect !";
                     }
@@ -707,6 +709,22 @@ namespace VSObserver
         public void cleanupInjectionSelectedVariable(string pathName)
         {
             vc.cleanupInjection(pathName);
+        }
+
+        private static bool IsValidRegex(string pattern)
+        {
+            if (string.IsNullOrEmpty(pattern)) return false;
+
+            try
+            {
+                Regex.Match("", pattern);
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
