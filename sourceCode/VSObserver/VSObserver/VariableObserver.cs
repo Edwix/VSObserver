@@ -12,10 +12,11 @@ using System.Data.SQLite;
 using System.Data.Common;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 
 namespace VSObserver
 {
-    class VariableObserver : ViewModelBase
+    class VariableObserver : ViewModelBase, IFileChange
     {
         private DataTable variableTable;
         private ObservableCollection<DataObserver> _variableList;
@@ -725,6 +726,14 @@ namespace VSObserver
             }
 
             return true;
+        }
+
+        public void loadXMLRule(string path)
+        {
+            if (File.Exists(path))
+            {
+                Console.WriteLine("VO + LOAD XML RULE ==> " + path);
+            }
         }
     }
 }

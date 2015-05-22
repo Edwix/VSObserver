@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!--definition of simple element-->
+  <xs:element name="Variable" type="xs:string"/>
+  <xs:element name="SimpleRule">
+    <xs:complexType>
+      <xs:attribute ref="value" use="required"/>
+      <xs:attribute ref="color" use="required"/>
+    </xs:complexType>    
+  </xs:element>
+
+  <!-- definition of attributes -->
+  <xs:attribute name="value" type="xs:decimal"/>
+  <xs:attribute name="color" type="xs:string"/>
+  
+
+  <!-- definition of complex elements -->
+  <xs:element name="List">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Item" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Item">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="RuleSet"/>
+        <xs:element ref="Variable"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="RuleSet">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="SimpleRule" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema> 

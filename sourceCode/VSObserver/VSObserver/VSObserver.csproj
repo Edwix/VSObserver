@@ -91,6 +91,8 @@
     <Compile Include="BoolToVisibility.cs" />
     <Compile Include="DataApplication.cs" />
     <Compile Include="DataObserver.cs" />
+    <Compile Include="FileWatcher.cs" />
+    <Compile Include="IFileChange.cs" />
     <Compile Include="StringToBackground.cs" />
     <Compile Include="VariableObserver.cs" />
     <Compile Include="ViewModelBase.cs" />
@@ -131,6 +133,7 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Rule.xsd" />
     <None Include="Resources\VSObserver_Icon3.ico" />
   </ItemGroup>
   <ItemGroup>

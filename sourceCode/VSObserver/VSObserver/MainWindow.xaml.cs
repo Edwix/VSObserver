@@ -35,6 +35,8 @@ namespace VSObserver
         private int refreshRate;
         private string ipAddresseRTCServer;
         private string sqlLiteDataBase;
+        //Chemin du fichier avec les règles
+        private string rulePath;
 
         private string oldClipBoardText;
         private DispatcherTimer clipBoardTimer;
@@ -106,6 +108,10 @@ namespace VSObserver
             //Association des évènement aux méthodes à appliquer
             refreshWorker.DoWork += refreshWorker_DoWork;
             refreshWorker.RunWorkerCompleted += refreshWorker_RunWorkerCompleted;
+
+            //Création de l'objet qui va regarder le fichier
+            FileWatcher fileWatch = new FileWatcher(rulePath);
+            fileWatch.setFileChangeListener(vo);
         }
 
         /// <summary>
@@ -157,6 +163,7 @@ namespace VSObserver
 
             ipAddresseRTCServer = ConfigurationManager.AppSettings["IpAddrRTC"];
             sqlLiteDataBase = ConfigurationManager.AppSettings["PathDataBase"];
+            rulePath = ConfigurationManager.AppSettings["PathRuleFile"];
         }
 
         /// <summary>
