@@ -13,6 +13,10 @@ using System.Data.Common;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Xml.Schema;
+using System.Xml;
+using System.Xml.Linq;
+using System.Reflection;
 
 namespace VSObserver
 {
@@ -732,7 +736,24 @@ namespace VSObserver
         {
             if (File.Exists(path))
             {
-                Console.WriteLine("VO + LOAD XML RULE ==> " + path);
+                Console.WriteLine("LOAD XML RULE ==> " + path);
+                string rulePath = @"Resources/Rule.xsd";
+
+                if(File.Exists(rulePath))
+                {
+                    XmlSchemaSet schemas = new XmlSchemaSet();
+                    schemas.Add("", rulePath);
+
+                    XDocument xmlDoc = XDocument.Load(path);
+                    bool errors = false;
+                    xmlDoc.Validate(schemas, (o, e) =>
+                    {
+                        Console.WriteLine("Error: {0}", e.Message);
+                        errors = true;
+                    });
+
+                    Console.WriteLine("doc1 {0}", errors ? "did not validate" : "validated");
+                }
             }
         }
     }
