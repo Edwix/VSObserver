@@ -1,0 +1,39 @@
+<List>
+   <Item>
+       <Variable>_18A11_34$</Variable>
+       <RuleSet>
+            <SimpleRule value="1" color="DarkGreen" />
+			<SimpleRule value="0" color="DarkORange" />
+       </RuleSet>
+   </Item>
+   <Item>
+       <Variable>_10A11_(|_4|5|10A11_10A12_2)$</Variable>
+       <RuleSet>
+            <SimpleRule value="1" color="DarkRed" />
+			<SimpleRule value="0" color="DarkGreen" />
+       </RuleSet>
+   </Item>
+   <Item>
+       <Variable>_10A11_(_3|10A11_10A13_1)$</Variable>
+       <RuleSet>
+            <SimpleRule value="1" color="DarkGreen" />
+			<SimpleRule value="0" color="DarkRed" />
+       </RuleSet>
+   </Item>
+   <Item>
+       <Variable>_10A11_10A11_10Q1_1$</Variable>
+       <RuleSet>
+            <SimpleRule value="1" color="DarkGreen" />
+			<SimpleRule value="0" color="DarkRed" />
+       </RuleSet>
+   </Item>
+   <Item>
+       <Variable>_10A11_68$</Variable>
+	   <Comment>State of earthing switch. 0 = No earthing on train.</Comment>
+       <RuleSet>
+            <SimpleRule value="1" color="DarkRed" />
+			<SimpleRule value="0" color="DarkGreen" />
+       </RuleSet>
+   </Item>
+   
+</List>
