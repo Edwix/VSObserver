@@ -18,6 +18,11 @@ namespace VSObserver
         public void setFileChangeListener(IFileChange fileChange)
         {
             this.fileChange = fileChange;
+
+            if (fileChange != null)
+            {
+                fileChange.loadXMLRule(Path.GetFullPath(path));
+            }
         }
 
         public void Run()

@@ -611,7 +611,10 @@ namespace VSObserver
 
                         if (colorRules.ContainsKey(rowObserver.PathName))
                         {
-                            rowObserver.Color = colorRules[rowObserver.PathName][rowObserver.Value];
+                            if (colorRules[rowObserver.PathName].ContainsKey(rowObserver.Value))
+                            {
+                                rowObserver.Color = colorRules[rowObserver.PathName][rowObserver.Value];
+                            }
                         }
 
                         if (status.state == InjectionStates.InjectionStates_IsSet)
@@ -751,6 +754,9 @@ namespace VSObserver
 
         public void loadXMLRule(string path)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             if (File.Exists(path))
             {
                 Console.WriteLine("LOAD XML RULE ==> " + path);
@@ -823,6 +829,9 @@ namespace VSObserver
                     }
                 }
             }
+
+            sw.Stop();
+            Console.WriteLine("END LOAD FILE : " + sw.ElapsedMilliseconds);
         }
     }
 }

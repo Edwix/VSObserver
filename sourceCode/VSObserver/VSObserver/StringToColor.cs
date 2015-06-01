@@ -22,7 +22,7 @@ namespace VSObserver
             }
             catch
             {
-                color = Colors.LightSalmon;
+                color = Colors.Transparent;
             }
             
             return new SolidColorBrush(color);
