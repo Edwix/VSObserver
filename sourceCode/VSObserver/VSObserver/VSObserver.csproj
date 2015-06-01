@@ -94,6 +94,7 @@
     <Compile Include="FileWatcher.cs" />
     <Compile Include="IFileChange.cs" />
     <Compile Include="StringToBackground.cs" />
+    <Compile Include="StringToColor.cs" />
     <Compile Include="VariableObserver.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Page Include="MainWindow.xaml">

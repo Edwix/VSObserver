@@ -40,6 +40,14 @@ namespace VSObserver
         private const string WRITING_TYPE = "WritingType";
         private const string SEARCH_REGEX = "SearchRegex";
 
+        private const string NODE_ITEM = "Item";
+        private const string NODE_VARIABLE = "Variable";
+        private const string NODE_RULE_SET = "RuleSet";
+        private const string NODE_SIMPLE_RULE = "SimpleRule";
+        private const string NODE_COMMENT = "SimpleRule";
+        private const string ATTR_VALUE = "value";
+        private const string ATTR_COLOR = "color";
+
         
         public const string F_VAL = "F";
         public const string W_VAL = "W";
@@ -60,6 +68,8 @@ namespace VSObserver
         private int show_number;
         private bool search_regex;
 
+        private Dictionary<string, Dictionary<string, string>> colorRules;
+
         public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase, int show_number)
         {
             this.ipAddr = ipAddr;
@@ -71,6 +81,7 @@ namespace VSObserver
             _writTyp = F_VAL;
             this.show_number = show_number;
             search_regex = false;
+            colorRules = new Dictionary<string, Dictionary<string, string>>();
         }
 
         public int VarNumberFound
@@ -597,6 +608,12 @@ namespace VSObserver
                         InjectionVariableStatus status = new InjectionVariableStatus();
                         vc.getInjectionStatus(dObs.PathName, status);
 
+
+                        if (colorRules.ContainsKey(rowObserver.PathName))
+                        {
+                            rowObserver.Color = colorRules[rowObserver.PathName][rowObserver.Value];
+                        }
+
                         if (status.state == InjectionStates.InjectionStates_IsSet)
                         {
                             rowObserver.IsForced = true;
@@ -738,6 +755,7 @@ namespace VSObserver
             {
                 Console.WriteLine("LOAD XML RULE ==> " + path);
                 string rulePath = @"Resources/Rule.xsd";
+                colorRules.Clear();
 
                 if(File.Exists(rulePath))
                 {
@@ -753,6 +771,56 @@ namespace VSObserver
                     });
 
                     Console.WriteLine("doc1 {0}", errors ? "did not validate" : "validated");
+
+                    if (errors != true)
+                    {
+                        var itemsXML = from items in xmlDoc.Descendants(NODE_ITEM)
+                                        select new
+                                        {
+                                            VariableName = items.Element(NODE_VARIABLE).Value,
+                                            RuleSet = items.Element(NODE_RULE_SET).Descendants(NODE_SIMPLE_RULE)
+                                        };
+
+                        foreach(var item in itemsXML)
+                        {
+                            string varName = item.VariableName;
+
+                            //We check whether the variable is a correct regex
+                            if (IsValidRegex(varName))
+                            {
+                                /*if (VariableList.Where(x => (Regex.IsMatch(x.PathName, varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, varName, RegexOptions.IgnoreCase))).Count() > 0)
+                                {
+                                    foreach (DataObserver dobs in VariableList.Where(x => (Regex.IsMatch(x.PathName, varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, varName, RegexOptions.IgnoreCase))))
+                                    {
+                                        dobs.Color = 
+                                    }
+                                }*/
+
+                                Dictionary<string, string> ruleSets = new Dictionary<string, string>();
+
+                                foreach(var ruleSet in item.RuleSet)
+                                {
+                                    if (!ruleSets.ContainsKey(ruleSet.Attribute(ATTR_VALUE).Value))
+                                    {
+                                        ruleSets.Add(ruleSet.Attribute(ATTR_VALUE).Value, ruleSet.Attribute(ATTR_COLOR).Value);
+                                    }
+                                }
+
+                                var source = variableTable.AsEnumerable();
+                                var searchResult = source.Where(x => (Regex.IsMatch(x.Field<string>(PATH), varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Field<string>(MAPPING), varName, RegexOptions.IgnoreCase)));
+
+                                foreach (DataRow result in searchResult)
+                                {
+                                    string varPathAndName = (string)result[PATH];
+
+                                    if (!colorRules.ContainsKey(varPathAndName))
+                                    {
+                                        colorRules.Add(varPathAndName, ruleSets);
+                                    }
+                                }                                
+                            }
+                        }
+                    }
                 }
             }
         }

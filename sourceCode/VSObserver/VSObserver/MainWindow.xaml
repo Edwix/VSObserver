@@ -7,6 +7,7 @@
     <Window.Resources>
         <nspace:BoolToVisibility x:Key="ConvBoolToVisibility" />
         <nspace:StringToBackground x:Key="ConvStringToBackground" />
+        <nspace:StringToColor x:Key="ConvStringToColor" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -172,7 +173,7 @@
                     </DataGridTemplateColumn.CellEditingTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToColor}}">
                                 <TextBlock Name="tb_force_icon" Text="F" VerticalAlignment="Center" Margin="5,0,5,0" Foreground="Red" FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
                                            Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" MouseDown="tb_force_icon_MouseDown"/>
                                 <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"/>

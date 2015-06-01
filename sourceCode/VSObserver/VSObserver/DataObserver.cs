@@ -23,6 +23,7 @@ namespace VSObserver
         private const string IS_FORCED = "IsForced";
         private const string IS_CHANGING = "IsChanging";
         private const string MAPPING = "Mapping";
+        private const string COLOR = "Color";
 
         private string _pathName;
         private string _path;
@@ -31,6 +32,7 @@ namespace VSObserver
         private string _val;
         private string _valF;
         private string _map;
+        private string _color;
         private bool _hasChanged;
         private bool _loocked;
         private bool _isForced;
@@ -114,6 +116,12 @@ namespace VSObserver
         {
             get { return _isForced; }
             set { _isForced = value; OnPropertyChanged(IS_FORCED); }
+        }
+
+        public string Color
+        {
+            get { return _color; }
+            set { _color = value; OnPropertyChanged(COLOR); }
         }
     }
 }
