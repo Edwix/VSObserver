@@ -173,11 +173,13 @@
                     </DataGridTemplateColumn.CellEditingTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate >
-                            <WrapPanel Orientation="Horizontal" Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToColor}}">
-                                <TextBlock Name="tb_force_icon" Text="F" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" Foreground="Red" FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
-                                           Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" MouseDown="tb_force_icon_MouseDown"/>
-                                <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"/>
-                            </WrapPanel>                       
+                            <Grid Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToColor}}">
+                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Name="tb_force_icon" Text="F" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" Foreground="Red" FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
+                                               Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" MouseDown="tb_force_icon_MouseDown"/>
+                                    <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"/>
+                                </WrapPanel>
+                            </Grid>                       
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellStyle>

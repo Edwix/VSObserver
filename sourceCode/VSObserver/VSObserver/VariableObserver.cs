@@ -765,65 +765,83 @@ namespace VSObserver
 
                 if(File.Exists(rulePath))
                 {
-                    XmlSchemaSet schemas = new XmlSchemaSet();
-                    schemas.Add("", rulePath);
-
-                    XDocument xmlDoc = XDocument.Load(path);
                     bool errors = false;
-                    xmlDoc.Validate(schemas, (o, e) =>
+                    XDocument xmlDoc = null;
+
+                    try
                     {
-                        Console.WriteLine("Error: {0}", e.Message);
+                        xmlDoc = XDocument.Load(path);
+                    }
+                    catch (Exception)
+                    {
                         errors = true;
-                    });
+                    }
 
-                    Console.WriteLine("doc1 {0}", errors ? "did not validate" : "validated");
-
-                    if (errors != true)
+                    if (errors != true && xmlDoc != null)
                     {
-                        var itemsXML = from items in xmlDoc.Descendants(NODE_ITEM)
-                                        select new
-                                        {
-                                            VariableName = items.Element(NODE_VARIABLE).Value,
-                                            RuleSet = items.Element(NODE_RULE_SET).Descendants(NODE_SIMPLE_RULE)
-                                        };
+                        XmlSchemaSet schemas = new XmlSchemaSet();
+                        schemas.Add("", rulePath);
 
-                        foreach(var item in itemsXML)
+                        //We are validating the format from XML file
+                        xmlDoc.Validate(schemas, (o, e) =>
                         {
-                            string varName = item.VariableName;
+                            Console.WriteLine("Error: {0}", e.Message);
+                            errors = true;
+                        });
 
-                            //We check whether the variable is a correct regex
-                            if (IsValidRegex(varName))
+                        Console.WriteLine("doc1 {0}", errors ? "did not validate" : "validated");
+
+                        if (errors != true)
+                        {
+                            //Parsing the XML file
+                            var itemsXML = from items in xmlDoc.Descendants(NODE_ITEM)
+                                           select new
+                                           {
+                                               VariableName = items.Element(NODE_VARIABLE).Value,
+                                               RuleSet = items.Element(NODE_RULE_SET).Descendants(NODE_SIMPLE_RULE)
+                                           };
+
+                            foreach (var item in itemsXML)
                             {
-                                /*if (VariableList.Where(x => (Regex.IsMatch(x.PathName, varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, varName, RegexOptions.IgnoreCase))).Count() > 0)
+                                string varName = item.VariableName;
+
+                                //We check whether the variable is a correct regex
+                                if (IsValidRegex(varName))
                                 {
-                                    foreach (DataObserver dobs in VariableList.Where(x => (Regex.IsMatch(x.PathName, varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, varName, RegexOptions.IgnoreCase))))
+                                    /*if (VariableList.Where(x => (Regex.IsMatch(x.PathName, varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, varName, RegexOptions.IgnoreCase))).Count() > 0)
                                     {
-                                        dobs.Color = 
+                                        foreach (DataObserver dobs in VariableList.Where(x => (Regex.IsMatch(x.PathName, varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, varName, RegexOptions.IgnoreCase))))
+                                        {
+                                            dobs.Color = 
+                                        }
+                                    }*/
+
+                                    //Loading of all rule set elements
+                                    Dictionary<string, string> ruleSets = new Dictionary<string, string>();
+
+                                    foreach (var ruleSet in item.RuleSet)
+                                    {
+                                        if (!ruleSets.ContainsKey(ruleSet.Attribute(ATTR_VALUE).Value))
+                                        {
+                                            ruleSets.Add(ruleSet.Attribute(ATTR_VALUE).Value, ruleSet.Attribute(ATTR_COLOR).Value);
+                                        }
                                     }
-                                }*/
 
-                                Dictionary<string, string> ruleSets = new Dictionary<string, string>();
-
-                                foreach(var ruleSet in item.RuleSet)
-                                {
-                                    if (!ruleSets.ContainsKey(ruleSet.Attribute(ATTR_VALUE).Value))
+                                    //Searching all variables in all variables list
+                                    var source = variableTable.AsEnumerable();
+                                    var searchResult = source.Where(x => (Regex.IsMatch(x.Field<string>(PATH), varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Field<string>(MAPPING), varName, RegexOptions.IgnoreCase)));
+                                    
+                                    ///Creating the dictionnary with elements 
+                                    foreach (DataRow result in searchResult)
                                     {
-                                        ruleSets.Add(ruleSet.Attribute(ATTR_VALUE).Value, ruleSet.Attribute(ATTR_COLOR).Value);
+                                        string varPathAndName = (string)result[PATH];
+
+                                        if (!colorRules.ContainsKey(varPathAndName))
+                                        {
+                                            colorRules.Add(varPathAndName, ruleSets);
+                                        }
                                     }
                                 }
-
-                                var source = variableTable.AsEnumerable();
-                                var searchResult = source.Where(x => (Regex.IsMatch(x.Field<string>(PATH), varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Field<string>(MAPPING), varName, RegexOptions.IgnoreCase)));
-
-                                foreach (DataRow result in searchResult)
-                                {
-                                    string varPathAndName = (string)result[PATH];
-
-                                    if (!colorRules.ContainsKey(varPathAndName))
-                                    {
-                                        colorRules.Add(varPathAndName, ruleSets);
-                                    }
-                                }                                
                             }
                         }
                     }
