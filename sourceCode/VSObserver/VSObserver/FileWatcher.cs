@@ -34,7 +34,7 @@ namespace VSObserver
 
                 watcher.Path = Path.GetDirectoryName(Path.GetFullPath(path));
 
-                //ICi on vérifier le fichier en fonction de son nom
+                //ICi on vérifie le fichier en fonction de son nom
                 watcher.NotifyFilter = NotifyFilters.LastWrite;
 
                 watcher.Filter = "*.xml";
