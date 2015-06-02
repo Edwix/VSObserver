@@ -615,6 +615,10 @@ namespace VSObserver
                             {
                                 rowObserver.Color = colorRules[rowObserver.PathName][rowObserver.Value];
                             }
+                            else
+                            {
+                                rowObserver.Color = "";
+                            }
                         }
 
                         if (status.state == InjectionStates.InjectionStates_IsSet)

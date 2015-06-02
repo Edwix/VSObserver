@@ -132,35 +132,6 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Path=Path}" Header="Path and Name" Width="Auto"/>
                 <DataGridTextColumn Binding="{Binding Path=Variable}" Header="Variable name" Width="Auto"/>
-                <!--<DataGridTextColumn Binding="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Header="Value" >
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="{x:Type DataGridCell}" >
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=ValueHasChanged}" Value="True">
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard x:Name="tt" >
-                                            <Storyboard Storyboard.TargetProperty="(DataGridCell.Background).(SolidColorBrush.Color)">
-                                                <ColorAnimation                                                                  
-                                                     FillBehavior="Stop"                                                                  
-                                                     From="{StaticResource colorAnim_valueChanged}"                                                                  
-                                                     To="Transparent"                                                                  
-                                                     By="Blue"                                                                  
-                                                     Duration="{StaticResource durationColor}" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="{x:Type TextBlock}" >
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>-->
-
                 <DataGridTemplateColumn Header="Value" Selector.IsSelected="{Binding Path=IsChanging, UpdateSourceTrigger=PropertyChanged}" Width="Auto">
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
@@ -175,8 +146,12 @@
                         <DataTemplate >
                             <Grid Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToColor}}">
                                 <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                    <TextBlock Name="tb_force_icon" Text="F" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" Foreground="Red" FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
-                                               Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" MouseDown="tb_force_icon_MouseDown"/>
+                                    <Border Name="force_ball" BorderBrush="Gray" BorderThickness="1" CornerRadius="20" Background="Red" Width="20" Height="20" Margin="5,5,10,5" 
+                                            MouseDown="force_ball_icon_MouseDown"
+                                            Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}"
+                                            Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}">
+                                        <TextBlock Name="tb_force_icon" Text="F" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontWeight="Bold"/>
+                                    </Border>
                                     <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"/>
                                 </WrapPanel>
                             </Grid>                       

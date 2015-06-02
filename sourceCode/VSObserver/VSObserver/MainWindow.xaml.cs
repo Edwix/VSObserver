@@ -325,15 +325,15 @@ namespace VSObserver
             timerWaitSearch.Start();
         }
 
-        private void tb_force_icon_MouseDown(object sender, MouseButtonEventArgs e)
+        private void force_ball_icon_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TextBlock tb = (TextBlock)sender;
+            Border forceBallBorder = (Border)sender;
 
 
-            if (tb != null)
+            if (forceBallBorder != null)
             {
                 //Le tag contient le nom de la variable plus chemin
-                vo.cleanupInjectionSelectedVariable(tb.Tag.ToString());
+                vo.cleanupInjectionSelectedVariable(forceBallBorder.Tag.ToString());
             }
         }
 
