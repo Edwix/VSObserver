@@ -102,8 +102,8 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ToggleButton Content="" Foreground="Black" IsChecked="{Binding Path=IsLocked, UpdateSourceTrigger=PropertyChanged}"
-                                          HorizontalAlignment="Center">
+                            <ToggleButton Name="lockBtn" Content="" Foreground="Black" IsChecked="{Binding Path=IsLocked, UpdateSourceTrigger=PropertyChanged}"
+                                          HorizontalAlignment="Center" Click="lockBtn_Click">
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="{x:Type ToggleButton}">
                                         <StackPanel Orientation="Horizontal">

@@ -351,5 +351,10 @@ namespace VSObserver
                 }
             }
         }
+
+        private void lockBtn_Click(object sender, RoutedEventArgs e)
+        {
+            vo.saveVariableLocked();
+        }
     }
 }

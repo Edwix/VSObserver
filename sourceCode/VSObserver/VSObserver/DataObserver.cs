@@ -111,7 +111,8 @@ namespace VSObserver
         public bool IsLocked
         {
             get { return _loocked; }
-            set { _loocked = value; OnPropertyChanged(IS_LOCKED); }
+            set 
+            { _loocked = value; OnPropertyChanged(IS_LOCKED); }
         }
 
         public bool IsForced

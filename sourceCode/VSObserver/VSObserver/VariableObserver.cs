@@ -865,5 +865,44 @@ namespace VSObserver
             sw.Stop();
             Console.WriteLine("END LOAD FILE : " + sw.ElapsedMilliseconds);
         }
+
+        public void saveVariableLocked()
+        {
+            try
+            {
+                string lockedListSaved = @"Resources/LockedList.csv";
+
+                if (!File.Exists(lockedListSaved))
+                {
+                    File.Create(lockedListSaved).Dispose();
+                }
+
+                FileInfo fi = new FileInfo(lockedListSaved);
+                TextWriter tw = new StreamWriter(fi.Open(FileMode.Truncate));
+
+                StringBuilder builder = new StringBuilder();
+
+                foreach(DataObserver dobs in getLockedVariables())
+                {
+                    if (dobs.PathName != getLockedVariables().Last().PathName)
+                    {
+                        builder.Append(dobs.PathName + ";");
+                    }
+                    else
+                    {
+                        builder.Append(dobs.PathName);
+                    }
+                }
+
+                tw.Write(builder.ToString());
+                tw.Flush();
+                tw.Close();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error : \n" + e.ToString());
+            }
+        }
     }
 }
