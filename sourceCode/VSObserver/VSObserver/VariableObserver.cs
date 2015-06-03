@@ -44,7 +44,7 @@ namespace VSObserver
         private const string NODE_VARIABLE = "Variable";
         private const string NODE_RULE_SET = "RuleSet";
         private const string NODE_SIMPLE_RULE = "SimpleRule";
-        private const string NODE_COMMENT = "SimpleRule";
+        private const string NODE_COMMENT = "Comment";
         private const string ATTR_VALUE = "value";
         private const string ATTR_COLOR = "color";
 
@@ -68,7 +68,7 @@ namespace VSObserver
         private int show_number;
         private bool search_regex;
 
-        private Dictionary<string, Dictionary<string, string>> colorRules;
+        private Dictionary<string, FileRules> colorRules;
 
         public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase, int show_number)
         {
@@ -81,7 +81,7 @@ namespace VSObserver
             _writTyp = F_VAL;
             this.show_number = show_number;
             search_regex = false;
-            colorRules = new Dictionary<string, Dictionary<string, string>>();
+            colorRules = new Dictionary<string, FileRules>();
         }
 
         public int VarNumberFound
@@ -611,14 +611,16 @@ namespace VSObserver
 
                         if (colorRules.ContainsKey(rowObserver.PathName))
                         {
-                            if (colorRules[rowObserver.PathName].ContainsKey(rowObserver.Value))
+                            if (colorRules[rowObserver.PathName].ColorRules.ContainsKey(rowObserver.Value))
                             {
-                                rowObserver.Color = colorRules[rowObserver.PathName][rowObserver.Value];
+                                rowObserver.Color = colorRules[rowObserver.PathName].ColorRules[rowObserver.Value];
                             }
                             else
                             {
                                 rowObserver.Color = "";
                             }
+
+                            rowObserver.CommentColor = colorRules[rowObserver.PathName].Comment;
                         }
 
                         if (status.state == InjectionStates.InjectionStates_IsSet)
@@ -802,6 +804,7 @@ namespace VSObserver
                                            select new
                                            {
                                                VariableName = items.Element(NODE_VARIABLE).Value,
+                                               Comment = (string)items.Element(NODE_COMMENT),
                                                RuleSet = items.Element(NODE_RULE_SET).Descendants(NODE_SIMPLE_RULE)
                                            };
 
@@ -820,6 +823,8 @@ namespace VSObserver
                                         }
                                     }*/
 
+                                    FileRules rules = new FileRules();
+
                                     //Loading of all rule set elements
                                     Dictionary<string, string> ruleSets = new Dictionary<string, string>();
 
@@ -830,6 +835,11 @@ namespace VSObserver
                                             ruleSets.Add(ruleSet.Attribute(ATTR_VALUE).Value, ruleSet.Attribute(ATTR_COLOR).Value);
                                         }
                                     }
+
+                                    //Adding the colors in function of value on the rule object
+                                    rules.ColorRules = ruleSets;
+                                    //Adding comment in the rules
+                                    rules.Comment = item.Comment;
 
                                     //Searching all variables in all variables list
                                     var source = variableTable.AsEnumerable();
@@ -842,7 +852,7 @@ namespace VSObserver
 
                                         if (!colorRules.ContainsKey(varPathAndName))
                                         {
-                                            colorRules.Add(varPathAndName, ruleSets);
+                                            colorRules.Add(varPathAndName, rules);
                                         }
                                     }
                                 }
