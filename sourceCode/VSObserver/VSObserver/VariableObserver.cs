@@ -904,5 +904,40 @@ namespace VSObserver
                 Console.WriteLine("Error : \n" + e.ToString());
             }
         }
+
+        public void loadLockedVariables()
+        {
+            try
+            {
+                string lockedListSaved = @"Resources/LockedList.csv";
+
+                if (File.Exists(lockedListSaved))
+                {
+                    StreamReader reader = new StreamReader(File.OpenRead(lockedListSaved));
+                    StringBuilder readString = new StringBuilder();
+                    
+                    while (!reader.EndOfStream)
+                    {
+                        readString.Append(reader.ReadLine());
+                    }
+
+                    string[] listOfVariables = readString.ToString().Split(';');
+                    ObservableCollection<DataObserver> listDobs = new ObservableCollection<DataObserver>();
+
+                    foreach (string pathName in listOfVariables)
+                    {
+                        DataObserver dobs = readValue(pathName, "");
+                        dobs.IsLocked = true;
+                        listDobs.Add(dobs);
+                    }
+
+                    VariableList = listDobs;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error load : \n" + e.ToString());
+            }
+        }
     }
 }

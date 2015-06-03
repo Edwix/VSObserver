@@ -112,6 +112,9 @@ namespace VSObserver
             //Création de l'objet qui va regarder le fichier
             FileWatcher fileWatch = new FileWatcher(rulePath);
             fileWatch.setFileChangeListener(vo);
+
+            //Chargmement des listes de variables sauvegardé
+            vo.loadLockedVariables();
         }
 
         /// <summary>
