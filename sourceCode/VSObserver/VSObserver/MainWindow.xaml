@@ -20,7 +20,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
         <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Margin="5,5,5,5" Grid.Column="2" Grid.Row="0"/>
@@ -64,7 +63,22 @@
                 </Style>
             </Image.Style>
         </Image>
-        <TextBox Name="tb_variableName" AcceptsReturn="False" Margin="5,5,5,5" Height="25" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="tb_variableName_TextChanged"/>
+        <DockPanel Width="Auto" HorizontalAlignment="Stretch" LastChildFill="True" Grid.Column="0" Grid.Row="0">
+            <Border Name="errorBall" Margin="5,0,0,0" CornerRadius="20" Width="25" Height="25" BorderBrush="LightGray" BorderThickness="1" Background="Red" ToolTip="{Binding Path=InformationMessage, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock HorizontalAlignment="Center" Name="tbl_message" VerticalAlignment="Center" Text="!" Foreground="White" FontWeight="Bold" >
+                </TextBlock>
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=InformationMessage}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+            <TextBox Name="tb_variableName" Grid.Column="1" AcceptsReturn="False" Margin="5,5,5,5" Height="24" Width="Auto" HorizontalAlignment="Stretch" Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="tb_variableName_TextChanged"/>
+        </DockPanel>        
         <Border Name="btn_typeW" BorderBrush="Gray" BorderThickness="1" CornerRadius="20" Background="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToBackground}}" Width="25" Height="25" Margin="0" Grid.Column="3" Grid.Row="0" MouseDown="btn_typeW_MouseDown">
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged}" Foreground="Black" FontWeight="ExtraBold" />
         </Border>
@@ -77,17 +91,6 @@
             <Run Text="{Binding VarNumberFound, UpdateSourceTrigger=PropertyChanged}" />
             <Run Text=" / " />
             <Run x:Name="run_varTotal" Text="0" />
-        </TextBlock>
-        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_message" Text="{Binding Path=InformationMessage, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=InformationMessage}" Value="{x:Null}">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
         </TextBlock>
         <DataGrid
             VerticalAlignment="Stretch"
@@ -146,7 +149,7 @@
                         <DataTemplate >
                             <Grid Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToColor}}">
                                 <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                    <Border Name="force_ball" BorderBrush="Gray" BorderThickness="1" CornerRadius="20" Background="Red" Width="20" Height="20" Margin="5,5,10,5" 
+                                    <Border Name="force_ball" BorderBrush="Gray" BorderThickness="1" CornerRadius="0" Background="Red" Width="20" Height="20" Margin="5,0,10,0" 
                                             MouseDown="force_ball_icon_MouseDown"
                                             Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}"
                                             Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}">

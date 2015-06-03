@@ -85,7 +85,7 @@ namespace VSObserver
 
             dataApp = new DataApplication();
             img_refresh.DataContext = dataApp;
-            tbl_message.DataContext = dataApp;
+            errorBall.DataContext = dataApp;
            
             
             dataApp.LoadDone = true;
