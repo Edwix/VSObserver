@@ -17,6 +17,7 @@ using System.Xml.Schema;
 using System.Xml;
 using System.Xml.Linq;
 using System.Reflection;
+using System.Windows.Input;
 
 namespace VSObserver
 {
@@ -69,6 +70,9 @@ namespace VSObserver
         private bool search_regex;
 
         private Dictionary<string, FileRules> colorRules;
+
+        ///Commands
+        private ICommand cmdCopyVar;
 
         public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase, int show_number)
         {
@@ -939,5 +943,34 @@ namespace VSObserver
                 Console.WriteLine("Error load : \n" + e.ToString());
             }
         }
+
+        #region Commands
+            public ICommand CopyVariable
+            {
+                get
+                {
+                    if (this.cmdCopyVar == null)
+                        this.cmdCopyVar = new RelayCommand(() => copyVariable(), () => true);
+
+                    return cmdCopyVar;
+                }
+            }
+
+            private void copyVariable()
+            {
+                try
+                {
+                    if(SelectedVariable != null)
+                    {
+                        string pathNameVar = SelectedVariable.PathName;
+                        Clipboard.SetText(pathNameVar);
+                    }
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Error copy variable : \n" + e.ToString());
+                }
+            }
+        #endregion
     }
 }

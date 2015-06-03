@@ -186,6 +186,9 @@
                 <DataGridTextColumn Binding="{Binding Path=Timestamp, UpdateSourceTrigger=PropertyChanged}" Header="Timestamp" Width="Auto"/>
                 <DataGridTextColumn Binding="{Binding Path=ValueHasChanged, UpdateSourceTrigger=PropertyChanged}" Header="Change" Visibility="Collapsed" Width="Auto"/>
             </DataGrid.Columns>
+            <DataGrid.InputBindings>
+                <KeyBinding Command="{Binding CopyVariable}" Gesture="CTRL+C" />
+            </DataGrid.InputBindings>
         </DataGrid>
     </Grid>
 </Window>
