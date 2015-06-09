@@ -33,6 +33,7 @@ namespace VSObserver
         VariableController vc;
 
         private const string QUERY_MAPPING = "SELECT V1.Name AS Path, V2.Name AS Mapping FROM Variable AS V1, Variable AS V2 WHERE  V2.variableId = V1.parentId";
+        private const string QUERY_ALL_VAR = "SELECT Name AS Path FROM Variable";
 
         private const string VARIABLE_LIST = "VariableList";
         private const string SEARCH_TEXT = "SearchText";
@@ -215,7 +216,7 @@ namespace VSObserver
                 NameList listeUT = control.getVariableList();
 
                 if (listeUT.size() > 0)
-                {                    
+                {
                     for (int i = 0; i < listeUT.size(); i++)
                     {
                         ///Si la clé primaire existe déjà dans le dictionnaire alors on rajoute le mapping
@@ -229,6 +230,47 @@ namespace VSObserver
                             variableTable.Rows.Add(listeUT.get(i), dic[listeUT.get(i)].ToString());
                         }
                     }
+                }
+            }
+            else
+            {
+                try
+                {
+                    SQLiteCommand cmdGetAll;
+                    sqliteConn.Open();
+                    cmdGetAll = new SQLiteCommand(QUERY_ALL_VAR, sqliteConn);
+
+                    ///Lecture des données contenu dans la base de données SQLite
+                    ///On met la clé et la valeur dans le dictionnaire
+                    SQLiteDataReader reader = cmdGetAll.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        if (!dic.ContainsKey(reader[PATH].ToString()))
+                            dic.Add(reader[PATH].ToString(), "");
+
+                        ///Si la clé primaire existe déjà dans le dictionnaire alors on rajoute le mapping
+                        ///Si elle n'existe pas on met un mapping vide
+                        if (!dic.ContainsKey(reader[PATH].ToString()))
+                        {
+                            variableTable.Rows.Add(reader[PATH].ToString(), "");
+                        }
+                        else
+                        {
+                            variableTable.Rows.Add(reader[PATH].ToString(), dic[reader[PATH].ToString()].ToString());
+                        }
+                    }
+
+                    sqliteConn.Close();
+
+                    dataApp.InformationMessage = null;
+
+                    //On met qu'on a eu une connexion puisqu'on a réussi à importé les variables du SQLite
+                    connectionOK = true;
+                }
+                catch (Exception e)
+                {
+                    dataApp.InformationMessage = "Error on SQLite data base !\n" + e.ToString() ;
                 }
             }
 
