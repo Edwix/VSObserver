@@ -31,6 +31,7 @@ namespace VSObserver
 
         private const int INTERVAL = 250;
         private const int INTERVAL_SEARCH = 500;
+        private const string LOCKED_LIST_FILE = "LockedList";
 
         private int refreshRate;
         private string ipAddresseRTCServer;
@@ -101,6 +102,7 @@ namespace VSObserver
             dg_variableList.DataContext = vo;
             btn_typeW.DataContext = vo;
             cb_RegexSearch.DataContext = vo;
+            img_lockedList.DataContext = vo;
 
             //Création de la tâche de fond qui va rafraichir la liste des varaibles
             refreshWorker = new BackgroundWorker();
@@ -357,7 +359,7 @@ namespace VSObserver
 
         private void lockBtn_Click(object sender, RoutedEventArgs e)
         {
-            vo.saveVariableLocked();
+            vo.saveVariableLocked(LOCKED_LIST_FILE);
         }
     }
 }

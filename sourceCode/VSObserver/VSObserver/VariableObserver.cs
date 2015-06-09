@@ -74,6 +74,7 @@ namespace VSObserver
 
         ///Commands
         private ICommand cmdCopyVar;
+        private ICommand cmdSavCurLckedList;
 
         public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase, int show_number)
         {
@@ -912,11 +913,11 @@ namespace VSObserver
             Console.WriteLine("END LOAD FILE : " + sw.ElapsedMilliseconds);
         }
 
-        public void saveVariableLocked()
+        public void saveVariableLocked(string name)
         {
             try
             {
-                string lockedListSaved = @"Resources/LockedList.csv";
+                string lockedListSaved = @"Resources/" + name + ".csv";
 
                 if (!File.Exists(lockedListSaved))
                 {
@@ -1012,6 +1013,23 @@ namespace VSObserver
                 {
                     Console.WriteLine("Error copy variable : \n" + e.ToString());
                 }
+            }
+
+            public ICommand SaveCurrentLockedList
+            {
+                get
+                {
+                    if (this.cmdSavCurLckedList == null)
+                        this.cmdSavCurLckedList = new RelayCommand(() => saveCurrentLockedList(), () => true);
+
+                    return cmdSavCurLckedList;
+                }
+            }
+
+            private void saveCurrentLockedList()
+            {
+                Console.WriteLine("SAVE CURRENT LOCKED LIST");
+                saveVariableLocked("test");
             }
         #endregion
     }
