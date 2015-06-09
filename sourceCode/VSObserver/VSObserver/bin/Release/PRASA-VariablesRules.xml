@@ -35,7 +35,7 @@
        </RuleSet>
    </Item>
    <Item>
-       <Variable>_10A12_(10A12_10XP12_XCB2_55|10XP12_XCB2_45|TR1|44|10A12_10XP12_XCB1_55|33|TR3|TR6|TR7|TR8|TR9|TR10|TR11|TR12|TR13|TR14|TR15|10A12_10XP12_XCB1_16|31|_M_|_19|10A12_10XP12_XCB2_4|10A12_10XP12_XCB2_19)$</Variable>
+       <Variable>_10A12_(1|2|3|10A12_10XP12_XCB2_55|10XP12_XCB2_45|TR1|44|10A12_10XP12_XCB1_55|33|TR3|TR6|TR7|TR8|TR9|TR10|TR11|TR12|TR13|TR14|TR15|10A12_10XP12_XCB1_16|31|_M_|_19|10A12_10XP12_XCB2_4|10A12_10XP12_XCB2_19)$</Variable>
        <RuleSet>
             <SimpleRule value="1" color="Green" />
 			<SimpleRule value="0" color="Red" />
@@ -53,6 +53,34 @@
        <RuleSet>
             <SimpleRule value="0" color="Green" />
 			<SimpleRule value="1" color="Red" />
+       </RuleSet>
+   </Item>
+   <Item>
+       <Variable>_40A1_(40A1_40XP1_X317_z22|d10|z12|d12|b8|d8|40A1_40XP1_X314_z22|b20|40A1_40XP1_X301_z8|d14|z8|z32|z14|40A1_40XP1_X314_d24|z16)$</Variable>
+       <RuleSet>
+            <SimpleRule value="1" color="Green" />
+			<SimpleRule value="0" color="Red" />
+       </RuleSet>
+   </Item>
+   <Item>
+       <Variable>_40A1_(z10|40A1_40XP1_X318_d24|d20|40A1_40XP1_X317_z18|d32)$</Variable>
+       <RuleSet>
+            <SimpleRule value="0" color="Green" />
+			<SimpleRule value="1" color="Red" />
+       </RuleSet>
+   </Item>
+   <Item>
+       <Variable>_40A1_(40A1_40XP1_X317_d22|40A1_40XP1_X317_d24|)$</Variable>
+       <RuleSet>
+            <SimpleRule value="0" color="Green" />
+			<SimpleRule value="1" color="Orange" />
+       </RuleSet>
+   </Item>
+   <Item>
+       <Variable>_19A1_(88|19A1_19XP1_A1_15_a_1|19A1_19XP1_A1_15_b_1|2|108|72|17|54|71|18|106)$</Variable>
+       <RuleSet>
+            <SimpleRule value="1" color="Green" />
+			<SimpleRule value="0" color="Red" />
        </RuleSet>
    </Item>
    <Item>
@@ -82,6 +110,14 @@
        <RuleSet>
             <SimpleRule value="1" color="Red" />
 			<SimpleRule value="0" color="Green" />
+       </RuleSet>
+   </Item>
+   <Item>
+       <Variable>_60S3_(24|14)$</Variable>
+	   <Comment>Dead man switch (Green = activated and Blue = not activated) </Comment>
+       <RuleSet>
+            <SimpleRule value="1" color="LightGreen" />
+			<SimpleRule value="0" color="DodgerBlue" />
        </RuleSet>
    </Item>
 </List>
