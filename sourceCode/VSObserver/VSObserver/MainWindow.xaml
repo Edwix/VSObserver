@@ -73,15 +73,18 @@
                     <i:Interaction.Behaviors>
                         <behavior:DropDownImageBehavior/>
                     </i:Interaction.Behaviors>
-                    <Image.ContextMenu>
+                    <Image.ContextMenu >
                         <ContextMenu ItemsSource="{Binding Path=LockedListSaved, UpdateSourceTrigger=PropertyChanged}">
-                            <MenuItem Header="Save current" Command="{Binding Path=SaveCurrentLockedList}"/>
-                        <Menu>
-                            <MenuItem Header="test 1"></MenuItem>
-                            <MenuItem Header="test 2"></MenuItem>
-                        </Menu>
-                        <Separator/>
-                            <MenuItem Header="Property"/>
+                        <MenuItem  Width="Auto" HorizontalAlignment="Stretch">
+                                <MenuItem.Header>
+                                    <TextBox ToolTip="Press to Enter to save the list" Height="25" Width="Auto"
+                                             HorizontalAlignment="Stretch" AcceptsReturn="False" Text="{Binding Path=FileNameLockedList, UpdateSourceTrigger=PropertyChanged}">
+                                        <TextBox.InputBindings>
+                                            <KeyBinding Key="Enter" Command="{Binding Path=SaveCurrentLockedList}" />
+                                        </TextBox.InputBindings>
+                                    </TextBox>
+                                </MenuItem.Header>
+                            </MenuItem>
                         </ContextMenu>
                     </Image.ContextMenu>
                 </Image>

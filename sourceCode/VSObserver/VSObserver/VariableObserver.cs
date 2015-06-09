@@ -41,6 +41,7 @@ namespace VSObserver
         private const string VAR_NUMBER_FOUND = "VarNumberFound";
         private const string WRITING_TYPE = "WritingType";
         private const string SEARCH_REGEX = "SearchRegex";
+        private const string FILE_NAME_LOCKED_LIST = "FileNameLockedList";
 
         private const string NODE_ITEM = "Item";
         private const string NODE_VARIABLE = "Variable";
@@ -61,6 +62,7 @@ namespace VSObserver
         private const string TIMESTAMP = "Timestamp";
         private const string REGEX_SEARCH = @"^[0-9a-zA-Z_/\-:\*\?]+$";
         private const string REGEX_REMPLACE = @"[^0-9a-zA-Z_/\-:\*\?]";
+        private const string REGEX_REMPLACE_FILE = @"[^0-9a-zA-Z_/\-]";
 
         private bool connectionOK;
         private Regex reg_var;
@@ -69,6 +71,8 @@ namespace VSObserver
         private string _writTyp;
         private int show_number;
         private bool search_regex;
+
+        private string _fileNameLockedVar;
 
         private Dictionary<string, FileRules> colorRules;
 
@@ -147,6 +151,12 @@ namespace VSObserver
         {
             get { return search_regex; }
             set { search_regex = value; OnPropertyChanged(SEARCH_REGEX); }
+        }
+
+        public string FileNameLockedList
+        {
+            get { return _fileNameLockedVar; }
+            set { _fileNameLockedVar = value; OnPropertyChanged(FILE_NAME_LOCKED_LIST); }
         }
 
         /// <summary>
@@ -1028,8 +1038,14 @@ namespace VSObserver
 
             private void saveCurrentLockedList()
             {
-                Console.WriteLine("SAVE CURRENT LOCKED LIST");
-                saveVariableLocked("test");
+                if (_fileNameLockedVar != "")
+                {
+                    //On remplace le nom de fichier entré pour enlevé tous mes caractères spéciaux
+                    string fileName = Regex.Replace(_fileNameLockedVar, REGEX_REMPLACE_FILE, "");
+
+                    Console.WriteLine("SAVE CURRENT LOCKED LIST : " + fileName);
+                    saveVariableLocked(fileName);
+                }
             }
         #endregion
     }
