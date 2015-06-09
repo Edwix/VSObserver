@@ -31,7 +31,7 @@ namespace VSObserver
 
         private const int INTERVAL = 250;
         private const int INTERVAL_SEARCH = 500;
-        private const string LOCKED_LIST_FILE = "LockedList";
+        public const string LOCKED_LIST_FILE = "LockedList";
 
         private int refreshRate;
         private string ipAddresseRTCServer;
@@ -117,6 +117,9 @@ namespace VSObserver
 
             //Chargmement des listes de variables sauvegardé
             vo.loadLockedVariables();
+
+            //Chargement de tous les fichiers sauvegardés qui contiennent les variable bloqués
+            vo.getListLockedVarSaved();
         }
 
         /// <summary>

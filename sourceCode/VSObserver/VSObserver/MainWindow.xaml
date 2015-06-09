@@ -69,22 +69,30 @@
         <!--=========================================================================================-->
         <!-- Button to have a list of locked lists -->
         <!--=========================================================================================-->
-                <Image Name="img_lockedList" Grid.Column="4" Grid.Row="0" Source="Resources/List.png" SnapsToDevicePixels="True" Height="16" Width="16">
+                <Image  x:Name="img_lockedList" Grid.Column="4" Grid.Row="0" Source="Resources/List.png" SnapsToDevicePixels="True" Height="16" Width="16">
                     <i:Interaction.Behaviors>
                         <behavior:DropDownImageBehavior/>
                     </i:Interaction.Behaviors>
-                    <Image.ContextMenu >
-                        <ContextMenu ItemsSource="{Binding Path=LockedListSaved, UpdateSourceTrigger=PropertyChanged}">
-                        <MenuItem  Width="Auto" HorizontalAlignment="Stretch">
-                                <MenuItem.Header>
-                                    <TextBox ToolTip="Press to Enter to save the list" Height="25" Width="Auto"
-                                             HorizontalAlignment="Stretch" AcceptsReturn="False" Text="{Binding Path=FileNameLockedList, UpdateSourceTrigger=PropertyChanged}">
-                                        <TextBox.InputBindings>
-                                            <KeyBinding Key="Enter" Command="{Binding Path=SaveCurrentLockedList}" />
-                                        </TextBox.InputBindings>
-                                    </TextBox>
-                                </MenuItem.Header>
-                            </MenuItem>
+                <Image.Resources>
+                    <CollectionViewSource x:Name="listLockedVarFile" x:Key="LockedVarFiles" Source="{Binding Path=ListOfFileLockedVar, UpdateSourceTrigger=PropertyChanged}" />
+                </Image.Resources>
+                <Image.ContextMenu >
+                        <ContextMenu>
+                            <ContextMenu.ItemsSource>
+                                <CompositeCollection>
+                                    <MenuItem  Width="Auto" HorizontalAlignment="Stretch">
+                                        <MenuItem.Header>
+                                            <TextBox ToolTip="Press to Enter to save the list" Height="25" Width="Auto"
+                                                     HorizontalAlignment="Stretch" AcceptsReturn="False" Text="{Binding Path=FileNameLockedList, UpdateSourceTrigger=PropertyChanged}">
+                                                <TextBox.InputBindings>
+                                                    <KeyBinding Key="Enter" Command="{Binding Path=SaveCurrentLockedList}" />
+                                                </TextBox.InputBindings>
+                                            </TextBox>
+                                        </MenuItem.Header>
+                                    </MenuItem>
+                                    <CollectionContainer Collection="{Binding Source={StaticResource LockedVarFiles}}" />
+                                </CompositeCollection>
+                            </ContextMenu.ItemsSource>
                         </ContextMenu>
                     </Image.ContextMenu>
                 </Image>

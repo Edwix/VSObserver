@@ -42,6 +42,7 @@ namespace VSObserver
         private const string WRITING_TYPE = "WritingType";
         private const string SEARCH_REGEX = "SearchRegex";
         private const string FILE_NAME_LOCKED_LIST = "FileNameLockedList";
+        private const string LIST_FILE_LOCKED_VAR = "ListOfFileLockedVar";
 
         private const string NODE_ITEM = "Item";
         private const string NODE_VARIABLE = "Variable";
@@ -73,6 +74,7 @@ namespace VSObserver
         private bool search_regex;
 
         private string _fileNameLockedVar;
+        private ObservableCollection<string> _listOfFileLockedVar;
 
         private Dictionary<string, FileRules> colorRules;
 
@@ -92,6 +94,7 @@ namespace VSObserver
             this.show_number = show_number;
             search_regex = false;
             colorRules = new Dictionary<string, FileRules>();
+            _listOfFileLockedVar = new ObservableCollection<string>();
         }
 
         public int VarNumberFound
@@ -157,6 +160,12 @@ namespace VSObserver
         {
             get { return _fileNameLockedVar; }
             set { _fileNameLockedVar = value; OnPropertyChanged(FILE_NAME_LOCKED_LIST); }
+        }
+
+        public ObservableCollection<string> ListOfFileLockedVar
+        {
+            get { return _listOfFileLockedVar; }
+            set { _listOfFileLockedVar = value; OnPropertyChanged(LIST_FILE_LOCKED_VAR);  }
         }
 
         /// <summary>
@@ -997,6 +1006,29 @@ namespace VSObserver
             }
         }
 
+        /// <summary>
+        /// Get the list of file with locked variables (.csv)
+        /// </summary>
+        public void getListLockedVarSaved()
+        {
+            _listOfFileLockedVar.Clear();
+            string[] listFilePath = Directory.GetFiles(@"Resources/");
+
+            foreach (string filePath in listFilePath)
+            {
+                if (Path.GetExtension(filePath).Equals(".csv"))
+                {
+                    //Si c'est different de la liste de sauvegarde par défaut, alors on ajoute les fichiers trouvées
+                    if (!Path.GetFileNameWithoutExtension(filePath).Equals(MainWindow.LOCKED_LIST_FILE))
+                    {
+                        _listOfFileLockedVar.Add(Path.GetFileNameWithoutExtension(filePath));
+                    }
+                }
+            }
+
+            OnPropertyChanged(LIST_FILE_LOCKED_VAR);
+        }
+
         #region Commands
             public ICommand CopyVariable
             {
@@ -1045,6 +1077,8 @@ namespace VSObserver
 
                     Console.WriteLine("SAVE CURRENT LOCKED LIST : " + fileName);
                     saveVariableLocked(fileName);
+
+                    getListLockedVarSaved();
                 }
             }
         #endregion
