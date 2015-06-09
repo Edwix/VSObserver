@@ -567,7 +567,7 @@ namespace VSObserver
                         break;
                     ///=================================================================================================
                     default:
-                        Console.WriteLine("READVALUE DEFAULT : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
+                        //Console.WriteLine("READVALUE DEFAULT : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
                         dataObserver = createDataObserver(completeVariable, "Undefined", VS_Type.VECTOR_DOUBLE, 0L, mapping, variableForced);
                         break;
                 }
@@ -971,11 +971,11 @@ namespace VSObserver
             }
         }
 
-        public void loadLockedVariables()
+        public void loadLockedVariables(string name)
         {
             try
             {
-                string lockedListSaved = @"Resources/LockedList.csv";
+                string lockedListSaved = @"Resources/"+ name + ".csv";
 
                 if (File.Exists(lockedListSaved))
                 {
@@ -1075,9 +1075,10 @@ namespace VSObserver
                     //On remplace le nom de fichier entré pour enlevé tous mes caractères spéciaux
                     string fileName = Regex.Replace(_fileNameLockedVar, REGEX_REMPLACE_FILE, "");
 
-                    Console.WriteLine("SAVE CURRENT LOCKED LIST : " + fileName);
+                    //Sauvegarde des variable bloqués
                     saveVariableLocked(fileName);
 
+                    //On récupère la liste pour l'afficher
                     getListLockedVarSaved();
                 }
             }

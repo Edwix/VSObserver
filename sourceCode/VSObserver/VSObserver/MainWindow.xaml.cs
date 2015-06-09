@@ -116,7 +116,7 @@ namespace VSObserver
             fileWatch.setFileChangeListener(vo);
 
             //Chargmement des listes de variables sauvegardé
-            vo.loadLockedVariables();
+            vo.loadLockedVariables(LOCKED_LIST_FILE);
 
             //Chargement de tous les fichiers sauvegardés qui contiennent les variable bloqués
             vo.getListLockedVarSaved();
@@ -363,6 +363,22 @@ namespace VSObserver
         private void lockBtn_Click(object sender, RoutedEventArgs e)
         {
             vo.saveVariableLocked(LOCKED_LIST_FILE);
+        }
+
+        private void fileLockedList_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+
+            if(menuItem != null)
+            {
+                Console.WriteLine("MENU ITEM CLICK : " + menuItem.Header.ToString());
+                vo.loadLockedVariables(menuItem.Header.ToString());
+            }
+        }
+
+        private void defaultLockedList_Click(object sender, RoutedEventArgs e)
+        {
+            vo.loadLockedVariables(LOCKED_LIST_FILE);
         }
     }
 }
