@@ -89,7 +89,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Behavior\DropDownButtonBehavior.cs" />
+    <Compile Include="Behavior\DropDownImageBehavior.cs" />
     <Compile Include="BoolToVisibility.cs" />
     <Compile Include="DataApplication.cs" />
     <Compile Include="DataObserver.cs" />

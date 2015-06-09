@@ -10,17 +10,17 @@ using System.Windows.Controls.Primitives;
 
 namespace VSObserver.Behavior
 {
-    class DropDownButtonBehavior : Behavior<Button>
+    class DropDownImageBehavior : Behavior<Image>
     {
         protected override void OnAttached()
         {
             base.OnAttached();
-            AssociatedObject.AddHandler(Button.ClickEvent, new RoutedEventHandler(AssociatedObject_Click), true);
+            AssociatedObject.AddHandler(Image.MouseLeftButtonDownEvent, new RoutedEventHandler(AssociatedObject_Click), true);
         }
 
         void AssociatedObject_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Button source = sender as Button;
+            Image source = sender as Image;
             if (source != null && source.ContextMenu != null)
             {
                 // If there is a drop-down assigned to this button, then position and display it 
@@ -33,7 +33,7 @@ namespace VSObserver.Behavior
         protected override void OnDetaching()
         {
             base.OnDetaching();
-            AssociatedObject.RemoveHandler(Button.ClickEvent, new RoutedEventHandler(AssociatedObject_Click));
+            AssociatedObject.RemoveHandler(Image.MouseLeftButtonDownEvent, new RoutedEventHandler(AssociatedObject_Click));
         }
     }
 }

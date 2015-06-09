@@ -17,7 +17,7 @@
             <ColumnDefinition Width="35"/>
             <ColumnDefinition Width="40"/>
             <ColumnDefinition Width="40"/>
-            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="30"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -69,37 +69,20 @@
         <!--=========================================================================================-->
         <!-- Button to have a list of locked lists -->
         <!--=========================================================================================-->
-        <Button Grid.Column="4" Grid.Row="0">
-            <i:Interaction.Behaviors>
-                <behavior:DropDownButtonBehavior/>
-            </i:Interaction.Behaviors>
-            <Button.Content>
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="Resources/List.png" SnapsToDevicePixels="True" Height="16" Width="16" />
-                    <Separator Margin="2,0">
-                        <Separator.LayoutTransform>
-                            <TransformGroup>
-                                <TransformGroup.Children>
-                                    <TransformCollection>
-                                        <RotateTransform Angle="90"/>
-                                    </TransformCollection>
-                                </TransformGroup.Children>
-                            </TransformGroup>
-                        </Separator.LayoutTransform>
-                    </Separator>
-                    <Path Margin="2" VerticalAlignment="Center" Width="6" Fill="#FF527DB5" Stretch="Uniform" HorizontalAlignment="Right" Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z "/>
-                </StackPanel>
-            </Button.Content>
-            <Button.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Attribute"/>
-                    <MenuItem Header="Setting"/>
-                    <Separator/>
-                    <MenuItem Header="Property"/>
-                </ContextMenu>
-            </Button.ContextMenu>
-        </Button>
-        <!--=========================================================================================-->
+                <Image Grid.Column="4" Grid.Row="0" Source="Resources/List.png" SnapsToDevicePixels="True" Height="16" Width="16">
+                    <i:Interaction.Behaviors>
+                        <behavior:DropDownImageBehavior/>
+                    </i:Interaction.Behaviors>
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Attribute"/>
+                            <MenuItem Header="Setting"/>
+                            <Separator/>
+                            <MenuItem Header="Property"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
+            <!--=========================================================================================-->
         <DockPanel Width="Auto" HorizontalAlignment="Stretch" LastChildFill="True" Grid.Column="0" Grid.Row="0">
             <Border Name="errorBall" Margin="5,0,0,0" CornerRadius="20" Width="25" Height="25" BorderBrush="LightGray" BorderThickness="1" Background="Red" ToolTip="{Binding Path=InformationMessage, UpdateSourceTrigger=PropertyChanged}">
                 <TextBlock HorizontalAlignment="Center" Name="tbl_message" VerticalAlignment="Center" Text="!" Foreground="White" FontWeight="Bold" >
