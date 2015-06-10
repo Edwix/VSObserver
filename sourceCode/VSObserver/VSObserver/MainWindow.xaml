@@ -16,7 +16,6 @@
             <ColumnDefinition />
             <ColumnDefinition Width="35"/>
             <ColumnDefinition Width="40"/>
-            <ColumnDefinition Width="40"/>
             <ColumnDefinition Width="30"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -25,7 +24,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
-        <Button Name="btn_hideDialog" Content="Hide" Height="20" Click="btn_hideDialog_Click" Margin="5,5,5,5" Grid.Column="2" Grid.Row="0"/>
         <Image Name="img_refresh" Source="Resources/Refresh.png" RenderTransformOrigin=".5,.5" Grid.Column="1" Grid.Row="0" MouseLeftButtonDown="refresh_ClickDown"
                 ToolTip="Refresh all variables" Margin="5,5,5,5">
             <Image.Style>
@@ -69,7 +67,7 @@
         <!--=========================================================================================-->
         <!-- Button to have a list of locked lists -->
         <!--=========================================================================================-->
-                <Image  x:Name="img_lockedList" Grid.Column="4" Grid.Row="0" Source="Resources/List.png" SnapsToDevicePixels="True" Height="16" Width="16">
+                <Image  x:Name="img_lockedList" Grid.Column="3" Grid.Row="0" Source="Resources/List.png" SnapsToDevicePixels="True" Height="16" Width="16">
                     <i:Interaction.Behaviors>
                         <behavior:DropDownImageBehavior/>
                     </i:Interaction.Behaviors>
@@ -120,7 +118,7 @@
             </Border>
             <TextBox Name="tb_variableName" Grid.Column="1" AcceptsReturn="False" Margin="5,5,5,5" Height="24" Width="Auto" HorizontalAlignment="Stretch" Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="tb_variableName_TextChanged"/>
         </DockPanel>        
-        <Border Name="btn_typeW" BorderBrush="Gray" BorderThickness="1" CornerRadius="20" Background="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToBackground}}" Width="25" Height="25" Margin="0" Grid.Column="3" Grid.Row="0" MouseDown="btn_typeW_MouseDown">
+        <Border Name="btn_typeW" BorderBrush="Gray" BorderThickness="1" CornerRadius="20" Background="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToBackground}}" Width="25" Height="25" Margin="0" Grid.Column="2" Grid.Row="0" MouseDown="btn_typeW_MouseDown">
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged}" Foreground="Black" FontWeight="ExtraBold" />
         </Border>
         <WrapPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="4" Margin="5,0,5,0">

@@ -218,7 +218,9 @@ namespace VSObserver
                     {
                         ///Suppression des espace blancs au debut et à la fin
                         tb_variableName.Text = clipBoardText.TrimStart().TrimEnd();
-                        this.Show();
+
+                        //Lorsqu'on fait un copier / coller on reaffiche la fenêtre
+                        this.WindowState = System.Windows.WindowState.Normal;
                     }
                 }
 
@@ -235,16 +237,6 @@ namespace VSObserver
                 MessageBox.Show("Error :\n" + ex.ToString());
                 this.Close();
             }
-        }
-
-        /// <summary>
-        /// Cache la fenêtre du programme lorsqu'on clique sur le bouton hide
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btn_hideDialog_Click(object sender, RoutedEventArgs e)
-        {
-            this.Hide();          
         }
 
         private void refresh_ClickDown(object sender, MouseButtonEventArgs e)
