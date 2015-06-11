@@ -23,7 +23,8 @@ namespace VSObserver
 {
     class VariableObserver : ViewModelBase, IFileChange
     {
-        private DataTable variableTable;
+        //private DataTable variableTable;
+        private ObservableCollection<DataObserver> _listOfDataObserver;
         private ObservableCollection<DataObserver> _variableList;
         private string _searchText;
         private string ipAddr;
@@ -183,11 +184,7 @@ namespace VSObserver
 
             vc = Vs.getVariableController();
             IControl control = IControl.create();
-            variableTable = new DataTable();
-            variableTable.Columns.Add(PATH, typeof(string));
-            variableTable.Columns.Add(MAPPING, typeof(string));
-
-            variableTable.PrimaryKey = new DataColumn[] { variableTable.Columns[PATH] };
+            _listOfDataObserver = new ObservableCollection<DataObserver>();
 
             try
             {
@@ -243,11 +240,11 @@ namespace VSObserver
                         ///Si elle n'existe pas on met un mapping vide
                         if (!dic.ContainsKey(listeUT.get(i)))
                         {
-                            variableTable.Rows.Add(listeUT.get(i), "");
+                            _listOfDataObserver.Add(createDataObserver(listeUT.get(i), ""));
                         }
                         else
                         {
-                            variableTable.Rows.Add(listeUT.get(i), dic[listeUT.get(i)].ToString());
+                            _listOfDataObserver.Add(createDataObserver(listeUT.get(i), dic[listeUT.get(i)].ToString()));
                         }
                     }
                 }
@@ -273,11 +270,11 @@ namespace VSObserver
                         ///Si elle n'existe pas on met un mapping vide
                         if (!dic.ContainsKey(reader[PATH].ToString()))
                         {
-                            variableTable.Rows.Add(reader[PATH].ToString(), "");
+                            _listOfDataObserver.Add(createDataObserver(reader[PATH].ToString(), ""));
                         }
                         else
                         {
-                            variableTable.Rows.Add(reader[PATH].ToString(), dic[reader[PATH].ToString()].ToString());
+                            _listOfDataObserver.Add(createDataObserver(reader[PATH].ToString(), dic[reader[PATH].ToString()].ToString()));
                         }
                     }
 
@@ -318,17 +315,7 @@ namespace VSObserver
                 dataApp.InformationMessage = "Error on SQLite data base !";
             }
 
-            return variableTable.Rows.Count;
-        }
-
-        
-
-        public void importAll()
-        {
-            foreach (DataRow dataRow in variableTable.Rows)
-            {
-                vc.importVariable(dataRow[PATH].ToString());
-            }
+            return _listOfDataObserver.Count;
         }
 
         /// <summary>
@@ -372,9 +359,8 @@ namespace VSObserver
                     dataApp.InformationMessage = null;
                 }
 
-                EnumerableRowCollection<DataRow> searchResult = null;
-                var source = variableTable.AsEnumerable();
-                List<DataRow> listDR = new List<DataRow>();
+                IEnumerable<DataObserver> searchResult = null;
+                var source = _listOfDataObserver;
 
                 if (search_regex)
                 {
@@ -386,7 +372,7 @@ namespace VSObserver
 
                         ///RegexOptions.IgnoreCase allows to ignore the case when we make a search
                         searchResult = from matchI in source
-                                       where Regex.IsMatch(matchI.Field<string>(PATH), variableName, RegexOptions.IgnoreCase) || Regex.IsMatch(matchI.Field<string>(MAPPING), variableName, RegexOptions.IgnoreCase)
+                                       where Regex.IsMatch(matchI.PathName, variableName, RegexOptions.IgnoreCase) || Regex.IsMatch(matchI.Mapping, variableName, RegexOptions.IgnoreCase)
                                        select matchI;
                     }
                     else
@@ -401,18 +387,17 @@ namespace VSObserver
                     //We remplace ? by . means any characthers
                     string regexVarName = "^.*" + variableName.Replace("*", ".*").Replace('?', '.') + ".*$";
 
-                    searchResult = source.Where(x => (Regex.IsMatch(x.Field<string>(PATH), regexVarName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Field<string>(MAPPING), regexVarName, RegexOptions.IgnoreCase)));
+                    searchResult = source.Where(x => (Regex.IsMatch(x.PathName, regexVarName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, regexVarName, RegexOptions.IgnoreCase)));
                     
                 }
 
-                listDR = searchResult.ToList<DataRow>();
 
                 if (searchResult != null)
                 {
                     Stopwatch swResh = new Stopwatch();
                     swResh.Start();
                     //variableNumber = searchResult.Count();
-                    variableNumber = listDR.Count;
+                    //variableNumber = listDR.Count;
                     swResh.Stop();
                     Console.WriteLine("COUNT " + swResh.Elapsed.ToString());
 
@@ -445,7 +430,7 @@ namespace VSObserver
                             }
                         } */
 
-                        listDR.ForEach(delegate(DataRow row)
+                       /*listDR.ForEach(delegate(DataRow row)
                         {
                             string completeVariable = (string)row[PATH];
                             string mapping = (string)row[MAPPING];
@@ -463,18 +448,40 @@ namespace VSObserver
                             }
 
                             //Si on a atteint le nombre d'affichage max on arrête la boucle
-                            /*if (compt == show_number)
+                            //if (compt == show_number)
+                            //{
+                            //    break;
+                            //}
+
+                        });*/
+
+                        foreach (DataObserver row in searchResult.Take<DataObserver>(show_number))
+                        {
+                            string completeVariable = row.PathName;
+                            string mapping = row.Mapping;
+
+                            //La lecture de variable retourne un DataObserver avec toutes les informations
+                            DataObserver dobs = readValue(completeVariable, mapping);
+
+                            //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer
+                            //Et si le tableau des variables blocké ne contient pas l'élément on l'ajoute
+                            //Cela permet d'éviter des doublons
+                            if (dobs != null) //&& !containsDatatObserver(lockVars, dobs))
+                            {
+                                variableResult.Add(dobs);
+                                compt++;
+                            }
+
+                            //Si on a atteint le nombre d'affichage max on arrête la boucle
+                            if (compt == show_number)
                             {
                                 break;
-                            }*/
-
-                        });
+                            }
+                        }
                     }
 
-                    VariableList = variableResult;                                        
-                }
-
-                
+                    VariableList = variableResult;                 
+                }                
             }
 
             VarNumberFound = variableNumber;
@@ -669,6 +676,19 @@ namespace VSObserver
                 Mapping = mapping,
                 IsForced = forced,
                 Timestamp = dtDateTime.ToString()
+            };
+
+            return dObs;
+        }
+
+        private DataObserver createDataObserver(string path, string mapping)
+        {
+            DataObserver dObs = new DataObserver
+            {
+                PathName = path,
+                Path = System.IO.Path.GetDirectoryName(path).Replace("\\", "/"),
+                Variable = System.IO.Path.GetFileName(path),
+                Mapping = mapping,
             };
 
             return dObs;
