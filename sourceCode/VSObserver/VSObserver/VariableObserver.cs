@@ -394,15 +394,30 @@ namespace VSObserver
 
                 if (searchResult != null)
                 {
+                    ObservableCollection<DataObserver> newListDObs = new ObservableCollection<DataObserver>(searchResult);
                     Stopwatch swResh = new Stopwatch();
                     swResh.Start();
                     //variableNumber = searchResult.Count();
                     //variableNumber = listDR.Count;
-                    variableNumber = new ObservableCollection<DataObserver>(searchResult).Count;
+                    //variableNumber = new ObservableCollection<DataObserver>(searchResult).Count;
+                    variableNumber = newListDObs.Count;
                     swResh.Stop();
                     Console.WriteLine("COUNT " + swResh.Elapsed.ToString());
 
-                    VariableList = new ObservableCollection<DataObserver>(searchResult.Take<DataObserver>(show_number));
+                    int compt = 0;
+                    foreach (DataObserver dObs in newListDObs)
+                    {
+                        if (compt == show_number)
+                        {
+                            break;
+                        }
+
+                        variableResult.Add(dObs);                       
+
+                        compt++;
+                    }
+
+                    VariableList = variableResult;
                 }                
             }
 
