@@ -240,11 +240,11 @@ namespace VSObserver
                         ///Si elle n'existe pas on met un mapping vide
                         if (!dic.ContainsKey(listeUT.get(i)))
                         {
-                            _listOfDataObserver.Add(createDataObserver(listeUT.get(i), ""));
+                            _listOfDataObserver.Add(createDataObserver(listeUT.get(i), "", VS_Type.INVALID, 0, "", false));
                         }
                         else
                         {
-                            _listOfDataObserver.Add(createDataObserver(listeUT.get(i), dic[listeUT.get(i)].ToString()));
+                            _listOfDataObserver.Add(createDataObserver(listeUT.get(i), "", VS_Type.INVALID, 0, dic[listeUT.get(i)].ToString(), false));
                         }
                     }
                 }
@@ -270,11 +270,11 @@ namespace VSObserver
                         ///Si elle n'existe pas on met un mapping vide
                         if (!dic.ContainsKey(reader[PATH].ToString()))
                         {
-                            _listOfDataObserver.Add(createDataObserver(reader[PATH].ToString(), ""));
+                            _listOfDataObserver.Add(createDataObserver(reader[PATH].ToString(), "", VS_Type.INVALID, 0, "", false));
                         }
                         else
                         {
-                            _listOfDataObserver.Add(createDataObserver(reader[PATH].ToString(), dic[reader[PATH].ToString()].ToString()));
+                            _listOfDataObserver.Add(createDataObserver(reader[PATH].ToString(), "", VS_Type.INVALID, 0, dic[reader[PATH].ToString()].ToString(), false));
                         }
                     }
 
@@ -398,89 +398,11 @@ namespace VSObserver
                     swResh.Start();
                     //variableNumber = searchResult.Count();
                     //variableNumber = listDR.Count;
+                    variableNumber = new ObservableCollection<DataObserver>(searchResult).Count;
                     swResh.Stop();
                     Console.WriteLine("COUNT " + swResh.Elapsed.ToString());
 
-                    ///On vérifie si on a bien une connexion à U-test
-                    if (connectionOK && searchResult != null)
-                    {
-                        int compt = 0;
-
-                        /*foreach (DataRow row in listDR)
-                        {
-                            string completeVariable = (string)row[PATH];
-                            string mapping = (string)row[MAPPING];
-
-                            //La lecture de variable retourne un DataObserver avec toutes les informations
-                            DataObserver dobs = readValue(completeVariable, mapping);
-
-                            //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer
-                            //Et si le tableau des variables blocké ne contient pas l'élément on l'ajoute
-                            //Cela permet d'éviter des doublons
-                            if (dobs != null) //&& !containsDatatObserver(lockVars, dobs))
-                            {
-                                variableResult.Add(dobs);
-                                compt++;
-                            }
-
-                            //Si on a atteint le nombre d'affichage max on arrête la boucle
-                            if (compt == show_number)
-                            {
-                                break;
-                            }
-                        } */
-
-                       /*listDR.ForEach(delegate(DataRow row)
-                        {
-                            string completeVariable = (string)row[PATH];
-                            string mapping = (string)row[MAPPING];
-
-                            //La lecture de variable retourne un DataObserver avec toutes les informations
-                            DataObserver dobs = readValue(completeVariable, mapping);
-
-                            //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer
-                            //Et si le tableau des variables blocké ne contient pas l'élément on l'ajoute
-                            //Cela permet d'éviter des doublons
-                            if (dobs != null) //&& !containsDatatObserver(lockVars, dobs))
-                            {
-                                variableResult.Add(dobs);
-                                compt++;
-                            }
-
-                            //Si on a atteint le nombre d'affichage max on arrête la boucle
-                            //if (compt == show_number)
-                            //{
-                            //    break;
-                            //}
-
-                        });*/
-
-                        foreach (DataObserver row in searchResult.Take<DataObserver>(show_number))
-                        {
-                            string completeVariable = row.PathName;
-                            string mapping = row.Mapping;
-
-                            //La lecture de variable retourne un DataObserver avec toutes les informations
-                            DataObserver dobs = readValue(completeVariable, mapping);
-
-                            //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer
-                            //Et si le tableau des variables blocké ne contient pas l'élément on l'ajoute
-                            //Cela permet d'éviter des doublons
-                            if (dobs != null) //&& !containsDatatObserver(lockVars, dobs))
-                            {
-                                variableResult.Add(dobs);
-                                compt++;
-                            }
-
-                            //Si on a atteint le nombre d'affichage max on arrête la boucle
-                            if (compt == show_number)
-                            {
-                                break;
-                            }
-                        }
-                    }
-
-                    VariableList = variableResult;                 
+                    VariableList = new ObservableCollection<DataObserver>(searchResult.Take<DataObserver>(show_number));
                 }                
             }
 
@@ -676,19 +598,6 @@ namespace VSObserver
                 Mapping = mapping,
                 IsForced = forced,
                 Timestamp = dtDateTime.ToString()
-            };
-
-            return dObs;
-        }
-
-        private DataObserver createDataObserver(string path, string mapping)
-        {
-            DataObserver dObs = new DataObserver
-            {
-                PathName = path,
-                Path = System.IO.Path.GetDirectoryName(path).Replace("\\", "/"),
-                Variable = System.IO.Path.GetFileName(path),
-                Mapping = mapping,
             };
 
             return dObs;
