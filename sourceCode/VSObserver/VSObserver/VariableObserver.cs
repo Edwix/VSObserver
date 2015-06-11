@@ -336,7 +336,10 @@ namespace VSObserver
         /// elle modifie le tableau de bord avec toutes les variables trouvées
         /// </summary>
         public void searchVariables()
-        {          
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
             ObservableCollection<DataObserver> lockVars = getLockedVariables();
@@ -371,6 +374,7 @@ namespace VSObserver
 
                 EnumerableRowCollection<DataRow> searchResult = null;
                 var source = variableTable.AsEnumerable();
+                List<DataRow> listDR = new List<DataRow>();
 
                 if (search_regex)
                 {
@@ -398,18 +402,26 @@ namespace VSObserver
                     string regexVarName = "^.*" + variableName.Replace("*", ".*").Replace('?', '.') + ".*$";
 
                     searchResult = source.Where(x => (Regex.IsMatch(x.Field<string>(PATH), regexVarName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Field<string>(MAPPING), regexVarName, RegexOptions.IgnoreCase)));
+                    
                 }
+
+                listDR = searchResult.ToList<DataRow>();
 
                 if (searchResult != null)
                 {
-                    variableNumber = searchResult.Count();
+                    Stopwatch swResh = new Stopwatch();
+                    swResh.Start();
+                    //variableNumber = searchResult.Count();
+                    variableNumber = listDR.Count;
+                    swResh.Stop();
+                    Console.WriteLine("COUNT " + swResh.Elapsed.ToString());
 
                     ///On vérifie si on a bien une connexion à U-test
                     if (connectionOK && searchResult != null)
                     {
                         int compt = 0;
 
-                        foreach (DataRow row in searchResult)
+                        /*foreach (DataRow row in listDR)
                         {
                             string completeVariable = (string)row[PATH];
                             string mapping = (string)row[MAPPING];
@@ -420,7 +432,7 @@ namespace VSObserver
                             //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer
                             //Et si le tableau des variables blocké ne contient pas l'élément on l'ajoute
                             //Cela permet d'éviter des doublons
-                            if (dobs != null && !containsDatatObserver(lockVars, dobs))
+                            if (dobs != null) //&& !containsDatatObserver(lockVars, dobs))
                             {
                                 variableResult.Add(dobs);
                                 compt++;
@@ -431,14 +443,44 @@ namespace VSObserver
                             {
                                 break;
                             }
-                        }
+                        } */
+
+                        listDR.ForEach(delegate(DataRow row)
+                        {
+                            string completeVariable = (string)row[PATH];
+                            string mapping = (string)row[MAPPING];
+
+                            //La lecture de variable retourne un DataObserver avec toutes les informations
+                            DataObserver dobs = readValue(completeVariable, mapping);
+
+                            //Si c'est différent que null ça veut dire qu'on à réussit à trouver un observer
+                            //Et si le tableau des variables blocké ne contient pas l'élément on l'ajoute
+                            //Cela permet d'éviter des doublons
+                            if (dobs != null) //&& !containsDatatObserver(lockVars, dobs))
+                            {
+                                variableResult.Add(dobs);
+                                compt++;
+                            }
+
+                            //Si on a atteint le nombre d'affichage max on arrête la boucle
+                            /*if (compt == show_number)
+                            {
+                                break;
+                            }*/
+
+                        });
                     }
 
-                    VariableList = variableResult;
+                    VariableList = variableResult;                                        
                 }
+
+                
             }
 
-            VarNumberFound = variableNumber;            
+            VarNumberFound = variableNumber;
+
+            sw.Stop();
+            Console.WriteLine("Search => " + sw.Elapsed.ToString());
         }
 
         /// <summary>
