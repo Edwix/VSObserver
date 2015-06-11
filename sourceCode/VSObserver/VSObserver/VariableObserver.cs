@@ -567,6 +567,107 @@ namespace VSObserver
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="completeVariable"></param>
+        /// <param name="mapping"></param>
+        /// <returns></returns>
+        private string readValue2(string completeVariable, out string dateTime)
+        {
+            string value = "";
+            int importOk = vc.importVariable(completeVariable);
+            int typeVS = -1;
+            long timeStamp = 0;
+            vc = Vs.getVariableController();
+            vc.getType(completeVariable, out typeVS);
+
+
+            if (importOk != 0)
+            {
+                switch (typeVS)
+                {
+                    ///=================================================================================================
+                    /// Si le type est égal à 1 alors c'est un entier
+                    ///=================================================================================================
+                    case 1:
+                        IntegerReader intr = vc.createIntegerReader(completeVariable);
+                        int valVarInt;
+
+                        if (intr != null)
+                        {
+                            intr.setBlocking(1 * 200);
+                            VariableState t = intr.waitForConnection();
+
+                            if (t == VariableState.Ok)
+                            {
+                                intr.get(out valVarInt, out timeStamp);
+                                value = valVarInt.ToString();
+                            }
+                        }
+
+                        break;
+                    ///=================================================================================================
+                    ///=================================================================================================
+                    /// Si le type est égal à 2 alors c'est un double
+                    ///=================================================================================================
+                    case 2:
+                        DoubleReader dblr = vc.createDoubleReader(completeVariable);
+                        double valVarDbl;
+
+                        if (dblr != null)
+                        {
+                            dblr.setBlocking(1 * 200);
+                            VariableState t = dblr.waitForConnection();
+
+                            if (t == VariableState.Ok)
+                            {
+                                dblr.get(out valVarDbl, out timeStamp);
+                                value = valVarDbl.ToString();
+                            }
+                        }
+                        break;
+                    ///=================================================================================================
+                    case 3:
+                        break;
+                    ///=================================================================================================
+                    /// Si le type est égal à 4 alors c'est un Vector Integer (Tableau d'entier)
+                    ///=================================================================================================
+                    case 4:
+                        VectorIntegerReader vecIntReader = vc.createVectorIntegerReader(completeVariable);
+                        IntegerVector valVarVecInt = new IntegerVector();
+
+                        if (vecIntReader != null)
+                        {
+                            vecIntReader.setBlocking(1 * 200);
+                            VariableState t = vecIntReader.waitForConnection();
+
+                            if (t == VariableState.Ok)
+                            {
+                                vecIntReader.get(valVarVecInt, out timeStamp);
+                                value = tableToString(valVarVecInt);
+                            }
+                        }
+                        break;
+                    ///=================================================================================================
+                    default:
+                        value = "Undefined";
+                        break;
+                }
+            }
+
+            dateTime = createDateTime(timeStamp);
+            return value;
+        }
+
+        public string createDateTime(long timeStamp)
+        {
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+            long ts = (timeStamp / 1000) + (2 * 360 * 10000);
+            dtDateTime = dtDateTime.AddMilliseconds(ts);
+            return dtDateTime.ToString();
+        }
+
+        /// <summary>
         /// Fonction qui permet de voir si une liste de DataObserver contient un élément DataObserver
         /// </summary>
         /// <param name="listOfDobs"></param>
@@ -600,10 +701,6 @@ namespace VSObserver
         /// <returns></returns>
         private DataObserver createDataObserver(string path, string value, VS_Type type, long timeStamp, string mapping, bool forced)
         {
-            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
-            long ts = (timeStamp / 1000) + (2 * 360 * 10000);
-            dtDateTime = dtDateTime.AddMilliseconds(ts);
-
             DataObserver dObs = new DataObserver {
                 PathName = path,
                 Path = System.IO.Path.GetDirectoryName(path).Replace("\\", "/"),
@@ -612,7 +709,7 @@ namespace VSObserver
                 Type = type,
                 Mapping = mapping,
                 IsForced = forced,
-                Timestamp = dtDateTime.ToString()
+                Timestamp = createDateTime(timeStamp)
             };
 
             return dObs;
@@ -642,6 +739,8 @@ namespace VSObserver
         /// </summary>
         public void refreshValues()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             ObservableCollection<DataObserver> oldVariableTable = VariableList;
 
             if (oldVariableTable != null)
@@ -649,58 +748,60 @@ namespace VSObserver
                 foreach (DataObserver rowObserver in oldVariableTable)
                 {
                     string oldValue = rowObserver.Value;
-                    DataObserver dObs = readValue(rowObserver.PathName, rowObserver.Mapping);
+                    string newDateTime = "";
+                    string newValue = readValue2(rowObserver.PathName, out newDateTime);
+                    //DataObserver dObs = readValue(rowObserver.PathName, rowObserver.Mapping);
 
-                    if (dObs != null)
+                    //We put the type because the old type is Invalid (the first loadding)
+                    //rowObserver.Type = dObs.Type;
+
+
+                    InjectionVariableStatus status = new InjectionVariableStatus();
+                    vc.getInjectionStatus(rowObserver.PathName, status);
+
+
+                    if (colorRules.ContainsKey(rowObserver.PathName))
                     {
-                        //We put the type because the old type is Invalid (the first loadding)
-                        rowObserver.Type = dObs.Type;
-
-
-                        InjectionVariableStatus status = new InjectionVariableStatus();
-                        vc.getInjectionStatus(dObs.PathName, status);
-
-
-                        if (colorRules.ContainsKey(rowObserver.PathName))
+                        if (colorRules[rowObserver.PathName].ColorRules.ContainsKey(rowObserver.Value))
                         {
-                            if (colorRules[rowObserver.PathName].ColorRules.ContainsKey(rowObserver.Value))
-                            {
-                                rowObserver.Color = colorRules[rowObserver.PathName].ColorRules[rowObserver.Value];
-                            }
-                            else
-                            {
-                                rowObserver.Color = "";
-                            }
-
-                            rowObserver.CommentColor = colorRules[rowObserver.PathName].Comment;
-                        }
-
-                        if (status.state == InjectionStates.InjectionStates_IsSet)
-                        {
-                            rowObserver.IsForced = true;
+                            rowObserver.Color = colorRules[rowObserver.PathName].ColorRules[rowObserver.Value];
                         }
                         else
                         {
-                            rowObserver.IsForced = false;
+                            rowObserver.Color = "";
                         }
 
-                        if (!rowObserver.Value.Equals(dObs.Value) && !rowObserver.IsChanging)
-                        {
-                            rowObserver.Value = dObs.Value;
-                            rowObserver.ValueHasChanged = true;
-                        }
-                        else
-                        {
-                            rowObserver.ValueHasChanged = false;
-                        }
+                        rowObserver.CommentColor = colorRules[rowObserver.PathName].Comment;
+                    }
 
-                        if (rowObserver.Timestamp != dObs.Timestamp)
-                        {
-                            rowObserver.Timestamp = dObs.Timestamp;
-                        }
+                    if (status.state == InjectionStates.InjectionStates_IsSet)
+                    {
+                        rowObserver.IsForced = true;
+                    }
+                    else
+                    {
+                        rowObserver.IsForced = false;
+                    }
+
+                    if (!rowObserver.Value.Equals(newValue) && !rowObserver.IsChanging)
+                    {
+                        rowObserver.Value = newValue;
+                        rowObserver.ValueHasChanged = true;
+                    }
+                    else
+                    {
+                        rowObserver.ValueHasChanged = false;
+                    }
+
+                    if (rowObserver.Timestamp != newDateTime)
+                    {
+                        rowObserver.Timestamp = newDateTime;
                     }
                 }
             }
+
+            sw.Stop();
+            Console.WriteLine("REFRESH TIME => " + sw.Elapsed.ToString());
         }
 
         private string tableToString(IntegerVector vector)
