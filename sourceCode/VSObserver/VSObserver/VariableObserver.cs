@@ -970,13 +970,13 @@ namespace VSObserver
                                     rules.Comment = item.Comment;
 
                                     //Searching all variables in all variables list
-                                    var source = variableTable.AsEnumerable();
-                                    var searchResult = source.Where(x => (Regex.IsMatch(x.Field<string>(PATH), varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Field<string>(MAPPING), varName, RegexOptions.IgnoreCase)));
+                                    var source = _listOfDataObserver.AsEnumerable();
+                                    var searchResult = source.Where(x => (Regex.IsMatch(x.PathName, varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, varName, RegexOptions.IgnoreCase)));
                                     
                                     ///Creating the dictionnary with elements 
-                                    foreach (DataRow result in searchResult)
+                                    foreach (DataObserver result in searchResult)
                                     {
-                                        string varPathAndName = (string)result[PATH];
+                                        string varPathAndName = result.PathName;
 
                                         if (!colorRules.ContainsKey(varPathAndName))
                                         {
