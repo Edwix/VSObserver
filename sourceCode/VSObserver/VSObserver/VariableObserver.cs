@@ -405,6 +405,10 @@ namespace VSObserver
                     Console.WriteLine("COUNT " + swResh.Elapsed.ToString());
 
                     int compt = 0;
+
+                    vc = Vs.getVariableController();
+                    
+
                     foreach (DataObserver dObs in newListDObs)
                     {
                         if (compt == show_number)
@@ -412,7 +416,11 @@ namespace VSObserver
                             break;
                         }
 
-                        variableResult.Add(dObs);                       
+                        //int typeVS = -10;
+                        //vc.getType(dObs.PathName, out typeVS);
+                        //dObs.Type = (VS_Type)typeVS;
+                        //Console.WriteLine("TYPE SEARYCH => " + dObs.Type);
+                        variableResult.Add(dObs);                   
 
                         compt++;
                     }
@@ -426,6 +434,8 @@ namespace VSObserver
             sw.Stop();
             Console.WriteLine("Search => " + sw.Elapsed.ToString());
         }
+
+
 
         /// <summary>
         /// Lecture d'une variable VS. Cette méthode retourne un DataObserver avec tous les 
@@ -441,7 +451,7 @@ namespace VSObserver
             long timeStamp;
             vc = Vs.getVariableController();
             vc.getType(completeVariable, out typeVS);
-            //Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
+            Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
 
             //Récupération du status d'une variable
            InjectionVariableStatus status = new InjectionVariableStatus();
@@ -578,8 +588,9 @@ namespace VSObserver
             int importOk = vc.importVariable(completeVariable);
             int typeVS = -1;
             long timeStamp = 0;
-            vc = Vs.getVariableController();
+            //vc = Vs.getVariableController();
             vc.getType(completeVariable, out typeVS);
+            Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
 
 
             if (importOk != 0)
@@ -657,6 +668,105 @@ namespace VSObserver
 
             dateTime = createDateTime(timeStamp);
             return value;
+        }
+
+        /// <summary>
+        /// Read value 3 retourne un DataObserver
+        /// </summary>
+        /// <param name="completeVariable"></param>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        private DataObserver readValue3(DataObserver oldDataObs)
+        {
+            DataObserver dObs = oldDataObs;
+            string completeVariable = oldDataObs.PathName;
+            int importOk = vc.importVariable(completeVariable);
+            int typeVS = -1;
+            long timeStamp = 0;
+            //vc = Vs.getVariableController();
+            vc.getType(completeVariable, out typeVS);
+            Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
+
+
+            if (importOk != 0)
+            {
+                switch (typeVS)
+                {
+                    ///=================================================================================================
+                    /// Si le type est égal à 1 alors c'est un entier
+                    ///=================================================================================================
+                    case 1:
+                        dObs.Type = VS_Type.INTEGER;
+                        IntegerReader intr = vc.createIntegerReader(completeVariable);
+                        int valVarInt;
+
+                        if (intr != null)
+                        {
+                            intr.setBlocking(1 * 200);
+                            VariableState t = intr.waitForConnection();
+
+                            if (t == VariableState.Ok)
+                            {
+                                intr.get(out valVarInt, out timeStamp);
+                                dObs.Value = valVarInt.ToString();
+                            }
+                        }
+
+                        break;
+                    ///=================================================================================================
+                    ///=================================================================================================
+                    /// Si le type est égal à 2 alors c'est un double
+                    ///=================================================================================================
+                    case 2:
+                        dObs.Type = VS_Type.DOUBLE;
+                        DoubleReader dblr = vc.createDoubleReader(completeVariable);
+                        double valVarDbl;
+
+                        if (dblr != null)
+                        {
+                            dblr.setBlocking(1 * 200);
+                            VariableState t = dblr.waitForConnection();
+
+                            if (t == VariableState.Ok)
+                            {
+                                dblr.get(out valVarDbl, out timeStamp);
+                                dObs.Value = valVarDbl.ToString();
+                            }
+                        }
+                        break;
+                    ///=================================================================================================
+                    case 3:
+                        break;
+                    ///=================================================================================================
+                    /// Si le type est égal à 4 alors c'est un Vector Integer (Tableau d'entier)
+                    ///=================================================================================================
+                    case 4:
+                        dObs.Type = VS_Type.VECTOR_INTEGER;
+                        VectorIntegerReader vecIntReader = vc.createVectorIntegerReader(completeVariable);
+                        IntegerVector valVarVecInt = new IntegerVector();
+
+                        if (vecIntReader != null)
+                        {
+                            vecIntReader.setBlocking(1 * 200);
+                            VariableState t = vecIntReader.waitForConnection();
+
+                            if (t == VariableState.Ok)
+                            {
+                                vecIntReader.get(valVarVecInt, out timeStamp);
+                                dObs.Value = tableToString(valVarVecInt);
+                            }
+                        }
+                        break;
+                    ///=================================================================================================
+                    default:
+                        dObs.Type = VS_Type.INVALID;
+                        dObs.Value = "Undefined";
+                        break;
+                }
+            }
+
+            dObs.Timestamp = createDateTime(timeStamp);
+            return dObs;
         }
 
         public string createDateTime(long timeStamp)
@@ -748,9 +858,10 @@ namespace VSObserver
                 foreach (DataObserver rowObserver in oldVariableTable)
                 {
                     string oldValue = rowObserver.Value;
-                    string newDateTime = "";
-                    string newValue = readValue2(rowObserver.PathName, out newDateTime);
-                    //DataObserver dObs = readValue(rowObserver.PathName, rowObserver.Mapping);
+                    //string newDateTime = "";
+                    //string newValue = readValue2(rowObserver.PathName, out newDateTime);
+                    //DataObserverFF dObs = readValue(rowObserver.PathName, rowObserver.Mapping);
+                    DataObserver dObs = readValue3(rowObserver);
 
                     //We put the type because the old type is Invalid (the first loadding)
                     //rowObserver.Type = dObs.Type;
@@ -783,9 +894,9 @@ namespace VSObserver
                         rowObserver.IsForced = false;
                     }
 
-                    if (!rowObserver.Value.Equals(newValue) && !rowObserver.IsChanging)
+                    if (!rowObserver.Value.Equals(dObs.Value) && !rowObserver.IsChanging)
                     {
-                        rowObserver.Value = newValue;
+                        rowObserver.Value = dObs.Value;
                         rowObserver.ValueHasChanged = true;
                     }
                     else
@@ -793,15 +904,15 @@ namespace VSObserver
                         rowObserver.ValueHasChanged = false;
                     }
 
-                    if (rowObserver.Timestamp != newDateTime)
+                    /*if (rowObserver.Timestamp != newDateTime)
                     {
                         rowObserver.Timestamp = newDateTime;
-                    }
+                    }*/
                 }
             }
 
             sw.Stop();
-            Console.WriteLine("REFRESH TIME => " + sw.Elapsed.ToString());
+            //Console.WriteLine("REFRESH TIME => " + sw.Elapsed.ToString());
         }
 
         private string tableToString(IntegerVector vector)
