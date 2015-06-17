@@ -34,13 +34,20 @@
                                           BorderBrush="{StaticResource BorderColor}"
                                           Background="#1CA8FF">
                                     <TextBlock x:Name="tblock_elem" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NbElement}" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                               Foreground="White" FontWeight="Bold" />
+                                               Foreground="White" FontWeight="Bold" >
+                                        <TextBlock.ToolTip>
+                                            <TextBlock>
+                                                <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NbElement}" />
+                                                <Run Text="/" />
+                                                <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TotalVariable}" />
+                                            </TextBlock>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </Border>
                             </Grid>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-
     </Style>
 </ResourceDictionary>

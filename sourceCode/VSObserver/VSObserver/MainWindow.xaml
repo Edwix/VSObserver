@@ -133,7 +133,7 @@
         <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" Visibility="Collapsed">
             <Run Text="Variables number : " />
             <Run Text="{Binding VarNumberFound, UpdateSourceTrigger=PropertyChanged}" />
-            <Run Text=" / " />
+            <Run Text="/" />
             <Run x:Name="run_varTotal" Text="0" />
         </TextBlock>
         <DataGrid

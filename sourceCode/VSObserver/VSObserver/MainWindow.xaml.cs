@@ -293,7 +293,8 @@ namespace VSObserver
         /// </summary>
         private void changeVariableIndication()
         {
-            run_varTotal.Text = totalNumberOfVariables.ToString();
+            //run_varTotal.Text = totalNumberOfVariables.ToString();
+            tb_variableName.TotalVariable = totalNumberOfVariables;
         }
 
         private void TextBox_GotMouseCapture(object sender, MouseEventArgs e)

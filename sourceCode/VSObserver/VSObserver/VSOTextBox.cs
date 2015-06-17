@@ -53,17 +53,32 @@ namespace VSObserver
         /// <summary>
         /// Registers a dependency property as backing store for the Content property
         /// </summary>
-        public static readonly DependencyProperty ContentProperty =
+        public static readonly DependencyProperty NbElementProperty =
             DependencyProperty.Register("NbElement", typeof(int), typeof(VSOTextBox), new PropertyMetadata(0));
 
         /// <summary>
-        /// Gets or sets the Content.
+        /// Nombre d'éléments trouvés
         /// </summary>
-        /// <value>The Content.</value>
         public int NbElement
         {
-            get { return (int)GetValue(ContentProperty); }
-            set { SetValue(ContentProperty, value); }
+            get { return (int)GetValue(NbElementProperty); }
+            set { SetValue(NbElementProperty, value); }
+        }
+
+
+        // <summary>
+        /// Registers a dependency property as backing store for the Content property
+        /// </summary>
+        public static readonly DependencyProperty TotalVariableProperty =
+            DependencyProperty.Register("TotalVariable", typeof(int), typeof(VSOTextBox), new PropertyMetadata(0));
+
+        /// <summary>
+        /// Nombre maximum de variable
+        /// </summary>
+        public int TotalVariable
+        {
+            get { return (int)GetValue(TotalVariableProperty); }
+            set { SetValue(TotalVariableProperty, value); }
         }
     }
 }
