@@ -49,5 +49,21 @@ namespace VSObserver
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(VSOTextBox), new FrameworkPropertyMetadata(typeof(VSOTextBox)));
         }
+
+        /// <summary>
+        /// Registers a dependency property as backing store for the Content property
+        /// </summary>
+        public static readonly DependencyProperty ContentProperty =
+            DependencyProperty.Register("NbElement", typeof(int), typeof(VSOTextBox), new PropertyMetadata(0));
+
+        /// <summary>
+        /// Gets or sets the Content.
+        /// </summary>
+        /// <value>The Content.</value>
+        public int NbElement
+        {
+            get { return (int)GetValue(ContentProperty); }
+            set { SetValue(ContentProperty, value); }
+        }
     }
 }

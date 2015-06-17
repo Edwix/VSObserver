@@ -685,7 +685,7 @@ namespace VSObserver
             long timeStamp = 0;
             //vc = Vs.getVariableController();
             vc.getType(completeVariable, out typeVS);
-            Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
+            //Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
 
 
             if (importOk != 0)

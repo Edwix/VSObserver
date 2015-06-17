@@ -4,21 +4,42 @@
     xmlns:local="clr-namespace:VSObserver">
 
     <Style x:Key="{x:Type local:VSOTextBox}" TargetType="{x:Type local:VSOTextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
-        <Setter Property="ItemContainerStyle">
-            <Setter.Value>
-                <Style TargetType="{x:Type ComboBoxItem}" >
-                    <Setter Property="Margin" Value="2, 2, 2, 0" />
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type ComboBoxItem}">
-                                <Border Background="Transparent" x:Name="borderSelect">
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Background="Aqua" Text="{TemplateBinding Content}" x:Name="nbElem"/>
+
+
+            <Setter Property="Margin" Value="2, 2, 2, 0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type local:VSOTextBox}">
+                        <!--<Border Background="Transparent" x:Name="borderSelect">
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Background="Aqua" Text="{Binding ElementName=NbElement, Path=Text, UpdateSourceTrigger=PropertyChanged}" x:Name="nbElem"/>
+                        </Border>-->
+                        <Border x:Name="Border"
+                            Padding="2"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid x:Name="LayoutGrid">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="{Binding RelativeSource={RelativeSource TemplatedParent},
+                                                    Path=ActualHeight}" />
+                                </Grid.ColumnDefinitions>
+                            <ScrollViewer x:Name="PART_ContentHost" Grid.Column="0" />
+                            <Border x:Name="PART_SearchIconBorder"
+                                  Grid.Column="1"
+                                  BorderThickness="1"
+                                  Padding="1"
+                                  VerticalAlignment="Stretch"
+                                  HorizontalAlignment="Stretch"
+                                  BorderBrush="Beige"
+                                  Background="Aqua">
+                                    <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NbElement}"  />
                                 </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Setter.Value>
-        </Setter>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
     </Style>
 </ResourceDictionary>
