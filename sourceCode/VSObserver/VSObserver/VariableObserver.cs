@@ -98,6 +98,12 @@ namespace VSObserver
             _listOfFileLockedVar = new ObservableCollection<string>();
         }
 
+        public string Info
+        {
+            get { return dataApp.InformationMessage; }
+            set { dataApp.InformationMessage = value; OnPropertyChanged("Info"); }
+        }
+
         public int VarNumberFound
         {
             get { return _varNb; }

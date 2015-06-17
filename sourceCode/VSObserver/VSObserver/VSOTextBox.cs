@@ -80,5 +80,37 @@ namespace VSObserver
             get { return (int)GetValue(TotalVariableProperty); }
             set { SetValue(TotalVariableProperty, value); }
         }
+
+        // <summary>
+        /// Registers a dependency property as backing store for the Content property
+        /// </summary>
+        public static readonly DependencyProperty SearchErrorProperty =
+            DependencyProperty.Register("SearchError", typeof(string), typeof(VSOTextBox), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Error text when there is on the search
+        /// </summary>
+        public string SearchError
+        {
+            get { return (string)GetValue(SearchErrorProperty); }
+            set 
+            { 
+                SetValue(SearchErrorProperty, value);
+                if (value == "" || value == null)
+                {
+                    ViewErrorSearch = System.Windows.Visibility.Collapsed;
+                }
+                else
+                {
+                    ViewErrorSearch = System.Windows.Visibility.Visible;
+                }
+            }
+        }
+
+        public Visibility ViewErrorSearch
+        {
+            get;
+            set;
+        }
     }
 }

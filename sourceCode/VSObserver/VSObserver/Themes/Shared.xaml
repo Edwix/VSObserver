@@ -3,4 +3,8 @@
     <SolidColorBrush x:Key="WindowBackgroundColor" Color="#F7F7F7"/>
     <SolidColorBrush x:Key="BorderColor" Color="#F7F7F7"/>
     <SolidColorBrush x:Key="DarkBorderColor" Color="#8D8D8D"/>
+    <LinearGradientBrush x:Key="BackgroundError" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FF0000" Offset="0" />
+        <GradientStop Color="#FF3131" Offset="1" />
+    </LinearGradientBrush>
 </ResourceDictionary>
