@@ -5,6 +5,7 @@
         xmlns:nspace="clr-namespace:VSObserver" 
         xmlns:behavior="clr-namespace:VSObserver.Behavior" 
         Title="VSObserver" Height="350" Width="525"
+        Background="#F7F7F7"
         >
     <Window.Resources>
         <nspace:BoolToVisibility x:Key="ConvBoolToVisibility" />
@@ -121,11 +122,12 @@
         <Border Name="btn_typeW" BorderBrush="Gray" BorderThickness="1" CornerRadius="20" Background="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToBackground}}" Width="25" Height="25" Margin="0" Grid.Column="2" Grid.Row="0" MouseDown="btn_typeW_MouseDown">
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged}" Foreground="Black" FontWeight="ExtraBold" />
         </Border>
-        <WrapPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="4" Margin="5,0,5,0">
+        
+        <WrapPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="4" Margin="5,0,5,0" Visibility="Collapsed">
             <CheckBox Name="cb_VerifyClipBoard" Content="Check clipboard" IsChecked="True"/>
             <CheckBox Margin="10,0,0,0" Name="cb_RegexSearch" Content="Search with regex" IsChecked="{Binding SearchRegex, UpdateSourceTrigger=PropertyChanged}"/>
         </WrapPanel>
-        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" >
+        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" Visibility="Collapsed">
             <Run Text="Variables number : " />
             <Run Text="{Binding VarNumberFound, UpdateSourceTrigger=PropertyChanged}" />
             <Run Text=" / " />
@@ -139,6 +141,8 @@
             ItemsSource="{Binding Path=VariableList, UpdateSourceTrigger=PropertyChanged}"
             SelectedItem="{Binding Path=SelectedVariable, UpdateSourceTrigger=PropertyChanged}"
             AutoGenerateColumns="False"
+            HeadersVisibility="None"
+            Background="Transparent"
             CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTemplateColumn>
