@@ -10,30 +10,26 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type local:VSOTextBox}">
-                        <!--<Border Background="Transparent" x:Name="borderSelect">
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Background="Aqua" Text="{Binding ElementName=NbElement, Path=Text, UpdateSourceTrigger=PropertyChanged}" x:Name="nbElem"/>
-                        </Border>-->
                         <Border x:Name="Border"
                             Padding="2"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                            <Grid x:Name="LayoutGrid">
+                            <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="{Binding RelativeSource={RelativeSource TemplatedParent},
-                                                    Path=ActualHeight}" />
+                                    <ColumnDefinition Width="{Binding ElementName=tblock_elem, Path=Width}"/>
                                 </Grid.ColumnDefinitions>
-                            <ScrollViewer x:Name="PART_ContentHost" Grid.Column="0" />
-                            <Border x:Name="PART_SearchIconBorder"
-                                  Grid.Column="1"
-                                  BorderThickness="1"
-                                  Padding="1"
-                                  VerticalAlignment="Stretch"
-                                  HorizontalAlignment="Stretch"
-                                  BorderBrush="Beige"
-                                  Background="Aqua">
-                                    <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NbElement}"  />
+                                <ScrollViewer x:Name="PART_ContentHost" Grid.Column="0" />
+                                <Border x:Name="PART_SearchIconBorder"
+                                          Grid.Column="1"
+                                          BorderThickness="1"
+                                          Padding="2"
+                                          CornerRadius="2"
+                                          BorderBrush="#F7F7F7"
+                                          Background="#1CA8FF">
+                                    <TextBlock x:Name="tblock_elem" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NbElement}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               Foreground="White" FontWeight="Bold"/>
                                 </Border>
                             </Grid>
                         </Border>

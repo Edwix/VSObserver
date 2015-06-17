@@ -227,7 +227,7 @@ namespace VSObserver
                 dataApp.InformationMessage = "Connection to RTC server isn't possible !";
             }
 
-            if (connectionOK)
+            /*if (connectionOK)
             {
                 ///Récupération de toutes les variables U-test
                 NameList listeUT = control.getVariableList();
@@ -250,7 +250,7 @@ namespace VSObserver
                 }
             }
             else
-            {
+            {*/
                 try
                 {
                     SQLiteCommand cmdGetAll;
@@ -289,7 +289,7 @@ namespace VSObserver
                 {
                     dataApp.InformationMessage = "Error on SQLite data base !\n" + e.ToString() ;
                 }
-            }
+            //}
 
             try
             {
