@@ -4,7 +4,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:nspace="clr-namespace:VSObserver" 
         xmlns:behavior="clr-namespace:VSObserver.Behavior" 
-        Title="VSObserver" Height="350" Width="525"
+        Title="VSObserver" Height="400" Width="600"
+        SizeToContent="Width"
         Background="{StaticResource WindowBackgroundColor}" Icon="/VSObserver;component/Images/VSO_logo.ico">
     <Window.Resources>
         <nspace:BoolToVisibility x:Key="ConvBoolToVisibility" />
@@ -241,19 +242,23 @@
         <DataGrid HeadersVisibility="None"
                   VerticalAlignment="Stretch"
                   Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="4"
-                  Name="dg_variableList"
-                  Margin="5"
+                  x:Name="dg_variableList"
+                  Margin="0"
+                  Width="Auto"
+                  AutoGenerateColumns="False"
                   GridLinesVisibility="None"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   ItemsSource="{Binding Path=VariableList, UpdateSourceTrigger=PropertyChanged}"
                   SelectedItem="{Binding Path=SelectedVariable, UpdateSourceTrigger=PropertyChanged}"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False">
+                  CanUserAddRows="False"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="False">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Action">
+                <DataGridTemplateColumn Header="Action" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <StackPanel x:Name="wp_action" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Width="Auto">
                                 <ToggleButton Content="" Foreground="Black" IsChecked="{Binding Path=IsLocked, UpdateSourceTrigger=PropertyChanged}"
                                           HorizontalAlignment="Center">
                                     <ToggleButton.Template>
@@ -278,27 +283,31 @@
                                         </ControlTemplate>
                                     </ToggleButton.Template>
                                 </ToggleButton>
-                                <Border Name="btn_typeW" BorderBrush="Gray" Background="Red" Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" BorderThickness="1" CornerRadius="0" Width="16" Height="16" Margin="5,0,0,0">
+                                <Border Name="force_ball" BorderBrush="Gray" Background="Red" 
+                                        Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" 
+                                        Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
+                                        MouseDown="force_ball_icon_MouseDown"
+                                        BorderThickness="1" CornerRadius="0" Width="16" Height="16" Margin="5,0,0,0">
                                     <TextBlock Name="tb_force_icon" Text="F" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Foreground="White" FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}" />
                                 </Border>
                                 <Border BorderBrush="Gray" Background="LightGreen" BorderThickness="1" CornerRadius="20" Width="16" Height="16" Margin="5,0,0,0">
                                 </Border>
                                 <Separator Height="Auto" Width="1"/>
-                            </WrapPanel>
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="PathMap">
+                <DataGridTemplateColumn Header="PathMap" Width="SizeToCells" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <WrapPanel Orientation="Vertical" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Path=Path, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Background="Transparent"/>
-                                <!--<TextBlock FontStyle="Italic" Text="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Background="Transparent"/>-->
+                            <WrapPanel x:Name="wp_pathname" Width="Auto" HorizontalAlignment="Stretch" Orientation="Vertical" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Path=Path, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True}"  HorizontalAlignment="Left" Background="Transparent"/>
+                                <TextBlock FontStyle="Italic" Text="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Background="Transparent"/>
                             </WrapPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Variable">
+                <DataGridTemplateColumn Header="Variable" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" FontWeight="Bold" TextAlignment="Center" Text="{Binding Path=Variable, UpdateSourceTrigger=PropertyChanged}">
@@ -306,10 +315,11 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Value">
+                <DataGridTemplateColumn Header="Value" Width="Auto">
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="5,0,5,0">
+                            <TextBox Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="2,0,2,0" 
+                                     GotMouseCapture="TextBox_GotMouseCapture" KeyDown="TextBox_KeyDown">
                                 <TextBox.InputBindings>
 
                                 </TextBox.InputBindings>
@@ -323,7 +333,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="TimeStamp">
+                <DataGridTemplateColumn Header="TimeStamp" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" TextAlignment="Center" Text="{Binding Path=Timestamp, UpdateSourceTrigger=PropertyChanged}">
@@ -333,8 +343,9 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
+            <DataGrid.InputBindings>
+                <KeyBinding Command="{Binding CopyVariable}" Gesture="CTRL+C" />
+            </DataGrid.InputBindings>
         </DataGrid>
-
-
     </Grid>
 </Window>
