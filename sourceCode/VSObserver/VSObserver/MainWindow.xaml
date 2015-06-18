@@ -290,10 +290,24 @@
                                         Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" 
                                         Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
                                         MouseDown="force_ball_icon_MouseDown"
-                                        BorderThickness="1" CornerRadius="0" Width="20" Height="20" Margin="5,0,0,0">
+                                        BorderThickness="1" CornerRadius="0" Width="18" Height="18" Margin="5,0,0,0">
                                     <TextBlock Name="tb_force_icon" Text="F" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Foreground="White" FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}" />
                                 </Border>
-                                <Border BorderBrush="{StaticResource DarkBorderColor}" Background="LightGreen" BorderThickness="1" CornerRadius="20" Width="20" Height="20" Margin="5,0,0,0">
+                                <Border BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="18" Width="18" Height="18" 
+                                        Background="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToColor}}"                                        
+                                        Margin="5,0,0,0" ToolTip="{Binding Path=CommentColor, UpdateSourceTrigger=PropertyChanged}">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged}" Value="{x:Null}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged}" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
                                 </Border>
                                 <Separator Height="Auto" Width="1"/>
                             </StackPanel>
@@ -342,7 +356,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" 
-                                       VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"/>
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"
+                                       ToolTip="{Binding Path=CommentColor, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
