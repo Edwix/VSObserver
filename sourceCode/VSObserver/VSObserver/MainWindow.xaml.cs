@@ -366,5 +366,10 @@ namespace VSObserver
         {
             vo.loadLockedVariables(LOCKED_LIST_FILE);
         }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            vo.stopRefreshOnSelectedElement(false);
+        }
     }
 }

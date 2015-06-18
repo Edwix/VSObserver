@@ -263,7 +263,7 @@
                         <DataTemplate>
                             <StackPanel x:Name="wp_action" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Width="Auto">
                                 <ToggleButton Content="" Foreground="Black" IsChecked="{Binding Path=IsLocked, UpdateSourceTrigger=PropertyChanged}"
-                                          HorizontalAlignment="Center">
+                                          HorizontalAlignment="Center" Click="lockBtn_Click">
                                     <ToggleButton.Template>
                                         <ControlTemplate TargetType="{x:Type ToggleButton}">
                                             <StackPanel Orientation="Horizontal">
@@ -346,7 +346,8 @@
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="2,0,2,0" 
-                                     GotMouseCapture="TextBox_GotMouseCapture" KeyDown="TextBox_KeyDown">
+                                     GotMouseCapture="TextBox_GotMouseCapture" KeyDown="TextBox_KeyDown"
+                                     LostFocus="TextBox_LostFocus">
                                 <TextBox.InputBindings>
 
                                 </TextBox.InputBindings>
