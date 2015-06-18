@@ -290,7 +290,7 @@
                                         Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" 
                                         Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
                                         MouseDown="force_ball_icon_MouseDown"
-                                        BorderThickness="1" CornerRadius="0" Width="18" Height="18" Margin="5,0,0,0">
+                                        BorderThickness="1" CornerRadius="20" Width="18" Height="18" Margin="5,0,0,0">
                                     <TextBlock Name="tb_force_icon" Text="F" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Foreground="White" FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}" />
                                 </Border>
                                 <Border BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="18" Width="18" Height="18" 

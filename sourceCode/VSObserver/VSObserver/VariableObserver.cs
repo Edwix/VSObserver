@@ -697,7 +697,7 @@ namespace VSObserver
             //Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
 
 
-            if (importOk != 0)
+            if (importOk != 0  && !oldDataObs.IsChanging)
             {
                 switch (typeVS)
                 {
@@ -772,9 +772,9 @@ namespace VSObserver
                         dObs.Value = "Undefined";
                         break;
                 }
+                dObs.Timestamp = createDateTime(timeStamp);
             }
 
-            dObs.Timestamp = createDateTime(timeStamp);
             return dObs;
         }
 
