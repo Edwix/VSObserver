@@ -290,10 +290,10 @@
                                         Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" 
                                         Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
                                         MouseDown="force_ball_icon_MouseDown"
-                                        BorderThickness="1" CornerRadius="0" Width="16" Height="16" Margin="5,0,0,0">
+                                        BorderThickness="1" CornerRadius="0" Width="20" Height="20" Margin="5,0,0,0">
                                     <TextBlock Name="tb_force_icon" Text="F" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Foreground="White" FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}" />
                                 </Border>
-                                <Border BorderBrush="Gray" Background="LightGreen" BorderThickness="1" CornerRadius="20" Width="16" Height="16" Margin="5,0,0,0">
+                                <Border BorderBrush="{StaticResource DarkBorderColor}" Background="LightGreen" BorderThickness="1" CornerRadius="20" Width="20" Height="20" Margin="5,0,0,0">
                                 </Border>
                                 <Separator Height="Auto" Width="1"/>
                             </StackPanel>
@@ -305,7 +305,17 @@
                         <DataTemplate>
                             <WrapPanel x:Name="wp_pathname" Width="Auto" HorizontalAlignment="Stretch" Orientation="Vertical" VerticalAlignment="Center">
                                 <TextBlock Text="{Binding Path=Path, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True}"  HorizontalAlignment="Left" Background="Transparent"/>
-                                <!--<TextBlock FontStyle="Italic" Text="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Background="Transparent"/>-->
+                                <TextBlock FontStyle="Italic" Text="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Background="Transparent">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </WrapPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
