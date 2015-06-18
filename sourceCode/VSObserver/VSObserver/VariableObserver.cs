@@ -44,6 +44,7 @@ namespace VSObserver
         private const string SEARCH_REGEX = "SearchRegex";
         private const string FILE_NAME_LOCKED_LIST = "FileNameLockedList";
         private const string LIST_FILE_LOCKED_VAR = "ListOfFileLockedVar";
+        private const string INFORMATION_MSG = "InformationMessage";
 
         private const string NODE_ITEM = "Item";
         private const string NODE_VARIABLE = "Variable";
@@ -68,7 +69,7 @@ namespace VSObserver
 
         private bool connectionOK;
         private Regex reg_var;
-        private DataApplication dataApp;
+        //private DataApplication dataApp;
         private DataObserver _selVar;
         private string _writTyp;
         private int show_number;
@@ -79,18 +80,20 @@ namespace VSObserver
 
         private Dictionary<string, FileRules> colorRules;
 
+        private string _infoMsg;
+
         ///Commands
         private ICommand cmdCopyVar;
         private ICommand cmdSavCurLckedList;
 
-        public VariableObserver(DataApplication dataApp, string ipAddr, string pathDataBase, int show_number)
+        public VariableObserver(string ipAddr, string pathDataBase, int show_number)
         {
             this.ipAddr = ipAddr;
             this.pathDataBase = pathDataBase;
             reg_var = new Regex(REGEX_SEARCH);
             _variableList = new ObservableCollection<DataObserver>();
             vc = Vs.getVariableController();
-            this.dataApp = dataApp;
+            //this.dataApp = dataApp;
             _writTyp = F_VAL;
             this.show_number = show_number;
             search_regex = false;
@@ -98,10 +101,10 @@ namespace VSObserver
             _listOfFileLockedVar = new ObservableCollection<string>();
         }
 
-        public string Info
+        public string InformationMessage
         {
-            get { return dataApp.InformationMessage; }
-            set { dataApp.InformationMessage = value; OnPropertyChanged("Info"); }
+            get { return _infoMsg; }
+            set { _infoMsg = value; OnPropertyChanged(INFORMATION_MSG); }
         }
 
         public int VarNumberFound
@@ -150,7 +153,7 @@ namespace VSObserver
                 }
                 else
                 {
-                    dataApp.InformationMessage = "The variable should have more than 2 characters";
+                    //dataApp.InformationMessage = "The variable should have more than 2 characters";
                     //variableCollectionViewSource.Source = new List<DataObserver>();
                     VariableList = getLockedVariables();
                 }
@@ -213,24 +216,24 @@ namespace VSObserver
 
                 sqliteConn.Close();
 
-                dataApp.InformationMessage = null;
+                InformationMessage = null;
             }
             catch (Exception)
             {
-                dataApp.InformationMessage = "Error on SQLite data base !";
+                InformationMessage = "Error on SQLite data base !";
             }
 
             try
             {
                 control.connect(this.ipAddr, 9090);
                 connectionOK = true;
-                dataApp.InformationMessage = null;
+                InformationMessage = null;
             }
             catch (Exception)
             {
                 //Connexion impossible
                 connectionOK = false;
-                dataApp.InformationMessage = "Connection to RTC server isn't possible !";
+                InformationMessage = "Connection to RTC server isn't possible !";
             }
 
             /*if (connectionOK)
@@ -286,14 +289,14 @@ namespace VSObserver
 
                     sqliteConn.Close();
 
-                    dataApp.InformationMessage = null;
+                    InformationMessage = null;
 
                     //On met qu'on a eu une connexion puisqu'on a réussi à importé les variables du SQLite
                     connectionOK = true;
                 }
                 catch (Exception e)
                 {
-                    dataApp.InformationMessage = "Error on SQLite data base !\n" + e.ToString() ;
+                    InformationMessage = "Error on SQLite data base !\n" + e.ToString() ;
                 }
             //}
 
@@ -314,11 +317,11 @@ namespace VSObserver
 
                 sqliteConn.Close();
 
-                dataApp.InformationMessage = null;
+                InformationMessage = null;
             }
             catch (Exception)
             {
-                dataApp.InformationMessage = "Error on SQLite data base !";
+                InformationMessage = "Error on SQLite data base !";
             }
 
             return _listOfDataObserver.Count;
@@ -358,11 +361,11 @@ namespace VSObserver
 
                 if (!reg_var.IsMatch(rawVariableName) && !search_regex)
                 {
-                    dataApp.InformationMessage = "The variable name has been remplaced by " + variableName + ".";
+                    InformationMessage = "The variable name has been remplaced by " + variableName + ".";
                 }
                 else
                 {
-                    dataApp.InformationMessage = null;
+                    InformationMessage = null;
                 }
 
                 IEnumerable<DataObserver> searchResult = null;
@@ -374,7 +377,7 @@ namespace VSObserver
 
                     if(isValidRegex)
                     {
-                        dataApp.InformationMessage = null;
+                        InformationMessage = null;
 
                         ///RegexOptions.IgnoreCase allows to ignore the case when we make a search
                         searchResult = from matchI in source
@@ -383,7 +386,7 @@ namespace VSObserver
                     }
                     else
                     {
-                        dataApp.InformationMessage = "The regular expression is incorrect !";
+                        InformationMessage = "The regular expression is incorrect !";
                     }
                 }
                 else if (reg_var.IsMatch(variableName))

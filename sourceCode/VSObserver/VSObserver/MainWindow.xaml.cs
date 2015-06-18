@@ -91,7 +91,7 @@ namespace VSObserver
             
             dataApp.LoadDone = true;
 
-            vo = new VariableObserver(dataApp, ipAddresseRTCServer, sqlLiteDataBase, number_variable);
+            vo = new VariableObserver(ipAddresseRTCServer, sqlLiteDataBase, number_variable);
             totalNumberOfVariables = vo.loadVariableList();
 
             //Datacontext pour lier le nombre de variable trouvés

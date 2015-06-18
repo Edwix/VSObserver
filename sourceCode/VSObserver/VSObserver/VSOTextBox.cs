@@ -96,21 +96,21 @@ namespace VSObserver
             set 
             { 
                 SetValue(SearchErrorProperty, value);
-                if (value == "" || value == null)
+                /*if (value == "" || value == null)
                 {
                     ViewErrorSearch = System.Windows.Visibility.Collapsed;
                 }
                 else
                 {
                     ViewErrorSearch = System.Windows.Visibility.Visible;
-                }
+                }*/
             }
         }
 
-        public Visibility ViewErrorSearch
+        /*public Visibility ViewErrorSearch
         {
             get;
             set;
-        }
+        }*/
     }
 }

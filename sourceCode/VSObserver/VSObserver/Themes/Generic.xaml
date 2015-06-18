@@ -18,38 +18,46 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{StaticResource DarkBorderColor}"
                         BorderThickness="1">
-                        <Grid ShowGridLines="True">
+                        <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="{Binding ElementName=tblock_elem, Path=Width}"/>
-                                <ColumnDefinition Width="{Binding ElementName=errorBall, Path=Width}"/>
+                                <ColumnDefinition Width="{Binding ElementName=stck_panel, Path=Width}"/>
                             </Grid.ColumnDefinitions>
                             <ScrollViewer x:Name="PART_ContentHost" Grid.Column="0" />
-                            <Border x:Name="PART_SearchIconBorder"
-                                        Grid.Column="1"
-                                        BorderThickness="1"
-                                        Padding="4,2,4,2"
-                                        CornerRadius="2"
-                                        BorderBrush="{StaticResource BorderColor}"
-                                        Background="#1CA8FF">
-                                <TextBlock x:Name="tblock_elem" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NbElement}" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                            Foreground="White" FontWeight="Bold" >
-                                    <TextBlock.ToolTip>
-                                        <TextBlock>
-                                            <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NbElement}" />
-                                            <Run Text="/" />
-                                            <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TotalVariable}" />
-                                        </TextBlock>
-                                    </TextBlock.ToolTip>
-                                </TextBlock>
-                            </Border>
-                            <Border x:Name="errorBall" CornerRadius="16" Width="18" Height="18" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" 
-                                    Background="{StaticResource BackgroundError}"
-                                    Padding="2" Grid.Column="2"
-                                    ToolTip="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SearchError}"
-                                    Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ViewErrorSearch}">
-                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="!" Foreground="White" FontWeight="Bold" />
-                            </Border>
+                            <StackPanel x:Name="stck_panel" Orientation="Horizontal" Grid.Column="1">
+                                <Border x:Name="PART_SearchIconBorder"                                            
+                                            BorderThickness="1"
+                                            Padding="4,2,4,2"
+                                            CornerRadius="2"
+                                            BorderBrush="{StaticResource BorderColor}"
+                                            Background="#1CA8FF">
+                                    <TextBlock x:Name="tblock_elem" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NbElement}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                Foreground="White" FontWeight="Bold" >
+                                        <TextBlock.ToolTip>
+                                            <TextBlock>
+                                                <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NbElement}" />
+                                                <Run Text="/" />
+                                                <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TotalVariable}" />
+                                            </TextBlock>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </Border>
+                                <Border x:Name="errorBall" Margin="5,0,0,0" CornerRadius="16" Width="18" Height="18" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" 
+                                        Background="{StaticResource BackgroundError}"
+                                        Padding="2"
+                                        ToolTip="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SearchError}">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SearchError}" Value="{x:Null}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="!" Foreground="White" FontWeight="Bold" />
+                                </Border>
+                            </StackPanel>
                         </Grid>
                     </Border>
                 </ControlTemplate>
