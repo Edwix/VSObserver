@@ -21,7 +21,7 @@ using System.Windows.Input;
 
 namespace VSObserver
 {
-    class VariableObserver : ViewModelBase, IFileChange
+    class VariableObserver : ViewModelBase, IFileChange, IEqualityComparer<DataObserver>
     {
         //private DataTable variableTable;
         private ObservableCollection<DataObserver> _listOfDataObserver;
@@ -429,7 +429,8 @@ namespace VSObserver
                         //vc.getType(dObs.PathName, out typeVS);
                         //dObs.Type = (VS_Type)typeVS;
                         //Console.WriteLine("TYPE SEARYCH => " + dObs.Type);
-                        variableResult.Add(dObs);                   
+                        if (!variableResult.Contains(dObs, this))
+                            variableResult.Add(dObs);               
 
                         compt++;
                     }
@@ -692,6 +693,7 @@ namespace VSObserver
             int importOk = vc.importVariable(completeVariable);
             int typeVS = -1;
             long timeStamp = 0;
+            string value = "";
             //vc = Vs.getVariableController();
             vc.getType(completeVariable, out typeVS);
             //Console.WriteLine("readValue : " + completeVariable + " TYPE " + typeVS + " VC " + importOk);
@@ -717,7 +719,7 @@ namespace VSObserver
                             if (t == VariableState.Ok)
                             {
                                 intr.get(out valVarInt, out timeStamp);
-                                dObs.Value = valVarInt.ToString();
+                                value = valVarInt.ToString();
                             }
                         }
 
@@ -739,7 +741,7 @@ namespace VSObserver
                             if (t == VariableState.Ok)
                             {
                                 dblr.get(out valVarDbl, out timeStamp);
-                                dObs.Value = valVarDbl.ToString();
+                                value = valVarDbl.ToString();
                             }
                         }
                         break;
@@ -762,16 +764,27 @@ namespace VSObserver
                             if (t == VariableState.Ok)
                             {
                                 vecIntReader.get(valVarVecInt, out timeStamp);
-                                dObs.Value = tableToString(valVarVecInt);
+                                value = tableToString(valVarVecInt);
                             }
                         }
                         break;
                     ///=================================================================================================
                     default:
                         dObs.Type = VS_Type.INVALID;
-                        dObs.Value = "Undefined";
+                        value = "Undefined";
                         break;
                 }
+
+                if (!oldDataObs.Value.Equals(value))
+                {
+                    dObs.Value = value;
+                    dObs.ValueHasChanged = true;
+                }
+                else
+                {
+                    dObs.ValueHasChanged = false;
+                }
+
                 dObs.Timestamp = createDateTime(timeStamp);
             }
 
@@ -903,7 +916,7 @@ namespace VSObserver
                         rowObserver.IsForced = false;
                     }
 
-                    if (!rowObserver.Value.Equals(dObs.Value) && !rowObserver.IsChanging)
+                    /*if (!rowObserver.Value.Equals(dObs.Value) && !rowObserver.IsChanging)
                     {
                         rowObserver.Value = dObs.Value;
                         rowObserver.ValueHasChanged = true;
@@ -913,7 +926,7 @@ namespace VSObserver
                         rowObserver.ValueHasChanged = false;
                     }
 
-                    /*if (rowObserver.Timestamp != newDateTime)
+                    if (rowObserver.Timestamp != newDateTime)
                     {
                         rowObserver.Timestamp = newDateTime;
                     }*/
@@ -1290,5 +1303,22 @@ namespace VSObserver
                 }
             }
         #endregion
+
+            public bool Equals(DataObserver x, DataObserver y)
+            {
+                if (x == null || y == null)
+                    return false;
+
+                return x.PathName.Equals(y.PathName);
+            }
+
+            public int GetHashCode(DataObserver obj)
+            {
+                //throw new NotImplementedException();
+                if (obj == null)
+                    return 0;
+
+                return obj.GetHashCode();
+            }
     }
 }

@@ -358,7 +358,28 @@
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" 
                                        VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"
-                                       ToolTip="{Binding Path=CommentColor, UpdateSourceTrigger=PropertyChanged}"/>
+                                       ToolTip="{Binding Path=CommentColor, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}" >
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=ValueHasChanged}" Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard x:Name="tt" >
+                                                        <Storyboard Storyboard.TargetProperty="(TextBlock.Background).(SolidColorBrush.Color)">
+                                                            <ColorAnimation                                                                  
+                                                                 FillBehavior="Stop"                                                                  
+                                                                 From="{StaticResource colorAnim_valueChanged}"                                                                  
+                                                                 To="Transparent"                                                                  
+                                                                 By="Blue"                                                                  
+                                                                 Duration="{StaticResource durationColor}" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
