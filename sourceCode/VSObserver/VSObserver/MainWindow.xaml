@@ -136,7 +136,7 @@
             <Run Text="/" />
             <Run x:Name="run_varTotal" Text="0" />
         </TextBlock>
-        <DataGrid
+        <!--<DataGrid
             VerticalAlignment="Stretch"
             Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="4"
             Name="dg_variableList"
@@ -235,6 +235,106 @@
             <DataGrid.InputBindings>
                 <KeyBinding Command="{Binding CopyVariable}" Gesture="CTRL+C" />
             </DataGrid.InputBindings>
+        </DataGrid>-->
+
+
+        <DataGrid HeadersVisibility="None"
+                  VerticalAlignment="Stretch"
+                  Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="4"
+                  Name="dg_variableList"
+                  Margin="5"
+                  GridLinesVisibility="None"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  ItemsSource="{Binding Path=VariableList, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding Path=SelectedVariable, UpdateSourceTrigger=PropertyChanged}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Action">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ToggleButton Content="" Foreground="Black" IsChecked="{Binding Path=IsLocked, UpdateSourceTrigger=PropertyChanged}"
+                                          HorizontalAlignment="Center">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image>
+                                                    <Image.Style>
+                                                        <Style>
+                                                            <Setter Property="Image.Source" Value="Resources/Lock_open.png" />
+                                                            <Setter Property="Image.Width" Value="16" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsChecked, 
+                                                             RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}" Value="True">
+                                                                    <Setter Property="Image.Source" Value="Resources/Lock.png" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                                <ContentPresenter Content="{TemplateBinding Content}" Margin="0,0,0,0" />
+                                            </StackPanel>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                                <Border Name="btn_typeW" BorderBrush="Gray" Background="Red" Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" BorderThickness="1" CornerRadius="0" Width="16" Height="16" Margin="5,0,0,0">
+                                    <TextBlock Name="tb_force_icon" Text="F" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Foreground="White" FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}" />
+                                </Border>
+                                <Border BorderBrush="Gray" Background="LightGreen" BorderThickness="1" CornerRadius="20" Width="16" Height="16" Margin="5,0,0,0">
+                                </Border>
+                                <Separator Height="Auto" Width="1"/>
+                            </WrapPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="PathMap">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <WrapPanel Orientation="Vertical" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Path=Path, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Background="Transparent"/>
+                                <!--<TextBlock FontStyle="Italic" Text="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Background="Transparent"/>-->
+                            </WrapPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Variable">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" FontWeight="Bold" TextAlignment="Center" Text="{Binding Path=Variable, UpdateSourceTrigger=PropertyChanged}">
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Value">
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="5,0,5,0">
+                                <TextBox.InputBindings>
+
+                                </TextBox.InputBindings>
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" 
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="TimeStamp">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" TextAlignment="Center" Text="{Binding Path=Timestamp, UpdateSourceTrigger=PropertyChanged}">
+
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
         </DataGrid>
+
+
     </Grid>
 </Window>
