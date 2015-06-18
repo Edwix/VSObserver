@@ -53,14 +53,7 @@ namespace VSObserver
         public MainWindow()
         {
             loadConfiguration();
-            InitializeComponent();
-
-            //Icone de notification
-                notifyIcon = new Forms.NotifyIcon();
-                this.notifyIcon.Text = "VSObserver";
-                notifyIcon.Icon = Properties.Resources.VSObserver_Icon;
-                this.notifyIcon.Visible = true;
-            
+            InitializeComponent();            
 
             //Création du timer pour récupérer la valeur du presse papier
             //Initialisation de l'ancienne valeur du presse papier

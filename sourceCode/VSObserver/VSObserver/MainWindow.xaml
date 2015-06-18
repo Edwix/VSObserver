@@ -5,8 +5,7 @@
         xmlns:nspace="clr-namespace:VSObserver" 
         xmlns:behavior="clr-namespace:VSObserver.Behavior" 
         Title="VSObserver" Height="350" Width="525"
-        Background="{StaticResource WindowBackgroundColor}"
-        >
+        Background="{StaticResource WindowBackgroundColor}" Icon="/VSObserver;component/Images/VSO_logo.ico">
     <Window.Resources>
         <nspace:BoolToVisibility x:Key="ConvBoolToVisibility" />
         <nspace:StringToBackground x:Key="ConvStringToBackground" />
