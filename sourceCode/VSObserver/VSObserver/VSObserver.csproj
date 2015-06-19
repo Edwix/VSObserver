@@ -51,8 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>VSO_logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="gc_services_dotnet, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5da1520d4db57f8e, processorArchitecture=MSIL">
@@ -194,6 +193,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\cog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="VSO_logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
