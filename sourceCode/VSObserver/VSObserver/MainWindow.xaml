@@ -26,234 +26,130 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
-        <Image Name="img_refresh" Source="Resources/Refresh.png" RenderTransformOrigin=".5,.5" Grid.Column="1" Grid.Row="0" MouseLeftButtonDown="refresh_ClickDown"
-                ToolTip="Refresh all variables" Margin="5,0,0,0" Width="25">
-            <Image.Style>
-                <Style TargetType="Image">
-                    <Setter Property="Image.RenderTransform">
-                        <Setter.Value>
-                            <RotateTransform CenterX="0" CenterY="0" />
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <!-- Quand on a la variable à FALSE alors le chargmenent n'est pas terminé
-                        Le ExitAction indique que lorsqu'on à fini l'action (LoadDone = True) on arrête l'animation-->
-                        <DataTrigger Binding="{Binding Path=LoadDone}" Value="False">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetProperty="RenderTransform.Angle"
-                                            From="0"
-                                            To="-360"
-                                            Duration="0:0:1"
-                                            RepeatBehavior="Forever" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                            <DataTrigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation
+
+        <!--=========================================================================================-->
+        <!-- Search field -->
+        <!--=========================================================================================-->
+            <nspace:VSOTextBox x:Name="tb_variableName" AcceptsReturn="False" Margin="5,5,5,5" Height="24" Width="Auto" HorizontalAlignment="Stretch"
+                               Grid.Column="0" Grid.Row="0"
+                               Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="tb_variableName_TextChanged"
+                               NbElement="{Binding VarNumberFound, UpdateSourceTrigger=PropertyChanged}" 
+                               SearchError="{Binding InformationMessage, UpdateSourceTrigger=PropertyChanged}"/>
+        <!--=========================================================================================-->
+
+        <!--=========================================================================================-->
+        <!-- Button to refresh the list of variables-->
+        <!--=========================================================================================-->
+            <Image Name="img_refresh" Source="Resources/Refresh.png" RenderTransformOrigin=".5,.5" Grid.Column="1" Grid.Row="0" MouseLeftButtonDown="refresh_ClickDown"
+                    ToolTip="Refresh all variables" Margin="5,0,0,0" Width="25">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Setter Property="Image.RenderTransform">
+                            <Setter.Value>
+                                <RotateTransform CenterX="0" CenterY="0" />
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <!-- Quand on a la variable à FALSE alors le chargmenent n'est pas terminé
+                            Le ExitAction indique que lorsqu'on à fini l'action (LoadDone = True) on arrête l'animation-->
+                            <DataTrigger Binding="{Binding Path=LoadDone}" Value="False">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
                                                 Storyboard.TargetProperty="RenderTransform.Angle"
                                                 From="0"
-                                                To="0" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.ExitActions>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Image.Style>
-        </Image>
+                                                To="-360"
+                                                Duration="0:0:1"
+                                                RepeatBehavior="Forever" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                    Storyboard.TargetProperty="RenderTransform.Angle"
+                                                    From="0"
+                                                    To="0" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        <!--=========================================================================================-->
+
+        <!--=========================================================================================-->
+        <!-- Button to change (writting or forcing) -->
+        <!--=========================================================================================-->
+            <Border Name="btn_typeW" BorderBrush="{StaticResource DarkBorderColor}" BorderThickness="1" CornerRadius="20" Margin="5,0,0,0"
+                    Background="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToBackground}}" 
+                    Width="20" Height="20" Grid.Column="2" Grid.Row="0" MouseDown="btn_typeW_MouseDown">
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" 
+                           Text="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged}" Foreground="Black" FontWeight="ExtraBold" />
+            </Border>
+        <!--=========================================================================================-->
+
         <!--=========================================================================================-->
         <!-- Button to have a list of locked lists -->
         <!--=========================================================================================-->
-                <Image  x:Name="img_lockedList" Grid.Column="3" Grid.Row="0" Source="Resources/List.png" SnapsToDevicePixels="True" Width="20"
-                        Margin="5,0,0,0">
-                    <i:Interaction.Behaviors>
-                        <behavior:DropDownImageBehavior/>
-                    </i:Interaction.Behaviors>
-                <Image.Resources>
-                    <CollectionViewSource x:Name="listLockedVarFile" x:Key="LockedVarFiles" Source="{Binding Path=ListOfFileLockedVar, UpdateSourceTrigger=PropertyChanged}" />
-                </Image.Resources>
-                <Image.ContextMenu >
-                        <ContextMenu>
+            <Image  x:Name="img_lockedList" Grid.Column="3" Grid.Row="0" Source="Resources/List.png" SnapsToDevicePixels="True" Width="20"
+                    Margin="5,0,0,0">
+                <i:Interaction.Behaviors>
+                    <behavior:DropDownImageBehavior/>
+                </i:Interaction.Behaviors>
+            <Image.Resources>
+                <CollectionViewSource x:Name="listLockedVarFile" x:Key="LockedVarFiles" Source="{Binding Path=ListOfFileLockedVar, UpdateSourceTrigger=PropertyChanged}" />
+            </Image.Resources>
+            <Image.ContextMenu>
+                    <ContextMenu>
                         <ContextMenu.ItemTemplate>
                             <DataTemplate>
                                 <MenuItem Name="fileLockedList" Header="{Binding}" Click="fileLockedList_Click" />
                             </DataTemplate>
                         </ContextMenu.ItemTemplate>
                         <ContextMenu.ItemsSource>
-                                <CompositeCollection>
-                                    <MenuItem  Width="Auto" HorizontalAlignment="Stretch" Margin="0">
-                                        <MenuItem.Header>
-                                            <TextBox ToolTip="Press to Enter to save the list" Height="25" Width="Auto"
-                                                     HorizontalAlignment="Stretch" AcceptsReturn="False" Text="{Binding Path=FileNameLockedList, UpdateSourceTrigger=PropertyChanged}">
-                                                <TextBox.InputBindings>
-                                                    <KeyBinding Key="Enter" Command="{Binding Path=SaveCurrentLockedList}" />
-                                                </TextBox.InputBindings>
-                                            </TextBox>
-                                        </MenuItem.Header>
-                                    </MenuItem>
-                                    <MenuItem Name="defaultLockedList" Header="Default locked list" Click="defaultLockedList_Click" />
-                                    <Separator />
-                                    <CollectionContainer Collection="{Binding Source={StaticResource LockedVarFiles}}" />
-                                </CompositeCollection>
-                            </ContextMenu.ItemsSource>
-                        </ContextMenu>
-                    </Image.ContextMenu>
-                </Image>
-            <!--=========================================================================================-->
-        <DockPanel Width="Auto" HorizontalAlignment="Stretch" LastChildFill="True" Grid.Column="0" Grid.Row="0">
-            <Border Name="errorBall" Margin="5,0,0,0" CornerRadius="20" Width="25" Height="25" BorderBrush="LightGray" BorderThickness="1" Background="Red" ToolTip="{Binding Path=InformationMessage, UpdateSourceTrigger=PropertyChanged}">
-                <TextBlock HorizontalAlignment="Center" Name="tbl_message" VerticalAlignment="Center" Text="!" Foreground="White" FontWeight="Bold" >
-                </TextBlock>
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=InformationMessage}" Value="{x:Null}">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-            </Border>
-            <!--<TextBox Name="tb_variableName" Grid.Column="1" AcceptsReturn="False" Margin="5,5,5,5" Height="24" Width="Auto" HorizontalAlignment="Stretch" Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="tb_variableName_TextChanged"/>-->
-            <nspace:VSOTextBox x:Name="tb_variableName" Grid.Column="1" AcceptsReturn="False" Margin="5,5,5,5" Height="24" Width="Auto" HorizontalAlignment="Stretch" 
-                               Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="tb_variableName_TextChanged"
-                               NbElement="{Binding VarNumberFound, UpdateSourceTrigger=PropertyChanged}" 
-                               SearchError="{Binding InformationMessage, UpdateSourceTrigger=PropertyChanged}"/>
-        </DockPanel>
+                            <CompositeCollection>
+                                <MenuItem  Width="Auto" HorizontalAlignment="Stretch" Margin="0">
+                                    <MenuItem.Header>
+                                        <TextBox ToolTip="Press to Enter to save the list" Height="25" Width="Auto"
+                                                 HorizontalAlignment="Stretch" AcceptsReturn="False" 
+                                                 Text="{Binding Path=FileNameLockedList, UpdateSourceTrigger=PropertyChanged}">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Key="Enter" Command="{Binding Path=SaveCurrentLockedList}" />
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+                                    </MenuItem.Header>
+                                </MenuItem>
+                                <MenuItem Name="defaultLockedList" Header="Default locked list" Click="defaultLockedList_Click" />
+                                <Separator />
+                                <CollectionContainer Collection="{Binding Source={StaticResource LockedVarFiles}}" />
+                            </CompositeCollection>
+                        </ContextMenu.ItemsSource>
+                    </ContextMenu>
+                </Image.ContextMenu>
+            </Image>
+        <!--=========================================================================================-->
+        
         <!--=========================================================================================-->
         <!-- Button to have the parameters -->
         <!--=========================================================================================-->
-        <Image  x:Name="img_parameters" Grid.Column="5" Grid.Row="0" Source="Images/cog.png" SnapsToDevicePixels="True" Width="20"
-                        Margin="5,0,0,0">
-            <i:Interaction.Behaviors>
-                <behavior:DropDownImageBehavior/>
-            </i:Interaction.Behaviors>
-            <Image.ContextMenu >
-                <ContextMenu>
-                    <MenuItem Name="cb_VerifyClipBoard" IsCheckable="True" Header="Check clipboard" IsChecked="True"  />
-                    <MenuItem Name="cb_RegexSearch" IsCheckable="True" Header="Search with regex" IsChecked="{Binding SearchRegex, UpdateSourceTrigger=PropertyChanged}"/>                    
-                </ContextMenu>
-            </Image.ContextMenu>
-        </Image>
+            <Image  x:Name="img_parameters" Grid.Column="4" Grid.Row="0" Source="Images/cog.png" SnapsToDevicePixels="True" Width="20"
+                            Margin="5,0,5,0">
+                <i:Interaction.Behaviors>
+                    <behavior:DropDownImageBehavior/>
+                </i:Interaction.Behaviors>
+                <Image.ContextMenu >
+                    <ContextMenu>
+                        <MenuItem Name="cb_VerifyClipBoard" IsCheckable="True" Header="Check clipboard" IsChecked="True"  />
+                        <MenuItem Name="cb_RegexSearch" IsCheckable="True" Header="Search with regex" IsChecked="{Binding SearchRegex, UpdateSourceTrigger=PropertyChanged}"/>                    
+                    </ContextMenu>
+                </Image.ContextMenu>
+            </Image>
         <!--=========================================================================================-->
-        <Border Name="btn_typeW" BorderBrush="Gray" BorderThickness="1" CornerRadius="20" Margin="5,0,0,0"
-                Background="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToBackground}}" 
-                Width="20" Height="20" Grid.Column="2" Grid.Row="0" MouseDown="btn_typeW_MouseDown">
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Path=WritingType, UpdateSourceTrigger=PropertyChanged}" Foreground="Black" FontWeight="ExtraBold" />
-        </Border>
-        
-        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" Name="tbl_varNumber" VerticalAlignment="Top" Height="20" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" Visibility="Collapsed">
-            <Run Text="Variables number : " />
-            <Run Text="{Binding VarNumberFound, UpdateSourceTrigger=PropertyChanged}" />
-            <Run Text="/" />
-            <Run x:Name="run_varTotal" Text="0" />
-        </TextBlock>
-        <!--<DataGrid
-            VerticalAlignment="Stretch"
-            Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="4"
-            Name="dg_variableList"
-            ScrollViewer.VerticalScrollBarVisibility="Visible"
-            ItemsSource="{Binding Path=VariableList, UpdateSourceTrigger=PropertyChanged}"
-            SelectedItem="{Binding Path=SelectedVariable, UpdateSourceTrigger=PropertyChanged}"
-            AutoGenerateColumns="False"
-            HeadersVisibility="None"
-            Background="Transparent"
-            CanUserAddRows="False">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ToggleButton Name="lockBtn" Content="" Foreground="Black" IsChecked="{Binding Path=IsLocked, UpdateSourceTrigger=PropertyChanged}"
-                                          HorizontalAlignment="Center" Click="lockBtn_Click">
-                                <ToggleButton.Template>
-                                    <ControlTemplate TargetType="{x:Type ToggleButton}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Image>
-                                                <Image.Style>
-                                                    <Style>
-                                                        <Setter Property="Image.Source" Value="Resources/Lock_open.png" />
-                                                        <Setter Property="Image.Width" Value="20" />
-                                                        <Setter Property="Image.HorizontalAlignment" Value="Center" />
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsChecked, 
-                                                             RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}" Value="True">
-                                                                <Setter Property="Image.Source" Value="Resources/Lock.png" />
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Image.Style>
-                                            </Image>
-                                            <ContentPresenter Content="{TemplateBinding Content}" Margin="5,0,0,0" />
-                                        </StackPanel>
-                                    </ControlTemplate>
-                                </ToggleButton.Template>
-                            </ToggleButton>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding Path=Path}" Header="Path and Name" Width="Auto"/>
-                <DataGridTextColumn Binding="{Binding Path=Variable}" Header="Variable name" Width="Auto"/>
-                <DataGridTemplateColumn Header="Value" Selector.IsSelected="{Binding Path=IsChanging, UpdateSourceTrigger=PropertyChanged}" Width="Auto">
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <TextBox Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" GotMouseCapture="TextBox_GotMouseCapture" KeyDown="TextBox_KeyDown">
-                                <TextBox.InputBindings>
-                                    
-                                </TextBox.InputBindings>
-                            </TextBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate >
-                            <Grid Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToColor}}">
-                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                    <Border Name="force_ball" BorderBrush="Gray" BorderThickness="1" CornerRadius="0" Background="Red" Width="20" Height="20" Margin="5,0,10,0" 
-                                            MouseDown="force_ball_icon_MouseDown"
-                                            Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}"
-                                            Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}">
-                                        <TextBlock Name="tb_force_icon" Text="F" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontWeight="Bold"/>
-                                    </Border>
-                                    <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"
-                                               ToolTip="{Binding Path=CommentColor, UpdateSourceTrigger=PropertyChanged}" />
-                                </WrapPanel>
-                            </Grid>                       
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellStyle>
-                        <Style TargetType="{x:Type DataGridCell}" >
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=ValueHasChanged}" Value="True">
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard x:Name="tt" >
-                                            <Storyboard Storyboard.TargetProperty="(DataGridCell.Background).(SolidColorBrush.Color)">
-                                                <ColorAnimation                                                                  
-                                                     FillBehavior="Stop"                                                                  
-                                                     From="{StaticResource colorAnim_valueChanged}"                                                                  
-                                                     To="Transparent"                                                                  
-                                                     By="Blue"                                                                  
-                                                     Duration="{StaticResource durationColor}" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGridTemplateColumn.CellStyle>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}" Header="Mapping" Width="Auto"/>
-                <DataGridTextColumn Binding="{Binding Path=Timestamp, UpdateSourceTrigger=PropertyChanged}" Header="Timestamp" Width="Auto"/>
-                <DataGridTextColumn Binding="{Binding Path=ValueHasChanged, UpdateSourceTrigger=PropertyChanged}" Header="Change" Visibility="Collapsed" Width="Auto"/>
-            </DataGrid.Columns>
-            <DataGrid.InputBindings>
-                <KeyBinding Command="{Binding CopyVariable}" Gesture="CTRL+C" />
-            </DataGrid.InputBindings>
-        </DataGrid>-->
-
 
         <DataGrid HeadersVisibility="None"
                   VerticalAlignment="Stretch"

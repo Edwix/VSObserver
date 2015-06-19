@@ -42,7 +42,6 @@ namespace VSObserver
         private string oldClipBoardText;
         private DispatcherTimer clipBoardTimer;
         private VariableObserver vo;
-        private Forms.NotifyIcon notifyIcon;
         private DataApplication dataApp;
         private BackgroundWorker refreshWorker;
         private int totalNumberOfVariables = 0;
@@ -79,7 +78,6 @@ namespace VSObserver
 
             dataApp = new DataApplication();
             img_refresh.DataContext = dataApp;
-            errorBall.DataContext = dataApp;
            
             
             dataApp.LoadDone = true;
@@ -87,8 +85,6 @@ namespace VSObserver
             vo = new VariableObserver(ipAddresseRTCServer, sqlLiteDataBase, number_variable);
             totalNumberOfVariables = vo.loadVariableList();
 
-            //Datacontext pour lier le nombre de variable trouvés
-            tbl_varNumber.DataContext = vo;
             changeVariableIndication();
 
             tb_variableName.DataContext = vo;
