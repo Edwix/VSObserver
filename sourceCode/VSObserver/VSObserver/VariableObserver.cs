@@ -831,14 +831,6 @@ namespace VSObserver
                                 //We check whether the variable is a correct regex
                                 if (IsValidRegex(varName))
                                 {
-                                    /*if (VariableList.Where(x => (Regex.IsMatch(x.PathName, varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, varName, RegexOptions.IgnoreCase))).Count() > 0)
-                                    {
-                                        foreach (DataObserver dobs in VariableList.Where(x => (Regex.IsMatch(x.PathName, varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, varName, RegexOptions.IgnoreCase))))
-                                        {
-                                            dobs.Color = 
-                                        }
-                                    }*/
-
                                     FileRules rules = new FileRules();
 
                                     //Loading of all rule set elements
@@ -854,15 +846,17 @@ namespace VSObserver
 
                                     //Adding the colors in function of value on the rule object
                                     rules.ColorRules = ruleSets;
+                                    
                                     //Adding comment in the rules
                                     rules.Comment = item.Comment;
 
                                     //Searching all variables in all variables list
                                     var source = _listOfDataObserver.AsEnumerable();
                                     var searchResult = source.Where(x => (Regex.IsMatch(x.PathName, varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, varName, RegexOptions.IgnoreCase)));
-                                    
+                                    ObservableCollection<DataObserver> _resSearh = new ObservableCollection<DataObserver>(searchResult);
+
                                     ///Creating the dictionnary with elements 
-                                    foreach (DataObserver result in searchResult)
+                                    foreach (DataObserver result in _resSearh)
                                     {
                                         string varPathAndName = result.PathName;
 
@@ -1040,21 +1034,21 @@ namespace VSObserver
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-            public bool Equals(DataObserver x, DataObserver y)
-            {
-                if (x == null || y == null)
-                    return false;
+        public bool Equals(DataObserver x, DataObserver y)
+        {
+            if (x == null || y == null)
+                return false;
 
-                return x.PathName.Equals(y.PathName);
-            }
+            return x.PathName.Equals(y.PathName);
+        }
 
-            public int GetHashCode(DataObserver obj)
-            {
-                //throw new NotImplementedException();
-                if (obj == null)
-                    return 0;
+        public int GetHashCode(DataObserver obj)
+        {
+            //throw new NotImplementedException();
+            if (obj == null)
+                return 0;
 
-                return obj.GetHashCode();
-            }
+            return obj.GetHashCode();
+        }
     }
 }
