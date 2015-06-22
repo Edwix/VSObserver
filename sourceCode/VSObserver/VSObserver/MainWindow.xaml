@@ -245,14 +245,40 @@
                             </WrapPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <WrapPanel x:Name="wp_pathname" Width="Auto" HorizontalAlignment="Stretch" Orientation="Vertical" VerticalAlignment="Center">
+                                <TextBox Text="{Binding Path=Path, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True}"  HorizontalAlignment="Left" Background="Transparent"
+                                         IsReadOnly="True" BorderThickness="0" Foreground="White"/>
+                                <TextBox FontStyle="Italic" Text="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Background="Transparent"
+                                         IsReadOnly="True" TextWrapping="Wrap" BorderThickness="0" Foreground="White">
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
+                            </WrapPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Variable">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" FontWeight="Bold" TextAlignment="Center" Text="{Binding Path=Variable, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" FontWeight="Bold" Text="{Binding Path=Variable, UpdateSourceTrigger=PropertyChanged}">
                             </TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox VerticalAlignment="Center" Margin="5,0,5,0" FontWeight="Bold" Text="{Binding Path=Variable, UpdateSourceTrigger=PropertyChanged}"
+                                       IsReadOnly="True" TextWrapping="Wrap" Background="Transparent" BorderThickness="0" Foreground="White"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Value">
                     <DataGridTemplateColumn.CellEditingTemplate>
