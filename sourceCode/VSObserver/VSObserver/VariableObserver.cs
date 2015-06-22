@@ -1026,6 +1026,32 @@ namespace VSObserver
                     getListLockedVarSaved();
                 }
             }
+
+            public ICommand SortByName
+            {
+                get
+                {
+                    if (this.cmdSavCurLckedList == null)
+                        this.cmdSavCurLckedList = new RelayCommand(() => sortByName(), () => true);
+
+                    return cmdSavCurLckedList;
+                }
+            }
+
+            private void sortByName()
+            {
+                if (SelectedVariable != null && VariableList != null)
+                {
+                    //On remplace le nom de fichier entré pour enlevé tous mes caractères spéciaux
+                    string fileName = Regex.Replace(_fileNameLockedVar, REGEX_REMPLACE_FILE, "");
+
+                    //Sauvegarde des variable bloqués
+                    saveVariableLocked(fileName);
+
+                    //On récupère la liste pour l'afficher
+                    getListLockedVarSaved();
+                }
+            }
         #endregion
 
         /// <summary>

@@ -204,12 +204,13 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="PathMap" CanUserResize="True">
+                <DataGridTemplateColumn Header="Path" CanUserResize="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <WrapPanel x:Name="wp_pathname" Width="Auto" HorizontalAlignment="Stretch" Orientation="Vertical" VerticalAlignment="Center">
                                 <TextBlock Text="{Binding Path=Path, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True}"  HorizontalAlignment="Left" Background="Transparent"/>
-                                <TextBlock FontStyle="Italic" Text="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Background="Transparent">
+                                <TextBlock FontStyle="Italic" Text="{Binding Path=Mapping, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Background="Transparent"
+                                           Margin="5,0,0,0">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -389,6 +390,12 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Name="sortByName" Header="Sort by name" Click="sortByName_Click"  />
+                    <MenuItem Header="Search with regex" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             <DataGrid.InputBindings>
                 <KeyBinding Command="{Binding CopyVariable}" Gesture="CTRL+C" />
             </DataGrid.InputBindings>

@@ -367,5 +367,18 @@ namespace VSObserver
         {
             vo.stopRefreshOnSelectedElement(false);
         }
+
+        private void sortByName_Click(object sender, RoutedEventArgs e)
+        {
+            ICollectionView cvTasks = CollectionViewSource.GetDefaultView(dg_variableList.ItemsSource);
+            int cellIndex = dg_variableList.CurrentCell.Column.DisplayIndex;
+            string selectedColumnHeader = (string)dg_variableList.SelectedCells[cellIndex].Column.Header;
+            
+            if (cvTasks != null)
+            {
+                cvTasks.SortDescriptions.Clear();
+                cvTasks.SortDescriptions.Add(new SortDescription(selectedColumnHeader, ListSortDirection.Ascending));
+            }
+        }
     }
 }
