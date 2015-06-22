@@ -393,7 +393,7 @@
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Name="sortByName" Header="Sort by name" Click="sortByName_Click"  />
-                    <MenuItem Header="Search with regex" />
+                    <MenuItem Header="Copy the mapping value" Command="{Binding CopyMapping}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.InputBindings>

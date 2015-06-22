@@ -85,6 +85,7 @@ namespace VSObserver
         ///Commands
         private ICommand cmdCopyVar;
         private ICommand cmdSavCurLckedList;
+        private ICommand cmdCopyMap;
 
         public VariableObserver(string ipAddr, string pathDataBase, int show_number)
         {
@@ -1027,29 +1028,30 @@ namespace VSObserver
                 }
             }
 
-            public ICommand SortByName
+            public ICommand CopyMapping
             {
                 get
                 {
-                    if (this.cmdSavCurLckedList == null)
-                        this.cmdSavCurLckedList = new RelayCommand(() => sortByName(), () => true);
+                    if (this.cmdCopyMap == null)
+                        this.cmdCopyMap= new RelayCommand(() => copyMapping(), () => true);
 
-                    return cmdSavCurLckedList;
+                    return cmdCopyMap;
                 }
             }
 
-            private void sortByName()
+            private void copyMapping()
             {
-                if (SelectedVariable != null && VariableList != null)
+                try
                 {
-                    //On remplace le nom de fichier entré pour enlevé tous mes caractères spéciaux
-                    string fileName = Regex.Replace(_fileNameLockedVar, REGEX_REMPLACE_FILE, "");
-
-                    //Sauvegarde des variable bloqués
-                    saveVariableLocked(fileName);
-
-                    //On récupère la liste pour l'afficher
-                    getListLockedVarSaved();
+                    if (SelectedVariable != null)
+                    {
+                        string map = SelectedVariable.Mapping;
+                        Clipboard.SetText(map);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error copy variable : \n" + e.ToString());
                 }
             }
         #endregion
