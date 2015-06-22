@@ -87,6 +87,7 @@ namespace VSObserver
 
             changeVariableIndication();
 
+            //On met le data context avec le variable observer
             tb_variableName.DataContext = vo;
             dg_variableList.DataContext = vo;
             btn_typeW.DataContext = vo;
@@ -105,7 +106,7 @@ namespace VSObserver
             fileWatch.setFileChangeListener(vo);
 
             //Chargmement des listes de variables sauvegardé
-            vo.loadLockedVariables(LOCKED_LIST_FILE);
+            vo.loadVariables(LOCKED_LIST_FILE, true);
 
             //Chargement de tous les fichiers sauvegardés qui contiennent les variable bloqués
             vo.getListLockedVarSaved();
@@ -354,13 +355,13 @@ namespace VSObserver
             if(menuItem != null)
             {
                 Console.WriteLine("MENU ITEM CLICK : " + menuItem.Header.ToString());
-                vo.loadLockedVariables(menuItem.Header.ToString());
+                vo.loadVariables(menuItem.Header.ToString(), true);
             }
         }
 
         private void defaultLockedList_Click(object sender, RoutedEventArgs e)
         {
-            vo.loadLockedVariables(LOCKED_LIST_FILE);
+            vo.loadVariables(LOCKED_LIST_FILE, true);
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
@@ -379,6 +380,11 @@ namespace VSObserver
                 cvTasks.SortDescriptions.Clear();
                 cvTasks.SortDescriptions.Add(new SortDescription(selectedColumnHeader, ListSortDirection.Ascending));
             }
+        }
+
+        private void showAllForcedVars_Click(object sender, RoutedEventArgs e)
+        {
+            vo.showAllForcing();
         }
     }
 }

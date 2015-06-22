@@ -126,6 +126,7 @@
                                     </MenuItem.Header>
                                 </MenuItem>
                                 <MenuItem Name="defaultLockedList" Header="Default locked list" Click="defaultLockedList_Click" />
+                                <MenuItem Name="showAllForcedVars" Header="Show all forced variables" Click="showAllForcedVars_Click" />
                                 <Separator />
                                 <CollectionContainer Collection="{Binding Source={StaticResource LockedVarFiles}}" />
                             </CompositeCollection>

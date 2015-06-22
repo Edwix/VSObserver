@@ -33,6 +33,8 @@ namespace VSObserver
 
         VariableController vc;
 
+        private const string NAME_ALL_FORCING = "AllForced";
+
         private const string QUERY_MAPPING = "SELECT V1.Name AS Path, V2.Name AS Mapping FROM Variable AS V1, Variable AS V2 WHERE  V2.variableId = V1.parentId";
         private const string QUERY_ALL_VAR = "SELECT Name AS Path FROM Variable";
 
@@ -881,16 +883,6 @@ namespace VSObserver
         {
             try
             {
-                string lockedListSaved = @"Resources/" + name + ".csv";
-
-                if (!File.Exists(lockedListSaved))
-                {
-                    File.Create(lockedListSaved).Dispose();
-                }
-
-                FileInfo fi = new FileInfo(lockedListSaved);
-                TextWriter tw = new StreamWriter(fi.Open(FileMode.Truncate));
-
                 StringBuilder builder = new StringBuilder();
 
                 foreach(DataObserver dobs in getLockedVariables())
@@ -905,7 +897,29 @@ namespace VSObserver
                     }
                 }
 
-                tw.Write(builder.ToString());
+                saveVariables(name, builder.ToString());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error : \n" + e.ToString());
+            }
+        }
+
+        public void saveVariables(string name, string content)
+        {
+            try
+            {
+                string lockedListSaved = @"Resources/" + name + ".csv";
+
+                if (!File.Exists(lockedListSaved))
+                {
+                    File.Create(lockedListSaved).Dispose();
+                }
+
+                FileInfo fi = new FileInfo(lockedListSaved);
+                TextWriter tw = new StreamWriter(fi.Open(FileMode.Truncate));
+
+                tw.Write(content);
                 tw.Flush();
                 tw.Close();
 
@@ -916,7 +930,7 @@ namespace VSObserver
             }
         }
 
-        public void loadLockedVariables(string name)
+        public void loadVariables(string name, bool isLocked)
         {
             try
             {
@@ -938,7 +952,7 @@ namespace VSObserver
                     foreach (string pathName in listOfVariables)
                     {
                         DataObserver dobs = createDataObserver(pathName, "", VS_Type.INVALID, 0, "", false);
-                        dobs.IsLocked = true;
+                        dobs.IsLocked = isLocked;
                         listDobs.Add(dobs);
                     }
 
@@ -964,7 +978,8 @@ namespace VSObserver
                 if (Path.GetExtension(filePath).Equals(".csv"))
                 {
                     //Si c'est different de la liste de sauvegarde par défaut, alors on ajoute les fichiers trouvées
-                    if (!Path.GetFileNameWithoutExtension(filePath).Equals(MainWindow.LOCKED_LIST_FILE))
+                    if (!Path.GetFileNameWithoutExtension(filePath).Equals(MainWindow.LOCKED_LIST_FILE)
+                        && !Path.GetFileNameWithoutExtension(filePath).Equals(NAME_ALL_FORCING))
                     {
                         _listOfFileLockedVar.Add(Path.GetFileNameWithoutExtension(filePath));
                     }
@@ -1055,6 +1070,45 @@ namespace VSObserver
                 }
             }
         #endregion
+
+        public void showAllForcing()
+        {
+            if (_listOfDataObserver != null)
+            {
+                if (_listOfDataObserver.Count > 0)
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    ObservableCollection<DataObserver> listDobs = new ObservableCollection<DataObserver>();
+
+                    foreach (DataObserver rowObserver in _listOfDataObserver)
+                    {
+                        InjectionVariableStatus status = new InjectionVariableStatus();
+                        vc.getInjectionStatus(rowObserver.PathName, status);
+
+                        //On regarde si le status correspond au forçage
+                        if (status.state == InjectionStates.InjectionStates_IsSet)
+                        {
+                            rowObserver.IsForced = true;
+                            builder.Append(rowObserver.PathName + ";");
+                            listDobs.Add(rowObserver);
+                        }
+                        else
+                        {
+                            rowObserver.IsForced = false;
+                        }
+                    }
+
+                    VarNumberFound = listDobs.Count;
+
+                    //Affichage des variables forcés
+                    VariableList = listDobs;
+
+                    //Save all variable in a csv file
+                    saveVariables(NAME_ALL_FORCING, builder.ToString().TrimEnd(';'));
+                }
+            }
+        }
 
         /// <summary>
         /// Permet de comparer le chemin de deux DataObserver
