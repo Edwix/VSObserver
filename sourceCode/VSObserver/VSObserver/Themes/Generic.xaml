@@ -15,7 +15,7 @@
                 <ControlTemplate TargetType="{x:Type local:VSOTextBox}">
                     <Border x:Name="Border"
                         CornerRadius="7"
-                        Padding="5,2,10,2"
+                        Padding="5,0,0,0"
                         BorderThickness="1"
                         ToolTip="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SearchError}">
                         <Border.Resources>
@@ -26,16 +26,20 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="{Binding ElementName=stck_panel, Path=Width}"/>
                             </Grid.ColumnDefinitions>
-                            <ScrollViewer x:Name="PART_ContentHost" Grid.Column="0" />
+                            <ScrollViewer Margin="0,2,0,2" x:Name="PART_ContentHost" Grid.Column="0" />
                             <StackPanel x:Name="stck_panel" Orientation="Horizontal" Grid.Column="1">
                                 <Border x:Name="PART_SearchIconBorder"                                            
-                                            BorderThickness="1"
+                                            BorderThickness="1,0,0,0"
                                             Padding="4,2,4,2"
-                                            CornerRadius="2"
-                                            BorderBrush="{StaticResource BorderColor}"
-                                            Background="#1CA8FF">
-                                    <TextBlock x:Name="tblock_elem" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NbElement}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                            CornerRadius="0,6,6,0"
+                                            BorderBrush="{StaticResource DarkBorderColor}"
+                                            Background="#57BFFF">
+                                    <TextBlock x:Name="tblock_elem" VerticalAlignment="Center" HorizontalAlignment="Center"
                                                 Foreground="White" FontWeight="Bold" >
+                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NbElement}" />
+                                        <Run Text="/" />
+                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TotalVariable}" />
+
                                         <TextBlock.ToolTip>
                                             <TextBlock>
                                                 <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NbElement}" />
