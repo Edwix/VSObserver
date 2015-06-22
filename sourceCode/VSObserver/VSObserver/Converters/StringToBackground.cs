@@ -5,28 +5,31 @@ using System.Text;
 using System.Windows.Data;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Media;
 
-namespace VSObserver
+namespace VSObserver.Converters
 {
-    class BoolToVisibility : IValueConverter
+    class StringToBackground : IValueConverter
     {
-        public bool IsReversed { get; set; }
-        public bool UseHidden { get; set; }
-        
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var val = System.Convert.ToBoolean(value, CultureInfo.InvariantCulture);
-            if (this.IsReversed)
+            string val = System.Convert.ToString(value, CultureInfo.InvariantCulture);
+
+            if (val == null)
             {
-                val = !val;
+                return new SolidColorBrush(Colors.AliceBlue);
             }
-            if (val)
+            
+            if (val.Equals(VariableObserver.F_VAL))
             {
-                return Visibility.Visible;
+                return new SolidColorBrush(Color.FromRgb(254,46,46));
             }
-            return this.UseHidden ? Visibility.Hidden : Visibility.Collapsed;
+            else
+            {
+                return new SolidColorBrush(Colors.Violet);
+            }
         }
-        
+
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();

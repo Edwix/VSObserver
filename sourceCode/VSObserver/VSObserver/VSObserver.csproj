@@ -90,14 +90,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Behavior\DropDownImageBehavior.cs" />
-    <Compile Include="BoolToVisibility.cs" />
+    <Compile Include="Converters\BoolToVisibility.cs" />
     <Compile Include="DataApplication.cs" />
     <Compile Include="DataObserver.cs" />
     <Compile Include="FileWatcher.cs" />
     <Compile Include="IFileChange.cs" />
+    <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="StringToBackground.cs" />
-    <Compile Include="StringToColor.cs" />
+    <Compile Include="Converters\StringToBackground.cs" />
+    <Compile Include="Converters\StringToColor.cs" />
     <Compile Include="VariableObserver.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="VSOTextBox.cs" />

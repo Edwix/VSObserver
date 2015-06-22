@@ -7,30 +7,25 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 
-namespace VSObserver
+namespace VSObserver.Converters
 {
-    class StringToBackground : IValueConverter
+    class StringToColor : IValueConverter
     {
-        public bool IsReversed { get; set; }
-        public bool UseHidden { get; set; }
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string val = System.Convert.ToString(value, CultureInfo.InvariantCulture);
+            Color color;
 
-            if (val == null)
+            try
             {
-                return new SolidColorBrush(Colors.AliceBlue);
+                color = (Color)ColorConverter.ConvertFromString(val);
+            }
+            catch
+            {
+                color = Colors.Transparent;
             }
             
-            if (val.Equals(VariableObserver.F_VAL))
-            {
-                return new SolidColorBrush(Color.FromRgb(254,46,46));
-            }
-            else
-            {
-                return new SolidColorBrush(Colors.Violet);
-            }
+            return new SolidColorBrush(color);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

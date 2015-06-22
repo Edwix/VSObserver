@@ -1,7 +1,8 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:VSObserver">
+    xmlns:local="clr-namespace:VSObserver"
+    xmlns:converters="clr-namespace:VSObserver.Converters">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Themes/Shared.xaml" />
@@ -15,9 +16,11 @@
                     <Border x:Name="Border"
                         CornerRadius="7"
                         Padding="5,2,10,2"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{StaticResource DarkBorderColor}"
-                        BorderThickness="1">
+                        BorderThickness="1"
+                        ToolTip="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SearchError}">
+                        <Border.Resources>
+                            <converters:IsNullConverter x:Key="ConvIsNull" />
+                        </Border.Resources>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -42,23 +45,22 @@
                                         </TextBlock.ToolTip>
                                     </TextBlock>
                                 </Border>
-                                <Border x:Name="errorBall" Margin="5,0,0,0" CornerRadius="16" Width="18" Height="18" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" 
-                                        Background="{StaticResource BackgroundError}"
-                                        Padding="2"
-                                        ToolTip="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SearchError}">
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SearchError}" Value="{x:Null}">
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="!" Foreground="White" FontWeight="Bold" />
-                                </Border>
                             </StackPanel>
                         </Grid>
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SearchError}" Value="{x:Null}">
+                                        <Setter Property="BorderBrush" Value="{StaticResource DarkBorderColor}" />
+                                        <Setter Property="Background" Value="White" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SearchError, Converter={StaticResource ConvIsNull}}" Value="False">
+                                        <Setter Property="BorderBrush" Value="{StaticResource DarkErrorBorderColor}" />
+                                        <Setter Property="Background" Value="{StaticResource BackgroundErrorColor}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
