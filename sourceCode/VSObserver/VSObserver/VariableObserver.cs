@@ -547,7 +547,8 @@ namespace VSObserver
                 }
 
                 dObs.Timestamp = timeStamp;
-                dObs.WhenUpdated = howManyTime(oldTimeStamp, dObs.Timestamp);
+                //dObs.WhenUpdated = howManyTime(oldTimeStamp, dObs.Timestamp);
+                dObs.WhenUpdated = createDateTime(dObs.Timestamp);
             }
 
             return dObs;
