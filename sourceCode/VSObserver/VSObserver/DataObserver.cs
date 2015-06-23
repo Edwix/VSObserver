@@ -25,16 +25,18 @@ namespace VSObserver
         private const string MAPPING = "Mapping";
         private const string COLOR = "Color";
         private const string COMMENT_COLOR = "CommentColor";
+        private const string WHEN_UPDATED = "WhenUpdated";
 
         private string _pathName;
         private string _path;
         private string _var;
-        private string _ts;
+        private long _ts;
         private string _val;
         private string _valF;
         private string _map;
         private string _color;
         private string _commentColor;
+        private string _wUpdated;
         private bool _hasChanged;
         private bool _loocked;
         private bool _isForced;
@@ -83,7 +85,13 @@ namespace VSObserver
             set { _map = value; OnPropertyChanged(MAPPING); }
         }
 
-        public string Timestamp
+        public string WhenUpdated
+        {
+            get { return _wUpdated; }
+            set { _wUpdated = value; OnPropertyChanged(WHEN_UPDATED); }
+        }
+
+        public long Timestamp
         {
             get { return _ts; }
             set { _ts = value; OnPropertyChanged(TIMESTAMP); }

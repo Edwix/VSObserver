@@ -381,10 +381,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="TimeStamp" MinWidth="50" Width="1*">
+                <DataGridTemplateColumn Header="WhenUpdated" MinWidth="50" Width="1*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" TextAlignment="Center" Text="{Binding Path=Timestamp, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" TextAlignment="Center" Text="{Binding Path=WhenUpdated, UpdateSourceTrigger=PropertyChanged}">
 
                             </TextBlock>
                         </DataTemplate>

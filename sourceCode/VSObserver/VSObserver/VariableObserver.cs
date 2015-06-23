@@ -452,6 +452,7 @@ namespace VSObserver
             string completeVariable = oldDataObs.PathName;
             int importOk = vc.importVariable(completeVariable);
             int typeVS = -1;
+            long oldTimeStamp = oldDataObs.Timestamp;
             long timeStamp = 0;
             string value = "";
             //vc = Vs.getVariableController();
@@ -545,7 +546,8 @@ namespace VSObserver
                     dObs.ValueHasChanged = false;
                 }
 
-                dObs.Timestamp = createDateTime(timeStamp);
+                dObs.Timestamp = timeStamp;
+                dObs.WhenUpdated = howManyTime(oldTimeStamp, dObs.Timestamp);
             }
 
             return dObs;
@@ -553,10 +555,24 @@ namespace VSObserver
 
         public string createDateTime(long timeStamp)
         {
+            return getDateTimeWithLong(timeStamp).ToString();
+        }
+
+        public DateTime getDateTimeWithLong(long timeStamp)
+        {
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
             long ts = (timeStamp / 1000) + (2 * 360 * 10000);
             dtDateTime = dtDateTime.AddMilliseconds(ts);
-            return dtDateTime.ToString();
+            return dtDateTime;
+        }
+
+        public string howManyTime(long timeStamp1, long timeStamp2)
+        {
+            DateTime dt1 = getDateTimeWithLong(timeStamp1);
+            DateTime dt2 = getDateTimeWithLong(timeStamp2);
+
+            TimeSpan total = dt2.Subtract(dt1);
+            return total.TotalSeconds + " seconds ago";
         }
 
         /// <summary>
@@ -601,7 +617,7 @@ namespace VSObserver
                 Type = type,
                 Mapping = mapping,
                 IsForced = forced,
-                Timestamp = createDateTime(timeStamp)
+                Timestamp = timeStamp
             };
 
             return dObs;
