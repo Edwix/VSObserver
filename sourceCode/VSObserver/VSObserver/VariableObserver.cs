@@ -80,7 +80,11 @@ namespace VSObserver
         private string _fileNameLockedVar;
         private ObservableCollection<string> _listOfFileLockedVar;
 
+        //Dictionnaire qui contient l'ensemble des règles de couleur
         private Dictionary<string, FileRules> colorRules;
+
+        //dictionnaire qui va contenire le chemin + nom (clé unique) et le mapping associé
+        Dictionary<string, string> dic;
 
         private string _infoMsg;
 
@@ -178,7 +182,7 @@ namespace VSObserver
         public int loadVariableList()
         {
             //On crée un dictionnaire qui va contenire le chemin + nom (clé unique) et le mapping associé
-            Dictionary<string, string> dic = new Dictionary<string, string>();
+            dic = new Dictionary<string, string>();
 
             //Création de la connexion SQLite
             string dataSource = @"Data Source=" + pathDataBase;
@@ -339,7 +343,6 @@ namespace VSObserver
 
             ///On recherche le nom de la variable à travers la liste des variables
             ///Cela nous retourne plusieurs en fonction de nom entrée
-            ObservableCollection<DataObserver> lockVars = getLockedVariables();
             ObservableCollection<DataObserver> variableResult = getLockedVariables();
             int variableNumber = 0;
             string rawVariableName = _searchText;
@@ -398,7 +401,6 @@ namespace VSObserver
                     string regexVarName = "^.*" + variableName.Replace("*", ".*").Replace('?', '.') + ".*$";
 
                     searchResult = source.Where(x => (Regex.IsMatch(x.PathName, regexVarName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, regexVarName, RegexOptions.IgnoreCase)));
-                    
                 }
 
 
@@ -415,7 +417,6 @@ namespace VSObserver
                     int compt = 0;
 
                     vc = Vs.getVariableController();
-                    
 
                     foreach (DataObserver dObs in newListDObs)
                     {
@@ -968,7 +969,7 @@ namespace VSObserver
 
                     foreach (string pathName in listOfVariables)
                     {
-                        DataObserver dobs = createDataObserver(pathName, "", VS_Type.INVALID, 0, "", false);
+                        DataObserver dobs = createDataObserver(pathName, "", VS_Type.INVALID, 0, dic[pathName], false);
                         dobs.IsLocked = isLocked;
                         listDobs.Add(dobs);
                     }
