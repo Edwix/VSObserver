@@ -20,6 +20,7 @@
                         ToolTip="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SearchError}">
                         <Border.Resources>
                             <converters:IsNullConverter x:Key="ConvIsNull" />
+                            <converters:BoolToVisibility x:Key="ConvBoolToVis" />
                         </Border.Resources>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -27,7 +28,8 @@
                                 <ColumnDefinition Width="{Binding ElementName=stck_panel, Path=Width}"/>
                             </Grid.ColumnDefinitions>
                             <ScrollViewer Margin="0,2,0,2" x:Name="PART_ContentHost" Grid.Column="0" />
-                            <StackPanel x:Name="stck_panel" Orientation="Horizontal" Grid.Column="1">
+                            <StackPanel x:Name="stck_panel" Orientation="Horizontal" Grid.Column="1" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ShowNumberResult, 
+                                Converter={StaticResource ConvBoolToVis}}">
                                 <Border x:Name="PART_SearchIconBorder"                                            
                                             BorderThickness="1,0,0,0"
                                             Padding="4,2,4,2"

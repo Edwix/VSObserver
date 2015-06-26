@@ -1,0 +1,17 @@
+﻿<Window x:Class="VSObserver.Dialog.ColoringRulesDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:nspace="clr-namespace:VSObserver"
+        Title="ColoringRulesDialog" Height="300" Width="300">
+    <StackPanel Orientation="Vertical">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label Content="Regex :" Grid.Column="0" />
+            <nspace:VSOTextBox Grid.Column="1" ShowNumberResult="False" AcceptsReturn="False" />
+            
+        </Grid>
+    </StackPanel>
+</Window>

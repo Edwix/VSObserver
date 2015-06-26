@@ -93,6 +93,9 @@
     <Compile Include="Converters\BoolToVisibility.cs" />
     <Compile Include="DataApplication.cs" />
     <Compile Include="DataObserver.cs" />
+    <Compile Include="Dialog\ColoringRulesDialog.xaml.cs">
+      <DependentUpon>ColoringRulesDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FileWatcher.cs" />
     <Compile Include="IFileChange.cs" />
     <Compile Include="Converters\IsNullConverter.cs" />
@@ -102,6 +105,10 @@
     <Compile Include="VariableObserver.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="VSOTextBox.cs" />
+    <Page Include="Dialog\ColoringRulesDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

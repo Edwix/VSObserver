@@ -18,6 +18,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Reflection;
 using System.Windows.Input;
+using VSObserver.Dialog;
 
 namespace VSObserver
 {
@@ -92,6 +93,7 @@ namespace VSObserver
         private ICommand cmdCopyVar;
         private ICommand cmdSavCurLckedList;
         private ICommand cmdCopyMap;
+        private ICommand cmdEditRule;
 
         public VariableObserver(string ipAddr, string pathDataBase, int show_number)
         {
@@ -1085,6 +1087,30 @@ namespace VSObserver
                 catch (Exception e)
                 {
                     Console.WriteLine("Error copy variable : \n" + e.ToString());
+                }
+            }
+
+            public ICommand EditColoringRule
+            {
+                get
+                {
+                    if (this.cmdEditRule == null)
+                        this.cmdEditRule = new RelayCommand(() => showEditRuleDialog(), () => true);
+
+                    return cmdEditRule;
+                }
+            }
+
+            private void showEditRuleDialog()
+            {
+                try
+                {
+                    ColoringRulesDialog colorRule = new ColoringRulesDialog();
+                    colorRule.ShowDialog();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error on editing rules : \n" + e.ToString());
                 }
             }
         #endregion

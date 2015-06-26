@@ -84,6 +84,21 @@ namespace VSObserver
         // <summary>
         /// Registers a dependency property as backing store for the Content property
         /// </summary>
+        public static readonly DependencyProperty ShowNumberResultProperty =
+            DependencyProperty.Register("ShowNumberResult", typeof(bool), typeof(VSOTextBox), new PropertyMetadata(true));
+
+        /// <summary>
+        /// Nombre maximum de variable
+        /// </summary>
+        public bool ShowNumberResult
+        {
+            get { return (bool)GetValue(ShowNumberResultProperty); }
+            set { SetValue(ShowNumberResultProperty, value); }
+        }
+
+        // <summary>
+        /// Registers a dependency property as backing store for the Content property
+        /// </summary>
         public static readonly DependencyProperty SearchErrorProperty =
             DependencyProperty.Register("SearchError", typeof(string), typeof(VSOTextBox), new PropertyMetadata(""));
 
