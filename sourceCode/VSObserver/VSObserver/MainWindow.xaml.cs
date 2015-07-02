@@ -20,6 +20,7 @@ using Draw = System.Drawing;
 using System.Data;
 using System.Configuration;
 using SysTime = System.Timers;
+using VSObserver.Models;
 
 namespace VSObserver
 {

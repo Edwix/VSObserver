@@ -91,6 +91,8 @@
     </ApplicationDefinition>
     <Compile Include="Behavior\DropDownImageBehavior.cs" />
     <Compile Include="Converters\BoolToVisibility.cs" />
+    <Compile Include="Models\ColoringRules.cs" />
+    <Compile Include="Models\ColoringRulesManager.cs" />
     <Compile Include="Models\DataApplication.cs" />
     <Compile Include="Models\DataObserver.cs" />
     <Compile Include="Dialog\ColoringRulesDialog.xaml.cs">
