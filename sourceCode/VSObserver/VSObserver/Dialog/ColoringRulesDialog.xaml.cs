@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using VSObserver.Models;
 
 namespace VSObserver.Dialog
 {
@@ -21,6 +22,7 @@ namespace VSObserver.Dialog
         public ColoringRulesDialog()
         {
             InitializeComponent();
+            this.DataContext = new ColoringRulesManager();
         }
     }
 }

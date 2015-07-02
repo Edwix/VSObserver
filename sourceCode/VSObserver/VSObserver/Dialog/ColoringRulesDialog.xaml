@@ -54,15 +54,8 @@
             <Label Content="Comment :" Grid.Column="0" />
             <TextBox AcceptsReturn="False" AcceptsTab="False" Grid.Column="1"/>
         </Grid>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="60" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Label Content="Comment :" Grid.Column="0" />
-            <TextBox AcceptsReturn="False" AcceptsTab="False" Grid.Column="1"/>
-        </Grid>
-        <ItemsControl ItemsSource="{Binding }">
+        <Button Content="Add coloring rule" Command="{Binding AddColoringRule}"/>
+        <ItemsControl ItemsSource="{Binding ListOfColoringRules}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel IsItemsHost="True"/>
