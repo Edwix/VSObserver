@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using VS;
 
-namespace VSObserver
+namespace VSObserver.Models
 {
     /// <summary>
     /// Classe qui permet de récupérer les données brutes

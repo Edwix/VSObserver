@@ -91,18 +91,18 @@
     </ApplicationDefinition>
     <Compile Include="Behavior\DropDownImageBehavior.cs" />
     <Compile Include="Converters\BoolToVisibility.cs" />
-    <Compile Include="DataApplication.cs" />
-    <Compile Include="DataObserver.cs" />
+    <Compile Include="Models\DataApplication.cs" />
+    <Compile Include="Models\DataObserver.cs" />
     <Compile Include="Dialog\ColoringRulesDialog.xaml.cs">
       <DependentUpon>ColoringRulesDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FileWatcher.cs" />
-    <Compile Include="IFileChange.cs" />
+    <Compile Include="Models\FileWatcher.cs" />
+    <Compile Include="Models\IFileChange.cs" />
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Converters\StringToBackground.cs" />
     <Compile Include="Converters\StringToColor.cs" />
-    <Compile Include="VariableObserver.cs" />
+    <Compile Include="Models\VariableObserver.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="VSOTextBox.cs" />
     <Page Include="Dialog\ColoringRulesDialog.xaml">

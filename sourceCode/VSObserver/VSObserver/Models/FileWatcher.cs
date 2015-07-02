@@ -2,7 +2,7 @@
 using System.IO;
 using System.Security.Permissions;
 
-namespace VSObserver
+namespace VSObserver.Models
 {
     class FileWatcher
     {
