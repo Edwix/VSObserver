@@ -2,7 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:nspace="clr-namespace:VSObserver"
+        xmlns:converters="clr-namespace:VSObserver.Converters"
         Title="ColoringRulesDialog" Height="300" Width="300">
+    <Window.Resources>
+        <converters:StringToColor x:Key="ConvStringToColor" />
+    </Window.Resources>
     <StackPanel Orientation="Vertical">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -55,19 +59,26 @@
             <TextBox AcceptsReturn="False" AcceptsTab="False" Grid.Column="1"/>
         </Grid>
         <Button Content="Add coloring rule" Command="{Binding AddColoringRule}"/>
-        <ItemsControl ItemsSource="{Binding ListOfColoringRules}">
+        <ItemsControl ItemsSource="{Binding ListOfColoringRules}" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel IsItemsHost="True"/>
+                    <WrapPanel IsItemsHost="True" Orientation="Vertical" HorizontalAlignment="Stretch" Width="Auto"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <WrapPanel Orientation="Horizontal">
-                        <Label Content="Element : " />
-                        <TextBox />
-                        <ComboBox />
-                    </WrapPanel>
+                    <DockPanel LastChildFill="True">
+                        <Label Content="Element : "  DockPanel.Dock="Left"/>
+                        <ComboBox DockPanel.Dock="Right" IsEditable="True" Width="Auto" Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" 
+                                  Background="{Binding Color, Converter={StaticResource ConvStringToColor}}">
+                            <ComboBoxItem Content="AliceBlue"  ToolTip="AliceBlue" Background="AliceBlue" />
+                            <ComboBoxItem Content="AntiqueWhite" ToolTip="AntiqueWhite" Background="AntiqueWhite" />
+                            <ComboBoxItem Content="Azure" ToolTip="Azure" Background="Azure" />
+                            <ComboBoxItem Content="Blue" ToolTip="Blue" Background="Blue" />
+                            <ComboBoxItem Content="Chocolate" ToolTip="Chocolate" Background="Chocolate" />
+                        </ComboBox>
+                        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
