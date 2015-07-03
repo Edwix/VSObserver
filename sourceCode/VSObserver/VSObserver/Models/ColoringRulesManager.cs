@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace VSObserver.Models
 {
@@ -21,12 +22,16 @@ namespace VSObserver.Models
         private string _comment;
         private string _regexErr;
 
+        private string rulePath;
+        private bool ruleExist;
+
         private ICommand cmdAddColRul;
         private ICommand cmdSaveRul;
 
         public ColoringRulesManager ()
         {
             _listOfColoringRules = new ObservableCollection<ColoringRules>();
+            ruleExist = false;
         }
 
         public ObservableCollection<ColoringRules> ListOfColoringRules
@@ -60,6 +65,16 @@ namespace VSObserver.Models
 
                 return _regexErr; 
             }
+        }
+
+        public void setRulePath(string rulePath)
+        {
+            this.rulePath = rulePath;
+        }
+
+        public void setRuleExist(bool ruleExist)
+        {
+            this.ruleExist = ruleExist;
         }
 
         public ICommand AddColoringRule
@@ -102,15 +117,36 @@ namespace VSObserver.Models
                 if (this.cmdSaveRul == null)
                     this.cmdSaveRul = new RelayCommand(() => saveColoringRule(), () => canSaveRules());
 
-                return cmdAddColRul;
+                return cmdSaveRul;
             }
         }
 
         public void saveColoringRule()
         {
-            if (_listOfColoringRules != null)
+            if (!String.IsNullOrEmpty(rulePath))
             {
-                _listOfColoringRules.Add(new ColoringRules());
+                if (ruleExist)
+                {
+                    XDocument xmlFile = XDocument.Load(rulePath);
+
+                    var query = from items in xmlFile.Elements(VariableObserver.NODE_ITEM)
+                                where items.Element(VariableObserver.NODE_VARIABLE).Value == RuleRegex
+                                select items;
+
+                    foreach (XElement item in query)
+                    {
+                        foreach (XElement simpleRule in item.Elements(VariableObserver.NODE_SIMPLE_RULE))
+                        {
+
+                        }
+                    }
+
+                    xmlFile.Save(rulePath);
+                }
+                else
+                {
+
+                }
             }
         }
 

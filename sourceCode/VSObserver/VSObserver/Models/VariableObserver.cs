@@ -49,13 +49,13 @@ namespace VSObserver.Models
         private const string LIST_FILE_LOCKED_VAR = "ListOfFileLockedVar";
         private const string INFORMATION_MSG = "InformationMessage";
 
-        private const string NODE_ITEM = "Item";
-        private const string NODE_VARIABLE = "Variable";
-        private const string NODE_RULE_SET = "RuleSet";
-        private const string NODE_SIMPLE_RULE = "SimpleRule";
-        private const string NODE_COMMENT = "Comment";
-        private const string ATTR_VALUE = "value";
-        private const string ATTR_COLOR = "color";
+        public const string NODE_ITEM = "Item";
+        public const string NODE_VARIABLE = "Variable";
+        public const string NODE_RULE_SET = "RuleSet";
+        public const string NODE_SIMPLE_RULE = "SimpleRule";
+        public const string NODE_COMMENT = "Comment";
+        public const string ATTR_VALUE = "value";
+        public const string ATTR_COLOR = "color";
 
         
         public const string F_VAL = "F";
