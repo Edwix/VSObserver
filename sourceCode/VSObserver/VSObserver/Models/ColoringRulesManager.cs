@@ -22,6 +22,7 @@ namespace VSObserver.Models
         private string _regexErr;
 
         private ICommand cmdAddColRul;
+        private ICommand cmdSaveRul;
 
         public ColoringRulesManager ()
         {
@@ -50,7 +51,7 @@ namespace VSObserver.Models
         {
             get 
             {
-                bool isValid = IsValidRegex(_regex);
+                bool isValid = IsValidRegex2(_regex);
 
                 if (!isValid)
                     _regexErr = "The regular expression isn't correct !";
@@ -81,6 +82,58 @@ namespace VSObserver.Models
         }
 
         private static bool IsValidRegex(string pattern)
+        {
+            try
+            {
+                Regex.Match("", pattern);
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public ICommand SaveRules
+        {
+            get
+            {
+                if (this.cmdSaveRul == null)
+                    this.cmdSaveRul = new RelayCommand(() => saveColoringRule(), () => canSaveRules());
+
+                return cmdAddColRul;
+            }
+        }
+
+        public void saveColoringRule()
+        {
+            if (_listOfColoringRules != null)
+            {
+                _listOfColoringRules.Add(new ColoringRules());
+            }
+        }
+
+        public bool canSaveRules()
+        {
+            bool isOk = false;
+
+            if (!String.IsNullOrEmpty(RuleRegex))
+            {
+                if (String.IsNullOrEmpty(RegexError) && ListOfColoringRules.Count > 0)
+                {
+                    if (!String.IsNullOrEmpty(ListOfColoringRules.First().Value) &&
+                        !String.IsNullOrEmpty(ListOfColoringRules.First().Color))
+                    {
+                        isOk = true;
+                    }
+                }
+            }            
+
+            return isOk;
+        }
+
+        private static bool IsValidRegex2(string pattern)
         {
             try
             {
