@@ -14,41 +14,8 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Label Content="Regex :" Grid.Column="0" />
-            <nspace:VSOTextBox Grid.Column="1" ShowNumberResult="False" AcceptsReturn="False" />
-        </Grid>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="60" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Label Content="Color :" Grid.Column="0" />
-            <ComboBox Grid.Column="1">
-                <ComboBox.Resources>
-                    <Style TargetType="ComboBox">
-                        <Setter Property="ItemsPanel">
-                            <Setter.Value>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel IsItemsHost="True" Orientation="Horizontal" HorizontalAlignment="Stretch" Width="Auto" Height="50" />
-                                </ItemsPanelTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                    <Style TargetType="ComboBoxItem">
-                        <Setter Property="Width" Value="50" />
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="Transparent"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ComboBox.Resources>
-
-                <ComboBoxItem Content="" ToolTip="AliceBlue" Background="AliceBlue" />
-                <ComboBoxItem Content="" ToolTip="AntiqueWhite" Background="AntiqueWhite" />
-                <ComboBoxItem Content="" ToolTip="Azure" Background="Azure" />
-                <ComboBoxItem Content="" ToolTip="Blue" Background="Blue" />
-                <ComboBoxItem Content="" ToolTip="Chocolate" Background="Chocolate" />
-            </ComboBox>
+            <nspace:VSOTextBox Grid.Column="1" ShowNumberResult="False" AcceptsReturn="False" Text="{Binding RuleRegex, UpdateSourceTrigger=PropertyChanged}"
+                               SearchError="{Binding RegexError, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -56,7 +23,7 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Label Content="Comment :" Grid.Column="0" />
-            <TextBox AcceptsReturn="False" AcceptsTab="False" Grid.Column="1"/>
+            <TextBox AcceptsReturn="False" AcceptsTab="False" Grid.Column="1" Text="{Binding RuleComment, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         <Button Content="Add coloring rule" Command="{Binding AddColoringRule}"/>
         <ItemsControl ItemsSource="{Binding ListOfColoringRules}" >
