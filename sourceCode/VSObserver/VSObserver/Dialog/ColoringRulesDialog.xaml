@@ -3,49 +3,57 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:nspace="clr-namespace:VSObserver"
         xmlns:converters="clr-namespace:VSObserver.Converters"
-        Title="ColoringRulesDialog" Height="300" Width="300">
+        Title="ColoringRulesDialog" Height="300" Width="300"
+        Background="{StaticResource WindowBackgroundColor}">
     <Window.Resources>
         <converters:StringToColor x:Key="ConvStringToColor" />
     </Window.Resources>
-    <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Vertical" Margin="5">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="70" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Label Content="Regex :" Grid.Column="0" />
             <nspace:VSOTextBox Grid.Column="1" ShowNumberResult="False" AcceptsReturn="False" Text="{Binding RuleRegex, UpdateSourceTrigger=PropertyChanged}"
                                SearchError="{Binding RegexError, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
-        <Grid>
+        <Grid Margin="0,5,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="70" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Label Content="Comment :" Grid.Column="0" />
             <TextBox AcceptsReturn="False" AcceptsTab="False" Grid.Column="1" Text="{Binding RuleComment, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
-        <Button Content="Add coloring rule" Command="{Binding AddColoringRule}"/>
-        <ItemsControl ItemsSource="{Binding ListOfColoringRules}" >
+        <Button Content="Add coloring rule" Command="{Binding AddColoringRule}" Margin="0,5,0,0"/>
+        <ItemsControl Margin="0,5,0,0" ItemsSource="{Binding ListOfColoringRules}" 
+                      Height="Auto" VerticalAlignment="Stretch">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel IsItemsHost="True" Orientation="Vertical" HorizontalAlignment="Stretch" Width="Auto"/>
+                    <StackPanel IsItemsHost="True" Orientation="Vertical" HorizontalAlignment="Stretch" Width="Auto" 
+                                Height="Auto" VerticalAlignment="Stretch" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <DockPanel LastChildFill="True">
-                        <Label Content="Element : "  DockPanel.Dock="Left"/>
-                        <ComboBox DockPanel.Dock="Right" IsEditable="True" Width="Auto" Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" 
-                                  Background="{Binding Color, Converter={StaticResource ConvStringToColor}}">
-                            <ComboBoxItem Content="AliceBlue"  ToolTip="AliceBlue" Background="AliceBlue" />
-                            <ComboBoxItem Content="AntiqueWhite" ToolTip="AntiqueWhite" Background="AntiqueWhite" />
-                            <ComboBoxItem Content="Azure" ToolTip="Azure" Background="Azure" />
-                            <ComboBoxItem Content="Blue" ToolTip="Blue" Background="Blue" />
-                            <ComboBoxItem Content="Chocolate" ToolTip="Chocolate" Background="Chocolate" />
-                        </ComboBox>
-                        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
-                    </DockPanel>
+                    <Border BorderBrush="{StaticResource DarkBorderColor}" Background="Transparent" BorderThickness="1"
+                            CornerRadius="5" Margin="0,0,0,5" Padding="5">
+                        <DockPanel LastChildFill="True">
+                            <Label Content="Element : "  DockPanel.Dock="Left"/>
+                            <ComboBox DockPanel.Dock="Right" IsEditable="True" Width="Auto" Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" 
+                                      Background="{Binding Color, Converter={StaticResource ConvStringToColor}}"
+                                      Margin="5,0,0,0">
+                                <ComboBoxItem Content="AliceBlue"  ToolTip="AliceBlue" Background="AliceBlue" />
+                                <ComboBoxItem Content="AntiqueWhite" ToolTip="AntiqueWhite" Background="AntiqueWhite" />
+                                <ComboBoxItem Content="Azure" ToolTip="Azure" Background="Azure" />
+                                <ComboBoxItem Content="Blue" ToolTip="Blue" Background="Blue" />
+                                <ComboBoxItem Content="Chocolate" ToolTip="Chocolate" Background="Chocolate" />
+                            </ComboBox>
+                            <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" AcceptsReturn="False"
+                                     AcceptsTab="False" />
+                        </DockPanel>
+                    </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
