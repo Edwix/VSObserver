@@ -670,19 +670,29 @@ namespace VSObserver.Models
 
                     if (colorRulesWithPath.ContainsKey(rowObserver.PathName))
                     {
+                        //Création du coloring rule juste pour voir si la valeur existe bien (contains)
                         ColoringRules colRule = new ColoringRules();
                         colRule.Value = rowObserver.Value;
 
-                        if (colorRulesWithPath[rowObserver.PathName].ListOfColoringRules.Contains(colRule, colorRulesWithPath[rowObserver.PathName]))
-                        {
-                            rowObserver.Color = colorRulesWithPath[rowObserver.PathName].ListOfColoringRules.Where(x => x.Value == rowObserver.Value).Select(y => y.Color).Single();
-                        }
-                        else
-                        {
-                            rowObserver.Color = "";
-                        }
+                        //On récupère le manager des règles de couleurs
+                        ColoringRulesManager managColor = colorRulesWithPath[rowObserver.PathName];
 
-                        rowObserver.CommentColor = colorRulesWithPath[rowObserver.PathName].RuleComment;
+                        if (managColor != null)
+                        {
+                            //On regarde si la valeur existe bien dans les règles
+                            if (managColor.ListOfColoringRules.Contains(colRule, colorRulesWithPath[rowObserver.PathName]))
+                            {
+                                //On récupère la couleur (select) en fonction de la valeur (where)
+                                rowObserver.Color = managColor.ListOfColoringRules.Where(x => x.Value == rowObserver.Value).Select(y => y.Color).Single();
+                            }
+                            else
+                            {
+                                rowObserver.Color = "";
+                            }
+
+                            //On met le commentaire dans la variable spécifié
+                            rowObserver.CommentColor = managColor.RuleComment;
+                        }
                     }
 
                     if (status.state == InjectionStates.InjectionStates_IsSet)
@@ -1108,7 +1118,7 @@ namespace VSObserver.Models
                 get
                 {
                     if (this.cmdEditRule == null)
-                        this.cmdEditRule = new RelayCommand(() => showEditRuleDialog(), () => true);
+                        this.cmdEditRule = new RelayCommand(() => showEditRuleDialog(), () => hasSelectedVariable());
 
                     return cmdEditRule;
                 }
@@ -1118,6 +1128,7 @@ namespace VSObserver.Models
             {
                 try
                 {
+                    Console.WriteLine("VAR showEditDialog =>" + SelectedVariable.PathName);
                     ColoringRulesDialog colorRule = new ColoringRulesDialog();
                     colorRule.ShowDialog();
                 }
@@ -1125,6 +1136,14 @@ namespace VSObserver.Models
                 {
                     Console.WriteLine("Error on editing rules : \n" + e.ToString());
                 }
+            }
+
+            public bool hasSelectedVariable()
+            {
+                if (SelectedVariable != null)
+                    return true;
+                else
+                    return false;
             }
         #endregion
 
