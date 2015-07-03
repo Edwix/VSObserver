@@ -82,7 +82,11 @@ namespace VSObserver.Models
         private ObservableCollection<string> _listOfFileLockedVar;
 
         //Dictionnaire qui contient l'ensemble des règles de couleur
-        private Dictionary<string, FileRules> colorRules;
+        //En fonction du chemin + nom de la variable (clé unique)
+        private Dictionary<string, ColoringRulesManager> colorRulesWithPath;
+
+        //Managère qui va gérer l'ensemble des règles de couleur
+        private ColoringRulesManager managerColorRules;
 
         //dictionnaire qui va contenire le chemin + nom (clé unique) et le mapping associé
         Dictionary<string, string> dic;
@@ -106,7 +110,7 @@ namespace VSObserver.Models
             _writTyp = F_VAL;
             this.show_number = show_number;
             search_regex = false;
-            colorRules = new Dictionary<string, FileRules>();
+            colorRulesWithPath = new Dictionary<string, ColoringRulesManager>();
             _listOfFileLockedVar = new ObservableCollection<string>();
         }
 
@@ -664,18 +668,21 @@ namespace VSObserver.Models
                     vc.getInjectionStatus(rowObserver.PathName, status);
 
 
-                    if (colorRules.ContainsKey(rowObserver.PathName))
+                    if (colorRulesWithPath.ContainsKey(rowObserver.PathName))
                     {
-                        if (colorRules[rowObserver.PathName].ColorRules.ContainsKey(rowObserver.Value))
+                        ColoringRules colRule = new ColoringRules();
+                        colRule.Value = rowObserver.Value;
+
+                        if (colorRulesWithPath[rowObserver.PathName].ListOfColoringRules.Contains(colRule, colorRulesWithPath[rowObserver.PathName]))
                         {
-                            rowObserver.Color = colorRules[rowObserver.PathName].ColorRules[rowObserver.Value];
+                            rowObserver.Color = colorRulesWithPath[rowObserver.PathName].ListOfColoringRules.Where(x => x.Value == rowObserver.Value).Select(y => y.Color).Single();
                         }
                         else
                         {
                             rowObserver.Color = "";
                         }
 
-                        rowObserver.CommentColor = colorRules[rowObserver.PathName].Comment;
+                        rowObserver.CommentColor = colorRulesWithPath[rowObserver.PathName].RuleComment;
                     }
 
                     if (status.state == InjectionStates.InjectionStates_IsSet)
@@ -806,7 +813,7 @@ namespace VSObserver.Models
             {
                 Console.WriteLine("LOAD XML RULE ==> " + path);
                 string rulePath = @"Resources/Rule.xsd";
-                colorRules.Clear();
+                colorRulesWithPath.Clear();
 
                 if(File.Exists(rulePath))
                 {
@@ -854,24 +861,30 @@ namespace VSObserver.Models
                                 //We check whether the variable is a correct regex
                                 if (IsValidRegex(varName))
                                 {
-                                    FileRules rules = new FileRules();
 
-                                    //Loading of all rule set elements
-                                    Dictionary<string, string> ruleSets = new Dictionary<string, string>();
+                                    ObservableCollection<ColoringRules> listColorRules = new ObservableCollection<ColoringRules>();
+                                    managerColorRules = new ColoringRulesManager();
 
                                     foreach (var ruleSet in item.RuleSet)
                                     {
-                                        if (!ruleSets.ContainsKey(ruleSet.Attribute(ATTR_VALUE).Value))
+                                        ColoringRules colorRule = new ColoringRules();
+                                        colorRule.Value = ruleSet.Attribute(ATTR_VALUE).Value;
+                                        colorRule.Color = ruleSet.Attribute(ATTR_COLOR).Value;
+
+                                        if (!listColorRules.Contains(colorRule, managerColorRules))
                                         {
-                                            ruleSets.Add(ruleSet.Attribute(ATTR_VALUE).Value, ruleSet.Attribute(ATTR_COLOR).Value);
+                                            listColorRules.Add(colorRule);
                                         }
                                     }
 
                                     //Adding the colors in function of value on the rule object
-                                    rules.ColorRules = ruleSets;
-                                    
+                                    managerColorRules.ListOfColoringRules = listColorRules;
+
                                     //Adding comment in the rules
-                                    rules.Comment = item.Comment;
+                                    managerColorRules.RuleComment = item.Comment;
+
+                                    //Ajout de l'expression régulière dans le manager
+                                    managerColorRules.RuleRegex = varName;
 
                                     //Searching all variables in all variables list
                                     var source = _listOfDataObserver.AsEnumerable();
@@ -883,12 +896,12 @@ namespace VSObserver.Models
                                     {
                                         string varPathAndName = result.PathName;
 
-                                        if (!colorRules.ContainsKey(varPathAndName))
+                                        if (!colorRulesWithPath.ContainsKey(varPathAndName))
                                         {
-                                            colorRules.Add(varPathAndName, rules);
+                                            colorRulesWithPath.Add(varPathAndName, managerColorRules);
                                         }
                                     }
-                                }
+                               }
                             }
                         }
                     }

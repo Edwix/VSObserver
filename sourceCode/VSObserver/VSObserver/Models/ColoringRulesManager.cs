@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace VSObserver.Models
 {
-    class ColoringRulesManager : ViewModelBase
+    class ColoringRulesManager : ViewModelBase, IEqualityComparer<ColoringRules>
     {
         private const string LIST_COLORINGRULES = "ListOfColoringRules";
         private const string RULE_REGEX = "RuleRegex";
@@ -92,6 +92,30 @@ namespace VSObserver.Models
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Permet de comparer deux valeur dans le Coloring Rule
+        /// Ainsi on peut savoir si la valeur existe déjà
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool Equals(ColoringRules x, ColoringRules y)
+        {
+            if (x == null || y == null)
+                return false;
+
+            return x.Value.Equals(y.Value);
+        }
+
+        public int GetHashCode(ColoringRules obj)
+        {
+            //throw new NotImplementedException();
+            if (obj == null)
+                return 0;
+
+            return obj.GetHashCode();
         }
     }
 }

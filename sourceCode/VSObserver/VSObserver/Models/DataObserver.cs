@@ -141,19 +141,4 @@ namespace VSObserver.Models
             set { _commentColor = value; OnPropertyChanged(COMMENT_COLOR); }
         }
     }
-
-    class FileRules
-    {
-        public Dictionary<string, string> ColorRules
-        {
-            get;
-            set;
-        }
-
-        public string Comment
-        {
-            get;
-            set;
-        }
-    }
 }
