@@ -1128,9 +1128,13 @@ namespace VSObserver.Models
             {
                 try
                 {
-                    Console.WriteLine("VAR showEditDialog =>" + SelectedVariable.PathName);
-                    ColoringRulesDialog colorRule = new ColoringRulesDialog();
-                    colorRule.ShowDialog();
+                    ColoringRulesDialog colorRuleDial = new ColoringRulesDialog();
+                    string pathName = SelectedVariable.PathName;
+                    
+                    if(colorRulesWithPath.ContainsKey(pathName))
+                        colorRuleDial.setColoringRulesManager(colorRulesWithPath[pathName]);
+
+                    colorRuleDial.ShowDialog();
                 }
                 catch (Exception e)
                 {

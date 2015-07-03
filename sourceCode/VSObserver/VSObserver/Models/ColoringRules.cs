@@ -5,7 +5,7 @@ using System.Text;
 
 namespace VSObserver.Models
 {
-    class ColoringRules : ViewModelBase
+    public class ColoringRules : ViewModelBase
     {
         private const string VALUE = "Value";
         private const string COLOR = "Color";

@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace VSObserver.Models
 {
-    class ColoringRulesManager : ViewModelBase, IEqualityComparer<ColoringRules>
+    public class ColoringRulesManager : ViewModelBase, IEqualityComparer<ColoringRules>
     {
         private const string LIST_COLORINGRULES = "ListOfColoringRules";
         private const string RULE_REGEX = "RuleRegex";

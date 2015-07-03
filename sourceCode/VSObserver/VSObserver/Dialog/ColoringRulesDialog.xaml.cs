@@ -24,5 +24,13 @@ namespace VSObserver.Dialog
             InitializeComponent();
             this.DataContext = new ColoringRulesManager();
         }
+
+        public void setColoringRulesManager(ColoringRulesManager manager)
+        {
+            if (manager != null)
+            {
+                this.DataContext = manager;
+            }
+        }
     }
 }
