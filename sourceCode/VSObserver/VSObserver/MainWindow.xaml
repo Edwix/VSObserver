@@ -20,6 +20,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -135,11 +136,32 @@
                 </Image.ContextMenu>
             </Image>
         <!--=========================================================================================-->
-        
+
+        <!--=========================================================================================-->
+        <!-- ToglleButton to start or stop the recording -->
+        <!--=========================================================================================-->
+            <ToggleButton Name="btnRecord" IsChecked="{Binding IsRecording}" Grid.Column="4" Grid.Row="0">
+                <Image Width="20" Height="20"  >
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsRecording}" Value="true">
+                                    <Setter Property="Source" Value="Images/control_stop.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsRecording}" Value="false">
+                                    <Setter Property="Source" Value="Images/control_play.png"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </ToggleButton>
+        <!--=========================================================================================-->
+
         <!--=========================================================================================-->
         <!-- Button to have the parameters -->
         <!--=========================================================================================-->
-            <Image  x:Name="img_parameters" Grid.Column="4" Grid.Row="0" Source="Images/cog.png" SnapsToDevicePixels="True" Width="20"
+            <Image  x:Name="img_parameters" Grid.Column="5" Grid.Row="0" Source="Images/cog.png" SnapsToDevicePixels="True" Width="20"
                             Margin="5,0,5,0">
                 <i:Interaction.Behaviors>
                     <behavior:DropDownImageBehavior/>

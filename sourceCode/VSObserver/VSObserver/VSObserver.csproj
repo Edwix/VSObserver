@@ -210,6 +210,12 @@
   <ItemGroup>
     <Resource Include="Images\delete.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\control_play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\control_stop.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

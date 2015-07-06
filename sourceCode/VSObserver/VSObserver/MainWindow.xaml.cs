@@ -94,6 +94,7 @@ namespace VSObserver
             btn_typeW.DataContext = vo;
             cb_RegexSearch.DataContext = vo;
             img_lockedList.DataContext = vo;
+            btnRecord.DataContext = vo;
 
             //Création de la tâche de fond qui va rafraichir la liste des varaibles
             refreshWorker = new BackgroundWorker();

@@ -34,6 +34,7 @@ namespace VSObserver.Models
 
         VariableController vc;
 
+
         private const string NAME_ALL_FORCING = "AllForced";
 
         private const string QUERY_MAPPING = "SELECT V1.Name AS Path, V2.Name AS Mapping FROM Variable AS V1, Variable AS V2 WHERE  V2.variableId = V1.parentId";
@@ -67,6 +68,7 @@ namespace VSObserver.Models
         private const string TYPE = "Type";
         private const string VALUE = "Value";
         private const string TIMESTAMP = "Timestamp";
+        private const string IS_RECORDING = "IsRecording";
         private const string REGEX_SEARCH = @"^[0-9a-zA-Z_/\-:\*\?]+$";
         private const string REGEX_REMPLACE = @"[^0-9a-zA-Z_/\-:\*\?]";
         private const string REGEX_REMPLACE_FILE = @"[^0-9a-zA-Z_/\-]";
@@ -78,6 +80,7 @@ namespace VSObserver.Models
         private string _writTyp;
         private int show_number;
         private bool search_regex;
+        private bool _isRecording;
 
         private string _fileNameLockedVar;
         private ObservableCollection<string> _listOfFileLockedVar;
@@ -113,6 +116,7 @@ namespace VSObserver.Models
             search_regex = false;
             colorRulesWithPath = new Dictionary<string, ColoringRulesManager>();
             _listOfFileLockedVar = new ObservableCollection<string>();
+            _isRecording = false;
         }
 
         public string InformationMessage
@@ -168,6 +172,15 @@ namespace VSObserver.Models
         {
             get { return search_regex; }
             set { search_regex = value; OnPropertyChanged(SEARCH_REGEX); }
+        }
+
+        /// <summary>
+        /// To activate or deactivate the recording of variables
+        /// </summary>
+        public bool IsRecording
+        {
+            get { return _isRecording; }
+            set { _isRecording = value; OnPropertyChanged(IS_RECORDING); }
         }
 
         public string FileNameLockedList
@@ -703,6 +716,11 @@ namespace VSObserver.Models
                     else
                     {
                         rowObserver.IsForced = false;
+                    }
+
+                    if (_isRecording)
+                    {
+                        Console.WriteLine("Record...");
                     }
                 }
             }
