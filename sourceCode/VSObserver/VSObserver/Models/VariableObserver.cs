@@ -19,6 +19,7 @@ using System.Xml.Linq;
 using System.Reflection;
 using System.Windows.Input;
 using VSObserver.Dialog;
+using System.Configuration;
 
 namespace VSObserver.Models
 {
@@ -191,6 +192,19 @@ namespace VSObserver.Models
                 {
                     strRecording = new StringBuilder();
 
+                    //==========================================================================================================
+                    //Header of trace
+                    //==========================================================================================================
+                        strRecording.Append("Date:" + DateTime.Now.ToString("yyyy-MM-dd") + "\n");
+                        strRecording.Append("Case: ;Action location: \n");
+                        strRecording.Append("Vehicle number: ;Train number: \n");
+                        strRecording.Append("Set serial number: ;Set name: \n");
+                        strRecording.Append("Comments: \n");
+                        strRecording.Append("\nSampling period: " + ConfigurationManager.AppSettings["RefreshRate"] + ";\n");
+                        strRecording.Append("\nArming date: ;Arming time: ;Arming cause: ;Function return: 0\n");
+                        strRecording.Append("Triggering date: " + DateTime.Now.ToString("yyyy-MM-dd") + ";Triggering time: " + DateTime.Now.ToString("HH:mm:ss") + ";Triggering cause: Maintenance;Function return: 0\n");
+                    //==========================================================================================================
+
                     foreach (DataObserver dobs in _variableList)
                     {
                         if (dobs != _variableList.Last())
@@ -201,7 +215,6 @@ namespace VSObserver.Models
                         {
                             strRecording.Append(dobs.PathName + " ((-))");
                         }
-
                     }
                 }
                 else

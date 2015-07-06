@@ -140,7 +140,7 @@
         <!--=========================================================================================-->
         <!-- ToglleButton to start or stop the recording -->
         <!--=========================================================================================-->
-            <ToggleButton Name="btnRecord" IsChecked="{Binding IsRecording}" Grid.Column="4" Grid.Row="0">
+            <ToggleButton Name="btnRecord" IsChecked="{Binding IsRecording}" Grid.Column="4" Grid.Row="0" Margin="5,0,0,0" >
                 <Image Width="20" Height="20"  >
                     <Image.Style>
                         <Style TargetType="{x:Type Image}">
