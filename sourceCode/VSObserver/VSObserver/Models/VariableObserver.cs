@@ -34,6 +34,7 @@ namespace VSObserver.Models
 
         VariableController vc;
 
+        private const string TRACE_FILE_DEFAULT = "Trace-VSO";
 
         private const string NAME_ALL_FORCING = "AllForced";
 
@@ -81,6 +82,8 @@ namespace VSObserver.Models
         private int show_number;
         private bool search_regex;
         private bool _isRecording;
+        //String builder qui va enregistrer toutes les informations
+        private StringBuilder strRecording;
 
         private string _fileNameLockedVar;
         private ObservableCollection<string> _listOfFileLockedVar;
@@ -180,7 +183,35 @@ namespace VSObserver.Models
         public bool IsRecording
         {
             get { return _isRecording; }
-            set { _isRecording = value; OnPropertyChanged(IS_RECORDING); }
+            set 
+            {
+                _isRecording = value;
+
+                if (_isRecording)
+                {
+                    strRecording = new StringBuilder();
+
+                    foreach (DataObserver dobs in _variableList)
+                    {
+                        if (dobs != _variableList.Last())
+                        {
+                            strRecording.Append(dobs.PathName + " ((-));");
+                        }
+                        else
+                        {
+                            strRecording.Append(dobs.PathName + " ((-))");
+                        }
+
+                    }
+                }
+                else
+                {
+                    if(strRecording != null)
+                        saveVariables(TRACE_FILE_DEFAULT, strRecording.ToString());
+                }
+
+                OnPropertyChanged(IS_RECORDING); 
+            }
         }
 
         public string FileNameLockedList
@@ -673,6 +704,12 @@ namespace VSObserver.Models
 
             if (oldVariableTable != null)
             {
+                if (_isRecording)
+                {
+                    //On saute une ligne à chaque raffraichissement
+                    strRecording.Append("\n");
+                }
+
                 foreach (DataObserver rowObserver in oldVariableTable)
                 {
                     string oldValue = rowObserver.Value;
@@ -720,7 +757,14 @@ namespace VSObserver.Models
 
                     if (_isRecording)
                     {
-                        Console.WriteLine("Record...");
+                        if (rowObserver != oldVariableTable.Last())
+                        {
+                            strRecording.Append(rowObserver.Value + ";");
+                        }
+                        else
+                        {
+                            strRecording.Append(rowObserver.Value);
+                        }
                     }
                 }
             }
