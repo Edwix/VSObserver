@@ -62,7 +62,9 @@
                                     <ComboBoxItem Content="Red" ToolTip="Red" Background="Red" />
                                     <ComboBoxItem Content="Yellow" ToolTip="Yellow" Background="Yellow" />
                                 </ComboBox>
-                                <Button Tag="{Binding Index}" Name="btnDelete" Click="btnDelete_Click" Background="Transparent" VerticalAlignment="Center"
+                                <!-- Binding Path=. means there is a bind on itself (ColoringRule). 
+                                     Binding Path=. signifie qu'il y a un lien sur lui même donc le tag aura un objet ColoringRule  -->
+                                <Button Tag="{Binding Path=.}" Name="btnDelete" Click="btnDelete_Click" Background="Transparent" VerticalAlignment="Center"
                                         BorderBrush="Transparent" BorderThickness="0" Margin="5,0,0,0">
                                     <Button.Style>
                                         <Style TargetType="{x:Type Button}">

@@ -66,7 +66,9 @@ namespace VSObserver.Dialog
 
             if (btnDel != null)
             {
-                colorManager.removeColoringRule((int)btnDel.Tag);
+                //The tag has a ColoringRules object, so we return it to delete it
+                //Le champ "Tag" du bouton contient un objet "ColoringRules", donc on le retourne pour qu'il soit supprimé
+                colorManager.removeColoringRule((ColoringRules)btnDel.Tag);
             }
         }
     }

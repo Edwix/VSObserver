@@ -104,7 +104,6 @@ namespace VSObserver.Models
             if (_listOfColoringRules != null)
             {
                 ColoringRules colRul = new ColoringRules();
-                colRul.Index = _listOfColoringRules.Count;
                 _listOfColoringRules.Add(colRul);
             }
         }
@@ -279,11 +278,15 @@ namespace VSObserver.Models
             return colorRuleManager;
         }
 
-
-        public void removeColoringRule(int index)
+        /// <summary>
+        /// Remove a coloring rule present in the list
+        /// Supprime un object ColoringRule présent dans la liste
+        /// </summary>
+        /// <param name="colorRule"></param>
+        public void removeColoringRule(ColoringRules colorRule)
         {
-            if(ListOfColoringRules != null)
-                ListOfColoringRules.RemoveAt(index);
+            if(ListOfColoringRules != null && colorRule != null)
+                ListOfColoringRules.Remove(colorRule);
         }
     }
 }
