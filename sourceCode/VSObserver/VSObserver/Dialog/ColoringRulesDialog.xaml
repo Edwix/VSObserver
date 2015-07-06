@@ -27,7 +27,7 @@
             <TextBox AcceptsReturn="False" AcceptsTab="False" Grid.Column="1" Text="{Binding RuleComment, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         <Button Content="Add coloring rule" Command="{Binding AddColoringRule}" Margin="0,5,0,0"/>
-        <ItemsControl Margin="0,5,0,0" ItemsSource="{Binding ListOfColoringRules}" 
+        <ItemsControl Margin="0,5,0,0" ItemsSource="{Binding ListOfColoringRules}"
                       Height="Auto" VerticalAlignment="Stretch">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -41,26 +41,29 @@
                             CornerRadius="5" Margin="0,0,0,5" Padding="5">
                         <DockPanel LastChildFill="True">
                             <Label Content="Element : "  DockPanel.Dock="Left"/>
-                            <ComboBox DockPanel.Dock="Right" IsEditable="True" Width="Auto" Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" 
-                                      Background="{Binding Color, Converter={StaticResource ConvStringToColor}}"
-                                      Margin="5,0,0,0">
-                                <ComboBoxItem Content="Aqua"  ToolTip="Aqua" Background="Aqua" />
-                                <ComboBoxItem Content="Blue" ToolTip="Blue" Background="Blue" />
-                                <ComboBoxItem Content="Chocolate" ToolTip="Chocolate" Background="Chocolate" />
-                                <ComboBoxItem Content="Crimson" ToolTip="Crimson" Background="Crimson" />
-                                <ComboBoxItem Content="DarkOrchid" ToolTip="DarkOrchid" Background="DarkOrchid" />
-                                <ComboBoxItem Content="DarkRed" ToolTip="DarkRed" Background="DarkRed" />
-                                <ComboBoxItem Content="DodgerBlue" ToolTip="DodgerBlue" Background="DodgerBlue" />
-                                <ComboBoxItem Content="Gold" ToolTip="Gold" Background="Gold" />
-                                <ComboBoxItem Content="Green" ToolTip="Green" Background="Green" />
-                                <ComboBoxItem Content="Gray" ToolTip="Gray" Background="Gray" />
-                                <ComboBoxItem Content="HotPink" ToolTip="HotPink" Background="HotPink" />
-                                <ComboBoxItem Content="LimeGreen" ToolTip="LimeGreen" Background="LimeGreen" />
-                                <ComboBoxItem Content="Orange" ToolTip="Orange" Background="Orange" />
-                                <ComboBoxItem Content="Purple" ToolTip="Purple" Background="Purple" />
-                                <ComboBoxItem Content="Red" ToolTip="Red" Background="Red" />
-                                <ComboBoxItem Content="Yellow" ToolTip="Yellow" Background="Yellow" />
-                            </ComboBox>
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                <ComboBox  IsEditable="True" Width="Auto" Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" 
+                                          Background="{Binding Color, Converter={StaticResource ConvStringToColor}}"
+                                          Margin="5,0,0,0">
+                                    <ComboBoxItem Content="Aqua"  ToolTip="Aqua" Background="Aqua" />
+                                    <ComboBoxItem Content="Blue" ToolTip="Blue" Background="Blue" />
+                                    <ComboBoxItem Content="Chocolate" ToolTip="Chocolate" Background="Chocolate" />
+                                    <ComboBoxItem Content="Crimson" ToolTip="Crimson" Background="Crimson" />
+                                    <ComboBoxItem Content="DarkOrchid" ToolTip="DarkOrchid" Background="DarkOrchid" />
+                                    <ComboBoxItem Content="DarkRed" ToolTip="DarkRed" Background="DarkRed" />
+                                    <ComboBoxItem Content="DodgerBlue" ToolTip="DodgerBlue" Background="DodgerBlue" />
+                                    <ComboBoxItem Content="Gold" ToolTip="Gold" Background="Gold" />
+                                    <ComboBoxItem Content="Green" ToolTip="Green" Background="Green" />
+                                    <ComboBoxItem Content="Gray" ToolTip="Gray" Background="Gray" />
+                                    <ComboBoxItem Content="HotPink" ToolTip="HotPink" Background="HotPink" />
+                                    <ComboBoxItem Content="LimeGreen" ToolTip="LimeGreen" Background="LimeGreen" />
+                                    <ComboBoxItem Content="Orange" ToolTip="Orange" Background="Orange" />
+                                    <ComboBoxItem Content="Purple" ToolTip="Purple" Background="Purple" />
+                                    <ComboBoxItem Content="Red" ToolTip="Red" Background="Red" />
+                                    <ComboBoxItem Content="Yellow" ToolTip="Yellow" Background="Yellow" />
+                                </ComboBox>
+                                <Button Content="Del" Tag="{Binding Index}" Name="btnDelete" Click="btnDelete_Click" />
+                            </StackPanel>
                             <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" AcceptsReturn="False"
                                      AcceptsTab="False" />
                         </DockPanel>

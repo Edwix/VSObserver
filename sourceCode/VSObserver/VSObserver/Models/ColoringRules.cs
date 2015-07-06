@@ -13,6 +13,15 @@ namespace VSObserver.Models
         private string _val;
         private string _col;
 
+        /// <summary>
+        /// L'index détermine la position de la règle de couleur dans la liste
+        /// </summary>
+        public int Index
+        {
+            get;
+            set;
+        }
+
         public string Value
         {
             get { return _val; }

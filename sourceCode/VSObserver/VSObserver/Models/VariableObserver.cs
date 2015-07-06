@@ -881,6 +881,7 @@ namespace VSObserver.Models
                                         ColoringRules colorRule = new ColoringRules();
                                         colorRule.Value = ruleSet.Attribute(ATTR_VALUE).Value;
                                         colorRule.Color = ruleSet.Attribute(ATTR_COLOR).Value;
+                                        colorRule.Index = listColorRules.Count;
 
                                         if (!listColorRules.Contains(colorRule, managerColorRules))
                                         {

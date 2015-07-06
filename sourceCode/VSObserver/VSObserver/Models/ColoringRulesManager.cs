@@ -103,7 +103,9 @@ namespace VSObserver.Models
         {
             if (_listOfColoringRules != null)
             {
-                _listOfColoringRules.Add(new ColoringRules());
+                ColoringRules colRul = new ColoringRules();
+                colRul.Index = _listOfColoringRules.Count;
+                _listOfColoringRules.Add(colRul);
             }
         }
 
@@ -275,6 +277,13 @@ namespace VSObserver.Models
 
             colorRuleManager.ListOfColoringRules = newListColRul;
             return colorRuleManager;
+        }
+
+
+        public void removeColoringRule(int index)
+        {
+            if(ListOfColoringRules != null)
+                ListOfColoringRules.RemoveAt(index);
         }
     }
 }

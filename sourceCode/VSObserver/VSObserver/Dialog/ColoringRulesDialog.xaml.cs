@@ -59,5 +59,15 @@ namespace VSObserver.Dialog
         {
             this.Close();
         }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            Button btnDel = sender as Button;
+
+            if (btnDel != null)
+            {
+                colorManager.removeColoringRule((int)btnDel.Tag);
+            }
+        }
     }
 }
