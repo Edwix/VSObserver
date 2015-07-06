@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using System.Xml;
 
 namespace VSObserver.Models
 {
@@ -23,6 +24,7 @@ namespace VSObserver.Models
         private string _regexErr;
 
         private string rulePath;
+        private string oldRegex;
         private bool ruleExist;
 
         private ICommand cmdAddColRul;
@@ -65,6 +67,11 @@ namespace VSObserver.Models
 
                 return _regexErr; 
             }
+        }
+
+        public void setOldRegex(string old)
+        {
+            this.oldRegex = old;
         }
 
         public void setRulePath(string rulePath)
@@ -125,28 +132,60 @@ namespace VSObserver.Models
         {
             if (!String.IsNullOrEmpty(rulePath))
             {
+                XDocument xmlFile = XDocument.Load(rulePath);
+                
                 if (ruleExist)
-                {
-                    XDocument xmlFile = XDocument.Load(rulePath);
+                {                    
 
-                    var query = from items in xmlFile.Elements(VariableObserver.NODE_ITEM)
-                                where items.Element(VariableObserver.NODE_VARIABLE).Value == RuleRegex
+                    var query = from items in xmlFile.Descendants(VariableObserver.NODE_ITEM)
+                                where items.Element(VariableObserver.NODE_VARIABLE).Value == oldRegex
                                 select items;
 
                     foreach (XElement item in query)
                     {
-                        foreach (XElement simpleRule in item.Elements(VariableObserver.NODE_SIMPLE_RULE))
+                        item.Element(VariableObserver.NODE_VARIABLE).Value = RuleRegex;
+                        item.Element(VariableObserver.NODE_COMMENT).Value = RuleComment;
+                        XElement ruleSet = item.Element(VariableObserver.NODE_RULE_SET);
+                        ruleSet.RemoveNodes();
+                        
+                        foreach(ColoringRules colorRule in _listOfColoringRules)
                         {
-
+                            XElement node = new XElement(VariableObserver.NODE_SIMPLE_RULE);
+                            node.SetAttributeValue(VariableObserver.ATTR_VALUE, colorRule.Value);
+                            node.SetAttributeValue(VariableObserver.ATTR_COLOR, colorRule.Color);
+                            ruleSet.Add(node);
                         }
-                    }
-
-                    xmlFile.Save(rulePath);
+                    }                    
                 }
                 else
                 {
+                    XElement listNode = xmlFile.Element(VariableObserver.NODE_LIST);
+                    XElement itemNode = new XElement(VariableObserver.NODE_ITEM);
+                    XElement varNode = new XElement(VariableObserver.NODE_VARIABLE);
+                    varNode.Value = RuleRegex;
 
+                    XElement comNode = new XElement(VariableObserver.NODE_COMMENT);
+                    comNode.Value = RuleComment;
+
+                    XElement ruleSetNode = new XElement(VariableObserver.NODE_RULE_SET);
+
+                    foreach (ColoringRules colorRule in _listOfColoringRules)
+                    {
+                        XElement node = new XElement(VariableObserver.NODE_SIMPLE_RULE);
+                        node.SetAttributeValue(VariableObserver.ATTR_VALUE, colorRule.Value);
+                        node.SetAttributeValue(VariableObserver.ATTR_COLOR, colorRule.Color);
+                        ruleSetNode.Add(node);
+                    }
+
+                    itemNode.Add(varNode);
+                    itemNode.Add(comNode);
+                    itemNode.Add(ruleSetNode);
+
+                    //Ajout de l'item dans la liste
+                    listNode.Add(itemNode);
                 }
+
+                xmlFile.Save(rulePath);
             }
         }
 

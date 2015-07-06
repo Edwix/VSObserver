@@ -21,11 +21,12 @@ namespace VSObserver.Dialog
     public partial class ColoringRulesDialog : Window
     {
         string rulePath;
+        ColoringRulesManager colorManager;
 
         public ColoringRulesDialog()
         {
             InitializeComponent();
-            ColoringRulesManager colorManager = new ColoringRulesManager();
+            colorManager = new ColoringRulesManager();
             rulePath = ConfigurationManager.AppSettings["PathRuleFile"];
             colorManager.setRulePath(rulePath);
 
@@ -37,8 +38,10 @@ namespace VSObserver.Dialog
             if (manager != null)
             {
                 manager.setRulePath(rulePath);
-                manager.setRuleExist(true);
+                manager.setOldRegex(manager.RuleRegex);
+                manager.setRuleExist(true);                
                 this.DataContext = manager;
+                colorManager = manager;
             }
         }
 

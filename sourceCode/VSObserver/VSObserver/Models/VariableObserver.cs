@@ -49,6 +49,7 @@ namespace VSObserver.Models
         private const string LIST_FILE_LOCKED_VAR = "ListOfFileLockedVar";
         private const string INFORMATION_MSG = "InformationMessage";
 
+        public const string NODE_LIST = "List";
         public const string NODE_ITEM = "Item";
         public const string NODE_VARIABLE = "Variable";
         public const string NODE_RULE_SET = "RuleSet";
@@ -683,7 +684,7 @@ namespace VSObserver.Models
                             if (managColor.ListOfColoringRules.Contains(colRule, colorRulesWithPath[rowObserver.PathName]))
                             {
                                 //On récupère la couleur (select) en fonction de la valeur (where)
-                                rowObserver.Color = managColor.ListOfColoringRules.Where(x => x.Value == rowObserver.Value).Select(y => y.Color).Single();
+                                rowObserver.Color = managColor.ListOfColoringRules.Where(x => x.Value == rowObserver.Value).Select(y => y.Color).First();
                             }
                             else
                             {
