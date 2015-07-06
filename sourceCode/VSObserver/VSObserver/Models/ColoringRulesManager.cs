@@ -10,7 +10,7 @@ using System.Xml;
 
 namespace VSObserver.Models
 {
-    public class ColoringRulesManager : ViewModelBase, IEqualityComparer<ColoringRules>
+    public class ColoringRulesManager : ViewModelBase, IEqualityComparer<ColoringRules>, ICloneable
     {
         private const string LIST_COLORINGRULES = "ListOfColoringRules";
         private const string RULE_REGEX = "RuleRegex";
@@ -29,6 +29,9 @@ namespace VSObserver.Models
 
         private ICommand cmdAddColRul;
         private ICommand cmdSaveRul;
+
+        //Permet de revenir lorsqu'on fait un cancel
+        private ColoringRulesManager savedInstance;
 
         public ColoringRulesManager ()
         {
@@ -82,6 +85,7 @@ namespace VSObserver.Models
         public void setRuleExist(bool ruleExist)
         {
             this.ruleExist = ruleExist;
+            savedInstance = (ColoringRulesManager)this.Clone();
         }
 
         public ICommand AddColoringRule
@@ -189,6 +193,14 @@ namespace VSObserver.Models
             }
         }
 
+        public ColoringRulesManager getSavedInstance()
+        {
+            if (savedInstance != null)
+                return savedInstance;
+            else
+                return new ColoringRulesManager();
+        }
+
         public bool canSaveRules()
         {
             bool isOk = false;
@@ -244,6 +256,25 @@ namespace VSObserver.Models
                 return 0;
 
             return obj.GetHashCode();
+        }
+
+        /// <summary>
+        /// Pour avoir un clone de l'objet et pour ne pas influencer sur l'existant
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            ColoringRulesManager colorRuleManager = (ColoringRulesManager)MemberwiseClone();
+
+            ObservableCollection<ColoringRules> newListColRul = new ObservableCollection<ColoringRules>();
+            //On copie toutes les règles de couleur existante, ainsi quand on change l'objet ça n'infulence pas sur les autres
+            foreach (ColoringRules colorRule in _listOfColoringRules)
+            {
+                newListColRul.Add((ColoringRules)colorRule.Clone());
+            }
+
+            colorRuleManager.ListOfColoringRules = newListColRul;
+            return colorRuleManager;
         }
     }
 }

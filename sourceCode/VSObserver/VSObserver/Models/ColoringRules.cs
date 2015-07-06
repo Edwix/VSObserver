@@ -5,7 +5,7 @@ using System.Text;
 
 namespace VSObserver.Models
 {
-    public class ColoringRules : ViewModelBase
+    public class ColoringRules : ViewModelBase, ICloneable
     {
         private const string VALUE = "Value";
         private const string COLOR = "Color";
@@ -23,6 +23,12 @@ namespace VSObserver.Models
         {
             get { return _col; }
             set { _col = value; OnPropertyChanged(COLOR); }
+        }
+
+        public object Clone()
+        {
+            ColoringRules colorRule = (ColoringRules)MemberwiseClone();
+            return colorRule;
         }
     }
 }

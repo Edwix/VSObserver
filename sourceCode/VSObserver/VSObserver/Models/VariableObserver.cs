@@ -1131,9 +1131,12 @@ namespace VSObserver.Models
                 {
                     ColoringRulesDialog colorRuleDial = new ColoringRulesDialog();
                     string pathName = SelectedVariable.PathName;
-                    
-                    if(colorRulesWithPath.ContainsKey(pathName))
-                        colorRuleDial.setColoringRulesManager(colorRulesWithPath[pathName]);
+
+                    if (colorRulesWithPath.ContainsKey(pathName))
+                    {
+                        //On passe une copie pour pouvoir vers un cancel si jamais
+                        colorRuleDial.setColoringRulesManager((ColoringRulesManager)colorRulesWithPath[pathName].Clone());
+                    }
 
                     colorRuleDial.ShowDialog();
                 }

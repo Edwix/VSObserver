@@ -47,6 +47,16 @@ namespace VSObserver.Dialog
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
+            closeWindow();
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            closeWindow();
+        }
+
+        private void closeWindow()
+        {
             this.Close();
         }
     }

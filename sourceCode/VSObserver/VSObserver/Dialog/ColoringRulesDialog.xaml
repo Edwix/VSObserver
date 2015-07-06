@@ -62,7 +62,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button Content="Save" Width="50" Command="{Binding SaveRules}" Grid.Column="0"/>
+            <Button Name="btnSave" Content="Save" Width="50" Command="{Binding SaveRules}" Grid.Column="0" Click="btnSave_Click"/>
             <Button Name="btnCancel" Width="50" Content="Cancel" Click="btnCancel_Click" 
                     Grid.Column="1"/>
         </Grid>
