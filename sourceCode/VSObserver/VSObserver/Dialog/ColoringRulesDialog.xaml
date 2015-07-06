@@ -44,11 +44,22 @@
                             <ComboBox DockPanel.Dock="Right" IsEditable="True" Width="Auto" Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" 
                                       Background="{Binding Color, Converter={StaticResource ConvStringToColor}}"
                                       Margin="5,0,0,0">
-                                <ComboBoxItem Content="AliceBlue"  ToolTip="AliceBlue" Background="AliceBlue" />
-                                <ComboBoxItem Content="AntiqueWhite" ToolTip="AntiqueWhite" Background="AntiqueWhite" />
-                                <ComboBoxItem Content="Azure" ToolTip="Azure" Background="Azure" />
+                                <ComboBoxItem Content="Aqua"  ToolTip="Aqua" Background="Aqua" />
                                 <ComboBoxItem Content="Blue" ToolTip="Blue" Background="Blue" />
                                 <ComboBoxItem Content="Chocolate" ToolTip="Chocolate" Background="Chocolate" />
+                                <ComboBoxItem Content="Crimson" ToolTip="Crimson" Background="Crimson" />
+                                <ComboBoxItem Content="DarkOrchid" ToolTip="DarkOrchid" Background="DarkOrchid" />
+                                <ComboBoxItem Content="DarkRed" ToolTip="DarkRed" Background="DarkRed" />
+                                <ComboBoxItem Content="DodgerBlue" ToolTip="DodgerBlue" Background="DodgerBlue" />
+                                <ComboBoxItem Content="Gold" ToolTip="Gold" Background="Gold" />
+                                <ComboBoxItem Content="Green" ToolTip="Green" Background="Green" />
+                                <ComboBoxItem Content="Gray" ToolTip="Gray" Background="Gray" />
+                                <ComboBoxItem Content="HotPink" ToolTip="HotPink" Background="HotPink" />
+                                <ComboBoxItem Content="LimeGreen" ToolTip="LimeGreen" Background="LimeGreen" />
+                                <ComboBoxItem Content="Orange" ToolTip="Orange" Background="Orange" />
+                                <ComboBoxItem Content="Purple" ToolTip="Purple" Background="Purple" />
+                                <ComboBoxItem Content="Red" ToolTip="Red" Background="Red" />
+                                <ComboBoxItem Content="Yellow" ToolTip="Yellow" Background="Yellow" />
                             </ComboBox>
                             <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" AcceptsReturn="False"
                                      AcceptsTab="False" />
