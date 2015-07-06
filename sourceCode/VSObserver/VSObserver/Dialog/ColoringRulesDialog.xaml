@@ -62,7 +62,28 @@
                                     <ComboBoxItem Content="Red" ToolTip="Red" Background="Red" />
                                     <ComboBoxItem Content="Yellow" ToolTip="Yellow" Background="Yellow" />
                                 </ComboBox>
-                                <Button Content="Del" Tag="{Binding Index}" Name="btnDelete" Click="btnDelete_Click" />
+                                <Button Tag="{Binding Index}" Name="btnDelete" Click="btnDelete_Click" Background="Transparent" VerticalAlignment="Center"
+                                        BorderBrush="Transparent" BorderThickness="0" Margin="5,0,0,0">
+                                    <Button.Style>
+                                        <Style TargetType="{x:Type Button}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border BorderThickness="0">
+                                                            <ContentPresenter />
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Cursor" Value="Hand"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                    <Image Source="../Images/delete.png" Width="16" Height="16" />
+                                </Button>
                             </StackPanel>
                             <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" AcceptsReturn="False"
                                      AcceptsTab="False" />
