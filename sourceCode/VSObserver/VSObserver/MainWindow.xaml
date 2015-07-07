@@ -177,7 +177,7 @@
 
         <DataGrid HeadersVisibility="None"
                   VerticalAlignment="Stretch"
-                  Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="5"
+                  Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6"
                   x:Name="dg_variableList"
                   Margin="0"
                   Width="Auto"

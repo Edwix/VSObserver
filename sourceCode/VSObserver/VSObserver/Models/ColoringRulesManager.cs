@@ -149,7 +149,10 @@ namespace VSObserver.Models
                     foreach (XElement item in query)
                     {
                         item.Element(VariableObserver.NODE_VARIABLE).Value = RuleRegex;
-                        item.Element(VariableObserver.NODE_COMMENT).Value = RuleComment;
+
+                        if (RuleComment != null)
+                            item.Element(VariableObserver.NODE_COMMENT).Value = RuleComment;
+
                         XElement ruleSet = item.Element(VariableObserver.NODE_RULE_SET);
                         ruleSet.RemoveNodes();
                         
@@ -170,7 +173,9 @@ namespace VSObserver.Models
                     varNode.Value = RuleRegex;
 
                     XElement comNode = new XElement(VariableObserver.NODE_COMMENT);
-                    comNode.Value = RuleComment;
+                    
+                    if(RuleComment != null)
+                        comNode.Value = RuleComment;
 
                     XElement ruleSetNode = new XElement(VariableObserver.NODE_RULE_SET);
 
@@ -183,7 +188,10 @@ namespace VSObserver.Models
                     }
 
                     itemNode.Add(varNode);
-                    itemNode.Add(comNode);
+
+                    if (RuleComment != null)
+                        itemNode.Add(comNode);
+
                     itemNode.Add(ruleSetNode);
 
                     //Ajout de l'item dans la liste
@@ -208,6 +216,7 @@ namespace VSObserver.Models
 
             if (!String.IsNullOrEmpty(RuleRegex))
             {
+
                 if (String.IsNullOrEmpty(RegexError) && ListOfColoringRules.Count > 0)
                 {
                     if (!String.IsNullOrEmpty(ListOfColoringRules.First().Value) &&
