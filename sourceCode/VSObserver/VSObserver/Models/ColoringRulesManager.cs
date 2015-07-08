@@ -159,8 +159,22 @@ namespace VSObserver.Models
                         foreach(ColoringRules colorRule in _listOfColoringRules)
                         {
                             XElement node = new XElement(VariableObserver.NODE_SIMPLE_RULE);
-                            node.SetAttributeValue(VariableObserver.ATTR_VALUE, colorRule.Value);
-                            node.SetAttributeValue(VariableObserver.ATTR_COLOR, colorRule.Color);
+
+                            if (!String.IsNullOrEmpty(colorRule.Value))
+                                node.SetAttributeValue(VariableObserver.ATTR_VALUE, colorRule.Value);
+                            else
+                                node.SetAttributeValue(VariableObserver.ATTR_VALUE, "0");
+
+                            if (!String.IsNullOrEmpty(colorRule.Color))
+                                node.SetAttributeValue(VariableObserver.ATTR_COLOR, colorRule.Color);
+                            else
+                                node.SetAttributeValue(VariableObserver.ATTR_COLOR, "");
+
+                            if(!String.IsNullOrEmpty(colorRule.Operator))
+                                node.SetAttributeValue(VariableObserver.ATTR_OPERATOR, colorRule.Operator);
+                            else
+                                node.SetAttributeValue(VariableObserver.ATTR_OPERATOR, VariableObserver.OPERATOR_EQUAL);
+
                             ruleSet.Add(node);
                         }
                     }                    
@@ -182,8 +196,22 @@ namespace VSObserver.Models
                     foreach (ColoringRules colorRule in _listOfColoringRules)
                     {
                         XElement node = new XElement(VariableObserver.NODE_SIMPLE_RULE);
-                        node.SetAttributeValue(VariableObserver.ATTR_VALUE, colorRule.Value);
-                        node.SetAttributeValue(VariableObserver.ATTR_COLOR, colorRule.Color);
+
+                        if (!String.IsNullOrEmpty(colorRule.Value))
+                            node.SetAttributeValue(VariableObserver.ATTR_VALUE, colorRule.Value);
+                        else
+                            node.SetAttributeValue(VariableObserver.ATTR_VALUE, "0");
+
+                        if (!String.IsNullOrEmpty(colorRule.Color))
+                            node.SetAttributeValue(VariableObserver.ATTR_COLOR, colorRule.Color);
+                        else
+                            node.SetAttributeValue(VariableObserver.ATTR_COLOR, "");
+
+                        if (!String.IsNullOrEmpty(colorRule.Operator))
+                            node.SetAttributeValue(VariableObserver.ATTR_OPERATOR, colorRule.Operator);
+                        else
+                            node.SetAttributeValue(VariableObserver.ATTR_OPERATOR, VariableObserver.OPERATOR_EQUAL);
+
                         ruleSetNode.Add(node);
                     }
 

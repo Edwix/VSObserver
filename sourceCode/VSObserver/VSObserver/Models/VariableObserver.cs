@@ -1069,10 +1069,7 @@ namespace VSObserver.Models
                                             colorRule.Operator = operatorRule;
                                         }
 
-                                        if (!listColorRules.Contains(colorRule, managerColorRules))
-                                        {
-                                            listColorRules.Add(colorRule);
-                                        }
+                                        listColorRules.Add(colorRule);
                                     }
 
                                     //Adding the colors in function of value on the rule object
