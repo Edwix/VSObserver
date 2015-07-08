@@ -756,95 +756,87 @@ namespace VSObserver.Models
 
                         if (managColor != null)
                         {
-                            //On regarde si la valeur existe bien dans les règles
-                            if (managColor.ListOfColoringRules.Contains(colRule, colorRulesWithPath[rowObserver.PathName]))
-                            {
-                                double value = 0;
-                                bool valueConverted = false;
+                            double value = 0;
+                            bool valueConverted = false;
                                 
-                                //================================================================================================
-                                // Conversion de la valeur de la variable en double
-                                //================================================================================================
-                                    try
-                                    {
-                                        value = Convert.ToDouble(rowObserver.Value);
-                                        valueConverted = true;
-                                    }
-                                    catch
-                                    {
-
-                                    }
-                                //================================================================================================
-
-                                //On vérifie si la valeur a bien été convetie
-                                if (valueConverted)
+                            //================================================================================================
+                            // Conversion de la valeur de la variable en double
+                            //================================================================================================
+                                try
                                 {
-                                    //================================================================================================
-                                    // Recherche et assignation des règles de coleurs
-                                    //================================================================================================
-                                        foreach (ColoringRules coloringRule in managColor.ListOfColoringRules)
-                                        {
-                                            string colorRule = coloringRule.Color;
-                                            string operatorRule = coloringRule.Operator;
+                                    value = Convert.ToDouble(rowObserver.Value);
+                                    valueConverted = true;
+                                }
+                                catch
+                                {
 
-                                            double valueRule = 0;
-                                            bool valueRuleConverted = false;
+                                }
+                            //================================================================================================
+
+                            //On vérifie si la valeur a bien été convetie
+                            if (valueConverted)
+                            {
+                                //================================================================================================
+                                // Recherche et assignation des règles de coleurs
+                                //================================================================================================
+                                    foreach (ColoringRules coloringRule in managColor.ListOfColoringRules)
+                                    {
+                                        string colorRule = coloringRule.Color;
+                                        string operatorRule = coloringRule.Operator;
+
+                                        double valueRule = 0;
+                                        bool valueRuleConverted = false;
                                 
-                                            try
+                                        try
+                                        {
+                                            valueRule = Convert.ToDouble(coloringRule.Value);
+                                            valueRuleConverted = true;
+                                        }
+                                        catch
+                                        {
+
+                                        }
+
+                                        if (!String.IsNullOrEmpty(operatorRule) && valueRuleConverted)
+                                        {
+                                            ///On va vérifier l'opérateur.
+                                            ///En fonction on vérifie la valeur
+                                            ///Si elle correpond alors on lui applique la valeur
+                                            switch (operatorRule)
                                             {
-                                                valueRule = Convert.ToDouble(coloringRule.Value);
-                                                valueRuleConverted = true;
-                                            }
-                                            catch
-                                            {
+                                                case OPERATOR_GREATER_EQUAL:
+                                                    if (value >= valueRule)
+                                                        rowObserver.Color = colorRule;
+                                                    break;
 
-                                            }
+                                                case OPERATOR_GREATER_THAN:
+                                                    if (value > valueRule)
+                                                        rowObserver.Color = colorRule;
+                                                    break;
 
-                                            if (!String.IsNullOrEmpty(operatorRule) && valueRuleConverted)
-                                            {
-                                                ///On va vérifier l'opérateur.
-                                                ///En fonction on vérifie la valeur
-                                                ///Si elle correpond alors on lui applique la valeur
-                                                switch (operatorRule)
-                                                {
-                                                    case OPERATOR_GREATER_EQUAL:
-                                                        if (value >= valueRule)
-                                                            rowObserver.Color = colorRule;
-                                                        break;
+                                                case OPERATOR_LOWER_EQUAL:
+                                                    if (value <= valueRule)
+                                                        rowObserver.Color = colorRule;
+                                                    break;
 
-                                                    case OPERATOR_GREATER_THAN:
-                                                        if (value > valueRule)
-                                                            rowObserver.Color = colorRule;
-                                                        break;
+                                                case OPERATOR_LOWER_THAN:
+                                                    if (value < valueRule)
+                                                        rowObserver.Color = colorRule;
+                                                    break;
 
-                                                    case OPERATOR_LOWER_EQUAL:
-                                                        if (value <= valueRule)
-                                                            rowObserver.Color = colorRule;
-                                                        break;
-
-                                                    case OPERATOR_LOWER_THAN:
-                                                        if (value < valueRule)
-                                                            rowObserver.Color = colorRule;
-                                                        break;
-
-                                                    //Par défaut c'est une égalité
-                                                    default:
-                                                        if(valueRule == value)
-                                                            rowObserver.Color = colorRule;
-                                                        break;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                rowObserver.Color = "";
+                                                //Par défaut c'est une égalité
+                                                default:
+                                                    if(valueRule == value)
+                                                        rowObserver.Color = colorRule;
+                                                    break;
                                             }
                                         }
-                                    //================================================================================================
-                                }
-                                else
-                                {
-                                    rowObserver.Color = "";
-                                }
+                                        else
+                                        {
+                                            rowObserver.Color = "";
+                                        }
+                                    }
+                                //================================================================================================
                             }
                             else
                             {
