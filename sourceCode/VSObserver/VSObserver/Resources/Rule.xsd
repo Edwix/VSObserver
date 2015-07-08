@@ -7,12 +7,14 @@
     <xs:complexType>
       <xs:attribute ref="value" use="required"/>
       <xs:attribute ref="color" use="required"/>
+      <xs:attribute ref="operator" use="optional"/>
     </xs:complexType>    
   </xs:element>
 
   <!-- definition of attributes -->
   <xs:attribute name="value" type="xs:decimal"/>
   <xs:attribute name="color" type="xs:string"/>
+  <xs:attribute name="operator" type="xs:string"/>
   
 
   <!-- definition of complex elements -->

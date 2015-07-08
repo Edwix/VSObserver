@@ -9,9 +9,11 @@ namespace VSObserver.Models
     {
         private const string VALUE = "Value";
         private const string COLOR = "Color";
+        private const string OPERATOR = "Operator";
 
         private string _val;
         private string _col;
+        private string _ope;
 
         public string Value
         {
@@ -23,6 +25,12 @@ namespace VSObserver.Models
         {
             get { return _col; }
             set { _col = value; OnPropertyChanged(COLOR); }
+        }
+
+        public string Operator
+        {
+            get { return _ope; }
+            set { _ope = value; OnPropertyChanged(OPERATOR); }
         }
 
         public object Clone()
