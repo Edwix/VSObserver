@@ -26,6 +26,10 @@ namespace VSObserver.Dialog
         public ColoringRulesDialog()
         {
             InitializeComponent();
+
+            //Affichage en premier plan
+            this.Topmost = true;
+
             colorManager = new ColoringRulesManager();
             rulePath = ConfigurationManager.AppSettings["PathRuleFile"];
             colorManager.setRulePath(rulePath);
