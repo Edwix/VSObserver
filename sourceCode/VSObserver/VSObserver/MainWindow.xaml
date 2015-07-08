@@ -272,58 +272,14 @@
                 <DataGridTemplateColumn Header="Variable">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" FontWeight="Bold" Text="{Binding Path=Variable, UpdateSourceTrigger=PropertyChanged}"
-                                           Grid.Column="0" />
-                                <Border BorderThickness="0" CornerRadius="18" Width="16" Height="16" Grid.Column="1" VerticalAlignment="Center"
-                                        Background="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToColor}}"                                        
-                                        Margin="5,0,0,0" ToolTip="{Binding Path=CommentColor, UpdateSourceTrigger=PropertyChanged}">
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged}" Value="{x:Null}">
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged}" Value="">
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                </Border>
-                            </Grid>
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" FontWeight="Bold" Text="{Binding Path=Variable, UpdateSourceTrigger=PropertyChanged}"
+                                        Grid.Column="0" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBox VerticalAlignment="Center" Margin="5,0,5,0" FontWeight="Bold" Text="{Binding Path=Variable, UpdateSourceTrigger=PropertyChanged}"
-                                       IsReadOnly="True" TextWrapping="Wrap" Background="Transparent" BorderThickness="0" Foreground="White" Grid.Column="0"/>
-                                <Border BorderThickness="0" CornerRadius="18" Width="16" Height="16" Grid.Column="1" VerticalAlignment="Center"
-                                            Background="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToColor}}"                                        
-                                            Margin="5,0,0,0" ToolTip="{Binding Path=CommentColor, UpdateSourceTrigger=PropertyChanged}">
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged}" Value="{x:Null}">
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged}" Value="">
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                </Border>
-                            </Grid>
+                            <TextBox VerticalAlignment="Center" Margin="5,0,5,0" FontWeight="Bold" Text="{Binding Path=Variable, UpdateSourceTrigger=PropertyChanged}"
+                                    IsReadOnly="True" TextWrapping="Wrap" Background="Transparent" BorderThickness="0" Foreground="White" Grid.Column="0"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
@@ -357,7 +313,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" CornerRadius="5" Margin="2,0,2,0"
-                                    Background="Transparent">
+                                    Background="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToColor}}"
+                                    ToolTip="{Binding Path=CommentColor, UpdateSourceTrigger=PropertyChanged}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
@@ -365,9 +322,7 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" 
                                            VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"
-                                           FontWeight="Bold"
-                                           ToolTip="{Binding Path=CommentColor, UpdateSourceTrigger=PropertyChanged}">
-                                    
+                                           FontWeight="Bold" Foreground="Black">                                    
                                     </TextBlock>
                                     <Border Name="force_ball" Background="Red" Grid.Column="1"
                                             Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" 
