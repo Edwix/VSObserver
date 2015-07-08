@@ -36,7 +36,8 @@
                                Grid.Column="0" Grid.Row="0"
                                Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="tb_variableName_TextChanged"
                                NbElement="{Binding VarNumberFound, UpdateSourceTrigger=PropertyChanged}" 
-                               SearchError="{Binding InformationMessage, UpdateSourceTrigger=PropertyChanged}"/>
+                               SearchError="{Binding InformationMessage, UpdateSourceTrigger=PropertyChanged}"
+                               IsEnabled="{Binding SearchTextEnabled}"/>
         <!--=========================================================================================-->
 
         <!--=========================================================================================-->

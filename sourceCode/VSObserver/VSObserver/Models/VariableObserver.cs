@@ -51,6 +51,7 @@ namespace VSObserver.Models
         private const string FILE_NAME_LOCKED_LIST = "FileNameLockedList";
         private const string LIST_FILE_LOCKED_VAR = "ListOfFileLockedVar";
         private const string INFORMATION_MSG = "InformationMessage";
+        private const string SEARCH_ENABLED = "SearchTextEnabled";
 
         public const string NODE_LIST = "List";
         public const string NODE_ITEM = "Item";
@@ -172,6 +173,11 @@ namespace VSObserver.Models
             }
         }
 
+        public bool SearchTextEnabled
+        {
+            get { return !_isRecording; }
+        }
+
         public bool SearchRegex
         {
             get { return search_regex; }
@@ -223,7 +229,8 @@ namespace VSObserver.Models
                         saveVariables(TRACE_FILE_DEFAULT, strRecording.ToString());
                 }
 
-                OnPropertyChanged(IS_RECORDING); 
+                OnPropertyChanged(IS_RECORDING);
+                OnPropertyChanged(SEARCH_ENABLED);
             }
         }
 
