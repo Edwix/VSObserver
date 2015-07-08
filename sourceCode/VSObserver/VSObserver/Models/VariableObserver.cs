@@ -61,7 +61,13 @@ namespace VSObserver.Models
         public const string NODE_COMMENT = "Comment";
         public const string ATTR_VALUE = "value";
         public const string ATTR_COLOR = "color";
+        public const string ATTR_OPERATOR = "operator";
 
+        public const string OPE_EQ = "eq";
+        public const string OPE_GT = "gt";
+        public const string OPE_LT = "lt";
+        public const string OPE_GE = "ge";
+        public const string OPE_LE = "le";
         
         public const string F_VAL = "F";
         public const string W_VAL = "W";
@@ -963,6 +969,20 @@ namespace VSObserver.Models
                                         ColoringRules colorRule = new ColoringRules();
                                         colorRule.Value = ruleSet.Attribute(ATTR_VALUE).Value;
                                         colorRule.Color = ruleSet.Attribute(ATTR_COLOR).Value;
+
+                                        string operatorRule = (string)ruleSet.Attribute(ATTR_OPERATOR);
+
+                                        ///Si la variable operatorRule est null, 
+                                        ///alors ça veut dire que le champ operatro n'existe pas 
+                                        ///donc on le met par défaut à equal
+                                        if (operatorRule == null)
+                                        {
+                                            colorRule.Operator = OPE_EQ;
+                                        }
+                                        else
+                                        {
+                                            colorRule.Operator = operatorRule;
+                                        }
 
                                         if (!listColorRules.Contains(colorRule, managerColorRules))
                                         {
