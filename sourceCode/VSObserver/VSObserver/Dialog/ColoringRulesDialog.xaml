@@ -42,6 +42,14 @@
                         <DockPanel LastChildFill="True">
                             <Label Content="Element : "  DockPanel.Dock="Left"/>
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                <ComboBox  IsEditable="False" Width="Auto" Margin="5,0,0,0"
+                                           SelectedValuePath="Tag" SelectedValue="{Binding Operator, UpdateSourceTrigger=PropertyChanged}">
+                                    <ComboBoxItem Content="="  ToolTip="Equal" Tag="eq"/>
+                                    <ComboBoxItem Content="&lt;" ToolTip="Lower than" Tag="lt" />
+                                    <ComboBoxItem Content="&gt;" ToolTip="Greater than" Tag="gt" />
+                                    <ComboBoxItem Content="&lt;=" ToolTip="Lower or equal" Tag="le" />
+                                    <ComboBoxItem Content="&gt;=" ToolTip="Greater or equal" Tag="ge" />
+                                </ComboBox>
                                 <ComboBox  IsEditable="True" Width="Auto" Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" 
                                           Background="{Binding Color, Converter={StaticResource ConvStringToColor}}"
                                           Margin="5,0,0,0">
