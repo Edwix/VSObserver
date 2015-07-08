@@ -63,11 +63,11 @@ namespace VSObserver.Models
         public const string ATTR_COLOR = "color";
         public const string ATTR_OPERATOR = "operator";
 
-        public const string OPE_EQ = "eq";
-        public const string OPE_GT = "gt";
-        public const string OPE_LT = "lt";
-        public const string OPE_GE = "ge";
-        public const string OPE_LE = "le";
+        public const string OPERATOR_EQUAL = "eq";
+        public const string OPERATOR_GREATER_THAN = "gt";
+        public const string OPERATOR_LOWER_THAN = "lt";
+        public const string OPERATOR_GREATER_EQUAL = "ge";
+        public const string OPERATOR_LOWER_EQUAL = "le";
         
         public const string F_VAL = "F";
         public const string W_VAL = "W";
@@ -744,7 +744,7 @@ namespace VSObserver.Models
                     InjectionVariableStatus status = new InjectionVariableStatus();
                     vc.getInjectionStatus(rowObserver.PathName, status);
 
-
+                    #region Assignation des couleurs selon les règles appliquées
                     if (colorRulesWithPath.ContainsKey(rowObserver.PathName))
                     {
                         //Création du coloring rule juste pour voir si la valeur existe bien (contains)
@@ -759,8 +759,92 @@ namespace VSObserver.Models
                             //On regarde si la valeur existe bien dans les règles
                             if (managColor.ListOfColoringRules.Contains(colRule, colorRulesWithPath[rowObserver.PathName]))
                             {
-                                //On récupère la couleur (select) en fonction de la valeur (where)
-                                rowObserver.Color = managColor.ListOfColoringRules.Where(x => x.Value == rowObserver.Value).Select(y => y.Color).First();
+                                double value = 0;
+                                bool valueConverted = false;
+                                
+                                //================================================================================================
+                                // Conversion de la valeur de la variable en double
+                                //================================================================================================
+                                    try
+                                    {
+                                        value = Convert.ToDouble(rowObserver.Value);
+                                        valueConverted = true;
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                //================================================================================================
+
+                                //On vérifie si la valeur a bien été convetie
+                                if (valueConverted)
+                                {
+                                    //================================================================================================
+                                    // Recherche et assignation des règles de coleurs
+                                    //================================================================================================
+                                        foreach (ColoringRules coloringRule in managColor.ListOfColoringRules)
+                                        {
+                                            string colorRule = coloringRule.Color;
+                                            string operatorRule = coloringRule.Operator;
+
+                                            double valueRule = 0;
+                                            bool valueRuleConverted = false;
+                                
+                                            try
+                                            {
+                                                valueRule = Convert.ToDouble(coloringRule.Value);
+                                                valueRuleConverted = true;
+                                            }
+                                            catch
+                                            {
+
+                                            }
+
+                                            if (!String.IsNullOrEmpty(operatorRule) && valueRuleConverted)
+                                            {
+                                                ///On va vérifier l'opérateur.
+                                                ///En fonction on vérifie la valeur
+                                                ///Si elle correpond alors on lui applique la valeur
+                                                switch (operatorRule)
+                                                {
+                                                    case OPERATOR_GREATER_EQUAL:
+                                                        if (value >= valueRule)
+                                                            rowObserver.Color = colorRule;
+                                                        break;
+
+                                                    case OPERATOR_GREATER_THAN:
+                                                        if (value > valueRule)
+                                                            rowObserver.Color = colorRule;
+                                                        break;
+
+                                                    case OPERATOR_LOWER_EQUAL:
+                                                        if (value <= valueRule)
+                                                            rowObserver.Color = colorRule;
+                                                        break;
+
+                                                    case OPERATOR_LOWER_THAN:
+                                                        if (value < valueRule)
+                                                            rowObserver.Color = colorRule;
+                                                        break;
+
+                                                    //Par défaut c'est une égalité
+                                                    default:
+                                                        if(valueRule == value)
+                                                            rowObserver.Color = colorRule;
+                                                        break;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                rowObserver.Color = "";
+                                            }
+                                        }
+                                    //================================================================================================
+                                }
+                                else
+                                {
+                                    rowObserver.Color = "";
+                                }
                             }
                             else
                             {
@@ -771,6 +855,7 @@ namespace VSObserver.Models
                             rowObserver.CommentColor = managColor.RuleComment;
                         }
                     }
+                    #endregion
 
                     if (status.state == InjectionStates.InjectionStates_IsSet)
                     {
@@ -977,7 +1062,7 @@ namespace VSObserver.Models
                                         ///donc on le met par défaut à equal
                                         if (operatorRule == null)
                                         {
-                                            colorRule.Operator = OPE_EQ;
+                                            colorRule.Operator = OPERATOR_EQUAL;
                                         }
                                         else
                                         {
