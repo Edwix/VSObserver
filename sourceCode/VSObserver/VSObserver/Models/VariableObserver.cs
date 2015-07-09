@@ -1100,163 +1100,220 @@ namespace VSObserver.Models
             Console.WriteLine("END LOAD FILE : " + sw.Elapsed.ToString());
         }
 
-        public void saveVariableLocked(string name)
-        {
-            try
+        #region Locked Variables managment
+            /// <summary>
+            /// Sauvegarde toutes les variables bloquées
+            /// </summary>
+            /// <param name="name"></param>
+            public void saveVariableLocked(string name)
             {
-                StringBuilder builder = new StringBuilder();
-
-                foreach(DataObserver dobs in getLockedVariables())
+                try
                 {
-                    if (dobs.PathName != getLockedVariables().Last().PathName)
+                    StringBuilder builder = new StringBuilder();
+
+                    if (_variableList != null)
                     {
-                        builder.Append(dobs.PathName + ";");
-                    }
-                    else
-                    {
-                        builder.Append(dobs.PathName);
+                        //Si la liste de variable contient plus d'un élément alors
+                        //on rajoute le ; sinon on laisse juste le nom
+                        if (_variableList.Count > 0)
+                            builder.Append(name + ";");
+                        else
+                            builder.Append(name);
+
+                        foreach (DataObserver dobs in getLockedVariables())
+                        {
+                            if (dobs.PathName != getLockedVariables().Last().PathName)
+                            {
+                                builder.Append(dobs.PathName + ";");
+                            }
+                            else
+                            {
+                                builder.Append(dobs.PathName);
+                            }
+                        }
+
+                        saveVariables(name, builder.ToString());
                     }
                 }
-
-                saveVariables(name, builder.ToString());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error : \n" + e.ToString());
-            }
-        }
-
-        public void saveAllVariable(string name)
-        {
-            try
-            {
-                StringBuilder builder = new StringBuilder();
-
-                foreach (DataObserver dobs in _variableList)
+                catch (Exception e)
                 {
-                    if (dobs.PathName != _variableList.Last().PathName)
-                    {
-                        builder.Append(dobs.PathName + ";");
-                    }
-                    else
-                    {
-                        builder.Append(dobs.PathName);
-                    }
-                }
-
-                saveVariables(name, builder.ToString());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error : \n" + e.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Méthode qui permet de déterminer si il y a des variables qui ne sont pas bloqué
-        /// </summary>
-        /// <returns></returns>
-        public bool hasUnlockedVariable()
-        {
-            bool unlocledVar = false;
-
-            int nbUnlockedVar = _variableList.Where(x => x.IsLocked == false).Count();
-
-            if (nbUnlockedVar > 0)
-                unlocledVar = true;
-
-            return unlocledVar;
-        }
-
-        public void saveVariables(string name, string content)
-        {
-            try
-            {
-                string lockedListSaved = @"Resources/" + name + ".csv";
-
-                if (!File.Exists(lockedListSaved))
-                {
-                    File.Create(lockedListSaved).Dispose();
-                }
-
-                FileInfo fi = new FileInfo(lockedListSaved);
-                TextWriter tw = new StreamWriter(fi.Open(FileMode.Truncate));
-
-                tw.Write(content);
-                tw.Flush();
-                tw.Close();
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error : \n" + e.ToString());
-            }
-        }
-
-        public void loadVariables(string name, bool isLocked)
-        {
-            try
-            {
-                string lockedListSaved = @"Resources/"+ name + ".csv";
-
-                if (File.Exists(lockedListSaved))
-                {
-                    StreamReader reader = new StreamReader(File.OpenRead(lockedListSaved));
-                    StringBuilder readString = new StringBuilder();
-                    
-                    while (!reader.EndOfStream)
-                    {
-                        readString.Append(reader.ReadLine());
-                    }
-
-                    string[] listOfVariables = readString.ToString().Split(';');
-                    ObservableCollection<DataObserver> listDobs = new ObservableCollection<DataObserver>();
-
-                    foreach (string pathName in listOfVariables)
-                    {
-                        string mapping = "";
-
-                        if (dic.ContainsKey(pathName))
-                            mapping = dic[pathName];
-
-                        DataObserver dobs = createDataObserver(pathName, "", VS_Type.INVALID, 0, mapping, false);
-                        dobs.IsLocked = isLocked;
-                        listDobs.Add(dobs);
-                    }
-
-                    VariableList = listDobs;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error load : \n" + e.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Get the list of file with locked variables (.csv)
-        /// </summary>
-        public void getListLockedVarSaved()
-        {
-            _listOfFileLockedVar.Clear();
-            string[] listFilePath = Directory.GetFiles(@"Resources/");
-
-            foreach (string filePath in listFilePath)
-            {
-                if (Path.GetExtension(filePath).Equals(".csv"))
-                {
-                    //Si c'est different de la liste de sauvegarde par défaut, alors on ajoute les fichiers trouvées
-                    if (!Path.GetFileNameWithoutExtension(filePath).Equals(MainWindow.LOCKED_LIST_FILE)
-                        && !Path.GetFileNameWithoutExtension(filePath).Equals(NAME_ALL_FORCING)
-                        && !Path.GetFileNameWithoutExtension(filePath).Equals(TRACE_FILE_DEFAULT))
-                    {
-                        _listOfFileLockedVar.Add(Path.GetFileNameWithoutExtension(filePath));
-                    }
+                    Console.WriteLine("Error : \n" + e.ToString());
                 }
             }
 
-            OnPropertyChanged(LIST_FILE_LOCKED_VAR);
-        }
+            /// <summary>
+            /// Méthode qui permet de charger toutes les variables même les non bloqués
+            /// </summary>
+            /// <param name="name"></param>
+            public void saveAllVariable(string name)
+            {
+                try
+                {
+                    StringBuilder builder = new StringBuilder();
+
+                    if (_variableList != null)
+                    {
+                        //Si la liste de variable contient plus d'un élément alors
+                        //on rajoute le ; sinon on laisse juste le nom
+                        if (_variableList.Count > 0)
+                            builder.Append(name + ";");
+                        else
+                            builder.Append(name);
+
+                        foreach (DataObserver dobs in _variableList)
+                        {
+                            if (dobs.PathName != _variableList.Last().PathName)
+                            {
+                                builder.Append(dobs.PathName + ";");
+                            }
+                            else
+                            {
+                                builder.Append(dobs.PathName);
+                            }
+                        }
+
+                        saveVariables(name, builder.ToString());
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error : \n" + e.ToString());
+                }
+            }
+
+            /// <summary>
+            /// Méthode qui permet de déterminer si il y a des variables qui ne sont pas bloqué
+            /// </summary>
+            /// <returns></returns>
+            public bool hasUnlockedVariable()
+            {
+                bool unlocledVar = false;
+
+                int nbUnlockedVar = _variableList.Where(x => x.IsLocked == false).Count();
+
+                if (nbUnlockedVar > 0)
+                    unlocledVar = true;
+
+                return unlocledVar;
+            }
+
+            /// <summary>
+            /// Sauvegarde des variables dans un fichier CSV
+            /// </summary>
+            /// <param name="name"></param>
+            /// <param name="content"></param>
+            public void saveVariables(string name, string content)
+            {
+                try
+                {
+                    //On remplace le nom de fichier entré pour enlevé tous mes caractères spéciaux
+                    string fileName = Regex.Replace(name, REGEX_REMPLACE_FILE, "");
+
+                    string lockedListSaved = @"Resources/" + fileName + ".csv";
+
+                    if (!File.Exists(lockedListSaved))
+                    {
+                        File.Create(lockedListSaved).Dispose();
+                    }
+
+                    FileInfo fi = new FileInfo(lockedListSaved);
+                    TextWriter tw = new StreamWriter(fi.Open(FileMode.Truncate));
+
+                    tw.Write(content);
+                    tw.Flush();
+                    tw.Close();
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error : \n" + e.ToString());
+                }
+            }
+
+            public void loadVariables(string name, bool isLocked)
+            {
+                try
+                {
+                    //On remplace le nom de fichier entré pour enlevé tous mes caractères spéciaux
+                    string fileName = Regex.Replace(name, REGEX_REMPLACE_FILE, "");
+
+                    string lockedListSaved = @"Resources/" + fileName + ".csv";
+
+                    if (File.Exists(lockedListSaved))
+                    {
+                        StreamReader reader = new StreamReader(File.OpenRead(lockedListSaved));
+                        StringBuilder readString = new StringBuilder();
+
+                        while (!reader.EndOfStream)
+                        {
+                            readString.Append(reader.ReadLine());
+                        }
+
+                        string[] listOfVariables = readString.ToString().Split(';');
+                        ObservableCollection<DataObserver> listDobs = new ObservableCollection<DataObserver>();
+
+                        //Le i permet d'exclure le nom du fichier
+                        //et ainsi ne pas le mettre dans la liste des variables
+                        int i = 0;
+                        foreach (string pathName in listOfVariables)
+                        {
+                            if (i != 0)
+                            {
+                                string mapping = "";
+
+                                if (dic.ContainsKey(pathName))
+                                    mapping = dic[pathName];
+
+                                DataObserver dobs = createDataObserver(pathName, "", VS_Type.INVALID, 0, mapping, false);
+                                dobs.IsLocked = isLocked;
+                                listDobs.Add(dobs);
+                            }
+
+                            i++;
+                        }
+
+                        VariableList = listDobs;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error load : \n" + e.ToString());
+                }
+            }
+
+            /// <summary>
+            /// Get the list of file with locked variables (.csv)
+            /// </summary>
+            public void getListLockedVarSaved()
+            {
+                _listOfFileLockedVar.Clear();
+                string[] listFilePath = Directory.GetFiles(@"Resources/");
+
+                foreach (string filePath in listFilePath)
+                {
+                    if (Path.GetExtension(filePath).Equals(".csv"))
+                    {
+                        //Si c'est different de la liste de sauvegarde par défaut, alors on ajoute les fichiers trouvées
+                        if (!Path.GetFileNameWithoutExtension(filePath).Equals(MainWindow.LOCKED_LIST_FILE)
+                            && !Path.GetFileNameWithoutExtension(filePath).Equals(NAME_ALL_FORCING)
+                            && !Path.GetFileNameWithoutExtension(filePath).Equals(TRACE_FILE_DEFAULT))
+                        {
+                            StreamReader reader = new StreamReader(File.OpenRead(filePath));
+                            StringBuilder readString = new StringBuilder();
+
+                            while (!reader.EndOfStream)
+                            {
+                                readString.Append(reader.ReadLine());
+                            }
+
+                            _listOfFileLockedVar.Add(readString.ToString().Split(';')[0]);
+                        }
+                    }
+                }
+
+                OnPropertyChanged(LIST_FILE_LOCKED_VAR);
+            }
+        #endregion
 
         #region Commands
             public ICommand CopyVariable
@@ -1301,9 +1358,6 @@ namespace VSObserver.Models
             {
                 if (_fileNameLockedVar != "")
                 {
-                    //On remplace le nom de fichier entré pour enlevé tous mes caractères spéciaux
-                    string fileName = Regex.Replace(_fileNameLockedVar, REGEX_REMPLACE_FILE, "");
-
                     if (hasUnlockedVariable())
                     {
                         Forms.DialogResult result1 = Forms.MessageBox.Show("Do you want to save the unlocked variable ?",
@@ -1311,17 +1365,17 @@ namespace VSObserver.Models
                                                                              Forms.MessageBoxButtons.YesNo);
                         if (result1 == Forms.DialogResult.Yes)
                         {
-                            saveAllVariable(fileName);
+                            saveAllVariable(_fileNameLockedVar);
                         }
                         else
                         {
-                            saveVariableLocked(fileName);
+                            saveVariableLocked(_fileNameLockedVar);
                         }
                     }
                     else
                     {
                         //Sauvegarde des variable bloqués
-                        saveVariableLocked(fileName);
+                        saveVariableLocked(_fileNameLockedVar);
                     }
 
                     //On récupère la liste pour l'afficher
