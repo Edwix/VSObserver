@@ -20,6 +20,7 @@ using System.Reflection;
 using System.Windows.Input;
 using VSObserver.Dialog;
 using System.Configuration;
+using Forms = System.Windows.Forms;
 
 namespace VSObserver.Models
 {
@@ -1125,6 +1126,48 @@ namespace VSObserver.Models
             }
         }
 
+        public void saveAllVariable(string name)
+        {
+            try
+            {
+                StringBuilder builder = new StringBuilder();
+
+                foreach (DataObserver dobs in _variableList)
+                {
+                    if (dobs.PathName != _variableList.Last().PathName)
+                    {
+                        builder.Append(dobs.PathName + ";");
+                    }
+                    else
+                    {
+                        builder.Append(dobs.PathName);
+                    }
+                }
+
+                saveVariables(name, builder.ToString());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error : \n" + e.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Méthode qui permet de déterminer si il y a des variables qui ne sont pas bloqué
+        /// </summary>
+        /// <returns></returns>
+        public bool hasUnlockedVariable()
+        {
+            bool unlocledVar = false;
+
+            int nbUnlockedVar = _variableList.Where(x => x.IsLocked == false).Count();
+
+            if (nbUnlockedVar > 0)
+                unlocledVar = true;
+
+            return unlocledVar;
+        }
+
         public void saveVariables(string name, string content)
         {
             try
@@ -1255,8 +1298,25 @@ namespace VSObserver.Models
                     //On remplace le nom de fichier entré pour enlevé tous mes caractères spéciaux
                     string fileName = Regex.Replace(_fileNameLockedVar, REGEX_REMPLACE_FILE, "");
 
-                    //Sauvegarde des variable bloqués
-                    saveVariableLocked(fileName);
+                    if (hasUnlockedVariable())
+                    {
+                        Forms.DialogResult result1 = Forms.MessageBox.Show("Do you want to save the unlocked variable ?",
+                                                                             "Important Question",
+                                                                             Forms.MessageBoxButtons.YesNo);
+                        if (result1 == Forms.DialogResult.Yes)
+                        {
+                            saveAllVariable(fileName);
+                        }
+                        else
+                        {
+                            saveVariableLocked(fileName);
+                        }
+                    }
+                    else
+                    {
+                        //Sauvegarde des variable bloqués
+                        saveVariableLocked(fileName);
+                    }
 
                     //On récupère la liste pour l'afficher
                     getListLockedVarSaved();
