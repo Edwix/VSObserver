@@ -304,54 +304,26 @@
                 <DataGridTemplateColumn Header="Value">
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBox Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="2,0,2,0" 
-                                     GotMouseCapture="TextBox_GotMouseCapture" KeyDown="TextBox_KeyDown" Grid.Column="0"
-                                     LostFocus="TextBox_LostFocus">
-                                    <TextBox.InputBindings>
+                            <TextBox Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="2,0,2,0" 
+                                    GotMouseCapture="TextBox_GotMouseCapture" KeyDown="TextBox_KeyDown" Grid.Column="0"
+                                    LostFocus="TextBox_LostFocus">
+                                <TextBox.InputBindings>
 
-                                    </TextBox.InputBindings>
-                                </TextBox>
-                                <Border Name="force_ball" Background="Red" Grid.Column="1"
-                                            Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" 
-                                            Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
-                                            MouseDown="force_ball_icon_MouseDown"
-                                            BorderThickness="0" CornerRadius="20" Width="16" Height="16" Margin="0,0,0,0">
-                                    <TextBlock Name="tb_force_icon" Text="F" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Foreground="White" 
-                                                   FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
-                                                   FontSize="10"/>
-                                </Border>
-                            </Grid>
+                                </TextBox.InputBindings>
+                            </TextBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" CornerRadius="5" Margin="2,0,2,0"
+                            <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" CornerRadius="5" Margin="2,0,2,0" Grid.Column="0"
                                     Background="{Binding Path=Color, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvStringToColor}}"
                                     ToolTip="{Binding Path=CommentColor, UpdateSourceTrigger=PropertyChanged}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
+                                
                                     <TextBlock Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" 
-                                           VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"
-                                           FontWeight="Bold" Foreground="Black">                                    
+                                            VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"
+                                            FontWeight="Bold">                                    
                                     </TextBlock>
-                                    <Border Name="force_ball" Background="Red" Grid.Column="1"
-                                            Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" 
-                                            Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
-                                            MouseDown="force_ball_icon_MouseDown"
-                                            BorderThickness="0" CornerRadius="20" Width="16" Height="16" Margin="0,0,0,0">
-                                        <TextBlock Name="tb_force_icon" Text="F" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Foreground="White" 
-                                                   FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
-                                                   FontSize="10"/>
-                                    </Border>
-                                </Grid>
+                                                                    
                                 <!--Style to change the color of background border when the value has changed-->
                                 <Border.Style>
                                     <Style TargetType="{x:Type Border}" >
@@ -361,11 +333,11 @@
                                                     <BeginStoryboard x:Name="tt" >
                                                         <Storyboard Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)">
                                                             <ColorAnimation                                                                  
-                                                                     FillBehavior="Stop"                                                                  
-                                                                     From="{StaticResource colorAnim_valueChanged}"                                                                  
-                                                                     To="Transparent"                                                                  
-                                                                     By="Blue"                                                                  
-                                                                     Duration="{StaticResource durationColor}" />
+                                                                        FillBehavior="Stop"                                                                  
+                                                                        From="{StaticResource colorAnim_valueChanged}"                                                                  
+                                                                        To="Transparent"                                                                  
+                                                                        By="Blue"                                                                  
+                                                                        Duration="{StaticResource durationColor}" />
                                                         </Storyboard>
                                                     </BeginStoryboard>
                                                 </DataTrigger.EnterActions>
@@ -380,9 +352,26 @@
                 <DataGridTemplateColumn Header="WhenUpdated" MinWidth="50" Width="1*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" TextAlignment="Center" Text="{Binding Path=WhenUpdated, UpdateSourceTrigger=PropertyChanged}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="25" />
+                                    <ColumnDefinition  />
+                                </Grid.ColumnDefinitions>
+                                <Border Name="force_ball" Background="Red" Grid.Column="0"
+                                            Visibility="{Binding Path=IsForced, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ConvBoolToVisibility}}" 
+                                            Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
+                                            MouseDown="force_ball_icon_MouseDown"
+                                            BorderThickness="0" CornerRadius="20" Width="16" Height="16" Margin="5,0,0,0">
+                                <TextBlock Name="tb_force_icon" Text="F" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Foreground="White" 
+                                                   FontWeight="Bold" Tag="{Binding Path=PathName, UpdateSourceTrigger=PropertyChanged}"
+                                                   FontSize="10"/>
+                            </Border>
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,5,0" TextAlignment="Center" Text="{Binding Path=WhenUpdated, UpdateSourceTrigger=PropertyChanged}"
+                                       Grid.Column="1">
 
                             </TextBlock>
+
+                        </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
