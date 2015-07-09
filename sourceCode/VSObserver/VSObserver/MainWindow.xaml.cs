@@ -55,7 +55,7 @@ namespace VSObserver
         public MainWindow()
         {
             loadConfiguration();
-            InitializeComponent();            
+            InitializeComponent();  
 
             //Création du timer pour récupérer la valeur du presse papier
             //Initialisation de l'ancienne valeur du presse papier
