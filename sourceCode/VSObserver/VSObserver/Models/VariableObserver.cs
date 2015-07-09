@@ -311,7 +311,7 @@ namespace VSObserver.Models
                 InformationMessage = "Connection to RTC server isn't possible !";
             }
 
-            /*if (connectionOK)
+            if (connectionOK)
             {
                 try
                 {          
@@ -342,7 +342,7 @@ namespace VSObserver.Models
                 }
             }
             else
-            {*/
+            {
                 try
                 {
                     SQLiteCommand cmdGetAll;
@@ -381,7 +381,7 @@ namespace VSObserver.Models
                 {
                     InformationMessage = "Error on SQLite data base !\n" + e.ToString() ;
                 }
-            //}
+            }
 
             try
             {
