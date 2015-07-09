@@ -1214,7 +1214,12 @@ namespace VSObserver.Models
 
                     foreach (string pathName in listOfVariables)
                     {
-                        DataObserver dobs = createDataObserver(pathName, "", VS_Type.INVALID, 0, dic[pathName], false);
+                        string mapping = "";
+
+                        if (dic.ContainsKey(pathName))
+                            mapping = dic[pathName];
+
+                        DataObserver dobs = createDataObserver(pathName, "", VS_Type.INVALID, 0, mapping, false);
                         dobs.IsLocked = isLocked;
                         listDobs.Add(dobs);
                     }
@@ -1242,7 +1247,8 @@ namespace VSObserver.Models
                 {
                     //Si c'est different de la liste de sauvegarde par défaut, alors on ajoute les fichiers trouvées
                     if (!Path.GetFileNameWithoutExtension(filePath).Equals(MainWindow.LOCKED_LIST_FILE)
-                        && !Path.GetFileNameWithoutExtension(filePath).Equals(NAME_ALL_FORCING))
+                        && !Path.GetFileNameWithoutExtension(filePath).Equals(NAME_ALL_FORCING)
+                        && !Path.GetFileNameWithoutExtension(filePath).Equals(TRACE_FILE_DEFAULT))
                     {
                         _listOfFileLockedVar.Add(Path.GetFileNameWithoutExtension(filePath));
                     }

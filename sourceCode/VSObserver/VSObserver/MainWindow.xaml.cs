@@ -30,6 +30,8 @@ namespace VSObserver
     public partial class MainWindow : Window
     {
 
+        public const string APP_NAME = "VSObserver";
+
         private const int INTERVAL = 250;
         private const int INTERVAL_SEARCH = 500;
         public const string LOCKED_LIST_FILE = "LockedList";
@@ -357,12 +359,15 @@ namespace VSObserver
             if(menuItem != null)
             {
                 Console.WriteLine("MENU ITEM CLICK : " + menuItem.Header.ToString());
+                //On indique dans le titre quel fichier est chargé
+                this.Title = APP_NAME + " - " + menuItem.Header.ToString();
                 vo.loadVariables(menuItem.Header.ToString(), true);
             }
         }
 
         private void defaultLockedList_Click(object sender, RoutedEventArgs e)
         {
+            this.Title = APP_NAME;
             vo.loadVariables(LOCKED_LIST_FILE, true);
         }
 
@@ -386,6 +391,7 @@ namespace VSObserver
 
         private void showAllForcedVars_Click(object sender, RoutedEventArgs e)
         {
+            this.Title = APP_NAME;
             vo.showAllForcing();
         }
     }
