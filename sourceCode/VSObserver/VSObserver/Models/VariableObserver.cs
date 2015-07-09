@@ -803,33 +803,46 @@ namespace VSObserver.Models
                                             ///On va vérifier l'opérateur.
                                             ///En fonction on vérifie la valeur
                                             ///Si elle correpond alors on lui applique la valeur
-                                            switch (operatorRule)
+                                            ///On arrête l'opération dès qu'on a une correspondance
+                                            if(operatorRule.Equals(OPERATOR_GREATER_EQUAL))
                                             {
-                                                case OPERATOR_GREATER_EQUAL:
-                                                    if (value >= valueRule)
-                                                        rowObserver.Color = colorRule;
+                                                if (value >= valueRule)
+                                                {
+                                                    rowObserver.Color = colorRule;
                                                     break;
-
-                                                case OPERATOR_GREATER_THAN:
-                                                    if (value > valueRule)
-                                                        rowObserver.Color = colorRule;
+                                                }
+                                            }
+                                            else if(operatorRule.Equals(OPERATOR_GREATER_THAN))
+                                            {
+                                                if (value > valueRule)
+                                                {
+                                                    rowObserver.Color = colorRule;
                                                     break;
-
-                                                case OPERATOR_LOWER_EQUAL:
-                                                    if (value <= valueRule)
-                                                        rowObserver.Color = colorRule;
+                                                }
+                                            }
+                                            else if(operatorRule.Equals(OPERATOR_LOWER_EQUAL))
+                                            {
+                                                if (value <= valueRule)
+                                                {
+                                                    rowObserver.Color = colorRule;
                                                     break;
-
-                                                case OPERATOR_LOWER_THAN:
-                                                    if (value < valueRule)
-                                                        rowObserver.Color = colorRule;
+                                                }
+                                            }
+                                            else if(operatorRule.Equals(OPERATOR_LOWER_THAN))
+                                            {
+                                                if (value < valueRule)
+                                                {
+                                                    rowObserver.Color = colorRule;
                                                     break;
-
-                                                //Par défaut c'est une égalité
-                                                default:
-                                                    if(valueRule == value)
-                                                        rowObserver.Color = colorRule;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (valueRule == value)
+                                                {
+                                                    rowObserver.Color = colorRule;
                                                     break;
+                                                }
                                             }
                                         }
                                         else
