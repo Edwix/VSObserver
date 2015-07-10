@@ -7,12 +7,18 @@ using System.Windows.Input;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Xml;
+using System.Configuration;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace VSObserver.Models
 {
     public class ColoringRulesManager : ViewModelBase, IEqualityComparer<ColoringRules>, ICloneable
     {
+        private const string TAG_COLOR_RULE = "ColRule";
+
         private const string LIST_COLORINGRULES = "ListOfColoringRules";
+        private const string LIST_COLOURS = "ListOfColours";
         private const string RULE_REGEX = "RuleRegex";
         private const string REGEX_ERROR = "RegexError";
         private const string RULE_COMMENT = "RuleComment";
@@ -33,10 +39,37 @@ namespace VSObserver.Models
         //Permet de revenir lorsqu'on fait un cancel
         private ColoringRulesManager savedInstance;
 
+        private ObservableCollection<ComboBoxItem> _listOfColours;
+
         public ColoringRulesManager ()
         {
             _listOfColoringRules = new ObservableCollection<ColoringRules>();
             ruleExist = false;
+
+            _listOfColours = new ObservableCollection<ComboBoxItem>();
+            
+            foreach (string key in ConfigurationManager.AppSettings.AllKeys)
+            {
+                if (key.Contains(TAG_COLOR_RULE))
+                {
+                    ComboBoxItem cbi = new ComboBoxItem();
+                    cbi.Content = key;
+
+                    try
+                    {
+                        cbi.Background = (SolidColorBrush)new BrushConverter().ConvertFromString(ConfigurationManager.AppSettings[key]);
+                    }
+                    catch
+                    {
+                        cbi.Background = Brushes.Transparent;
+                    }
+                }
+            }
+        }
+
+        public ObservableCollection<ComboBoxItem> ListOfColours
+        {
+            get { return _listOfColours; }
         }
 
         public ObservableCollection<ColoringRules> ListOfColoringRules

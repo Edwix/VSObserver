@@ -51,26 +51,11 @@
                                     <ComboBoxItem Content="&lt;=" ToolTip="Lower or equal" Tag="le" />
                                     <ComboBoxItem Content="&gt;=" ToolTip="Greater or equal" Tag="ge" />
                                 </ComboBox>
-                                <ComboBox IsEditable="False" Width="60"
+                                <ComboBox IsEditable="False" Width="60" 
+                                          ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ListOfColours}"
                                           SelectedValue="{Binding Color, UpdateSourceTrigger=PropertyChanged}"
                                           Background="{Binding Color, Converter={StaticResource ConvStringToColor}}" SelectedValuePath="Background"
                                           Margin="5,0,0,0">
-                                    <ComboBoxItem Content="" ToolTip="Aqua" Background="Aqua" />
-                                    <ComboBoxItem Content="" ToolTip="Blue" Background="Blue" />
-                                    <ComboBoxItem Content="" ToolTip="Chocolate" Background="Chocolate" />
-                                    <ComboBoxItem Content="" ToolTip="Crimson" Background="Crimson" />
-                                    <ComboBoxItem Content="" ToolTip="DarkOrchid" Background="DarkOrchid" />
-                                    <ComboBoxItem Content="" ToolTip="DarkRed" Background="DarkRed" />
-                                    <ComboBoxItem Content="" ToolTip="DodgerBlue" Background="DodgerBlue" />
-                                    <ComboBoxItem Content="" ToolTip="Gold" Background="Gold" />
-                                    <ComboBoxItem Content="" ToolTip="Green" Background="#CECECE" />
-                                    <ComboBoxItem Content="" ToolTip="Gray" Background="Gray" />
-                                    <ComboBoxItem Content="" ToolTip="HotPink" Background="HotPink" />
-                                    <ComboBoxItem Content="" ToolTip="LimeGreen" Background="LimeGreen" />
-                                    <ComboBoxItem Content="" ToolTip="Orange" Background="Orange" />
-                                    <ComboBoxItem Content="" ToolTip="Purple" Background="Purple" />
-                                    <ComboBoxItem Content="" ToolTip="Red" Background="Red" />
-                                    <ComboBoxItem Content="" ToolTip="Yellow" Background="Yellow" />
                                 </ComboBox>
                                 <!-- Binding Path=. means there is a bind on itself (ColoringRule). 
                                      Binding Path=. signifie qu'il y a un lien sur lui même donc le tag aura un objet ColoringRule  -->
