@@ -364,12 +364,15 @@ namespace VSObserver
                 this.Title = APP_NAME + " - " + menuItem.Header.ToString();
                 vo.loadVariables(menuItem.Header.ToString(), true);
             }
+
+            closePopupLockedList();
         }
 
         private void defaultLockedList_Click(object sender, RoutedEventArgs e)
         {
             this.Title = APP_NAME;
             vo.loadVariables(LOCKED_LIST_FILE, true);
+            closePopupLockedList();
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
@@ -394,6 +397,7 @@ namespace VSObserver
         {
             this.Title = APP_NAME;
             vo.showAllForcing();
+            closePopupLockedList();
         }
 
         /// <summary>
@@ -425,6 +429,11 @@ namespace VSObserver
             {
                 pop_listLockedFiles.IsOpen = true;
             }
+        }
+
+        private void closePopupLockedList()
+        {
+            pop_listLockedFiles.IsOpen = false;
         }
     }
 }
