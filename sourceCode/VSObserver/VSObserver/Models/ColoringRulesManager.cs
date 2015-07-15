@@ -53,7 +53,7 @@ namespace VSObserver.Models
                 if (key.Contains(TAG_COLOR_RULE))
                 {
                     ComboBoxItem cbi = new ComboBoxItem();
-                    cbi.Content = key;
+                    cbi.Content = "";
 
                     try
                     {
@@ -63,6 +63,8 @@ namespace VSObserver.Models
                     {
                         cbi.Background = Brushes.Transparent;
                     }
+
+                    _listOfColours.Add(cbi);
                 }
             }
         }
