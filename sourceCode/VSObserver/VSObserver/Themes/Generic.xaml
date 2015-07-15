@@ -64,6 +64,10 @@
                                         <Setter Property="BorderBrush" Value="{StaticResource DarkErrorBorderColor}" />
                                         <Setter Property="Background" Value="{StaticResource BackgroundErrorColor}" />
                                     </DataTrigger>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsEnabled}" Value="False">
+                                        <Setter Property="BorderBrush" Value="{StaticResource DarkBorderColor}" />
+                                        <Setter Property="Background" Value="{StaticResource NotEnabledColor}" />
+                                    </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>

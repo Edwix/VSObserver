@@ -4,6 +4,7 @@
     <SolidColorBrush x:Key="BorderColor" Color="#F7F7F7"/>
     <SolidColorBrush x:Key="DarkBorderColor" Color="#8D8D8D"/>
     <SolidColorBrush x:Key="DarkErrorBorderColor" Color="#B40404"/>
+    <SolidColorBrush x:Key="NotEnabledColor" Color="#BFBFBF"/>
     <SolidColorBrush x:Key="BackgroundErrorColor" Color="#F6CECE"/>
     <LinearGradientBrush x:Key="BackgroundError" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="#FF0000" Offset="0" />
