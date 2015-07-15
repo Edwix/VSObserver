@@ -101,16 +101,10 @@
         <!--=========================================================================================-->
             <Image  x:Name="img_lockedList" Grid.Column="3" Grid.Row="0" Source="Resources/List.png" SnapsToDevicePixels="True" Width="20"
                     Margin="5,0,0,0" MouseLeftButtonUp="img_lockedList_MouseLeftButtonUp">
-                <!--<i:Interaction.Behaviors>
-                    <behavior:DropDownImageBehavior/>
-                </i:Interaction.Behaviors>
-                <Image.Resources>
-                    <CollectionViewSource x:Name="listLockedVarFile" x:Key="LockedVarFiles" Source="{Binding Path=ListOfFileLockedVar, UpdateSourceTrigger=PropertyChanged}" />
-                </Image.Resources>-->
             </Image>
             <Popup Name="pop_listLockedFiles" PlacementTarget="{Binding ElementName=img_lockedList}" PopupAnimation="Fade" Placement="Bottom" IsOpen="False" StaysOpen="False">
                 <Border BorderBrush="{StaticResource DarkBorderColor}" BorderThickness="1">
-                    <Menu>
+                    <Menu Background="{StaticResource WindowBackgroundColor}">
                         <Menu.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <VirtualizingStackPanel Orientation="Vertical"/>
