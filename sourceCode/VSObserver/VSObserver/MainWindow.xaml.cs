@@ -90,14 +90,18 @@ namespace VSObserver
 
             changeVariableIndication();
 
-            //On met le data context avec le variable observer
-            tb_variableName.DataContext = vo;
-            dg_variableList.DataContext = vo;
-            btn_typeW.DataContext = vo;
-            cb_RegexSearch.DataContext = vo;
-            img_lockedList.DataContext = vo;
-            btnRecord.DataContext = vo;
-            pop_listLockedFiles.DataContext = vo;
+            ///================================================================================================================================
+            ///DATACONTEXT:
+            ///On met le data context avec le variable observer
+            ///================================================================================================================================
+                tb_variableName.DataContext = vo;
+                dg_variableList.DataContext = vo;
+                btn_typeW.DataContext = vo;
+                cb_RegexSearch.DataContext = vo;
+                img_lockedList.DataContext = vo;
+                btnRecord.DataContext = vo;
+                pop_listLockedFiles.DataContext = vo;
+            ///================================================================================================================================
 
             //Création de la tâche de fond qui va rafraichir la liste des varaibles
             refreshWorker = new BackgroundWorker();
@@ -434,6 +438,18 @@ namespace VSObserver
         private void closePopupLockedList()
         {
             pop_listLockedFiles.IsOpen = false;
+        }
+
+        private void img_parameters_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (pop_parameters.IsOpen == true)
+            {
+                pop_parameters.IsOpen = false;
+            }
+            else
+            {
+                pop_parameters.IsOpen = true;
+            }
         }
     }
 }

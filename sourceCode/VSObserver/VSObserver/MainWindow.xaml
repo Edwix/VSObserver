@@ -194,17 +194,16 @@
         <!-- Button to have the parameters -->
         <!--=========================================================================================-->
             <Image  x:Name="img_parameters" Grid.Column="5" Grid.Row="0" Source="Images/cog.png" SnapsToDevicePixels="True" Width="20"
-                            Margin="5,0,5,0">
-                <i:Interaction.Behaviors>
-                    <behavior:DropDownImageBehavior/>
-                </i:Interaction.Behaviors>
-                <Image.ContextMenu >
-                    <ContextMenu>
-                        <MenuItem Name="cb_VerifyClipBoard" IsCheckable="True" Header="Check clipboard" IsChecked="True"  />
-                        <MenuItem Name="cb_RegexSearch" IsCheckable="True" Header="Search with regex" IsChecked="{Binding SearchRegex, UpdateSourceTrigger=PropertyChanged}"/>                    
-                    </ContextMenu>
-                </Image.ContextMenu>
+                            Margin="5,0,5,0" MouseLeftButtonUp="img_parameters_MouseLeftButtonUp">
             </Image>
+            <Popup Name="pop_parameters" PlacementTarget="{Binding ElementName=img_parameters}" PopupAnimation="Fade" Placement="Bottom" IsOpen="False" StaysOpen="False">
+                <Border BorderBrush="{StaticResource DarkBorderColor}" BorderThickness="1">
+                    <Menu Background="{StaticResource WindowBackgroundColor}">
+                        <MenuItem Name="cb_VerifyClipBoard" IsCheckable="True" Header="Check clipboard" IsChecked="True"  />
+                        <MenuItem Name="cb_RegexSearch" IsCheckable="True" Header="Search with regex" IsChecked="{Binding SearchRegex, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Menu>
+                </Border>
+            </Popup>
         <!--=========================================================================================-->
 
         <DataGrid HeadersVisibility="None"
