@@ -141,7 +141,7 @@
         <!--=========================================================================================-->
         <!-- ToglleButton to start or stop the recording -->
         <!--=========================================================================================-->
-            <ToggleButton Name="btnRecord" IsChecked="{Binding IsRecording}" Grid.Column="4" Grid.Row="0" Margin="5,0,0,0" >
+            <ToggleButton x:Name="btnRecord" IsChecked="{Binding IsRecording}" Click="btnRecord_Click" Grid.Column="4" Grid.Row="0" Margin="5,0,0,0">
                 <ToggleButton.Style>
                     <Style TargetType="{x:Type ToggleButton}">
                         <Setter Property="Template">
@@ -175,6 +175,14 @@
                     </Image.Style>
                 </Image>
             </ToggleButton>
+            <!--Popup which displays a message when a trace is recording-->
+            <Popup Name="pop_infoTrace" IsOpen="False" StaysOpen="False" Placement="Relative" AllowsTransparency="True"
+                            PopupAnimation="Fade" PlacementTarget="{Binding ElementName=btnRecord}"
+                   VerticalOffset="-10">
+                <Border Background="#F7FF73" BorderBrush="{StaticResource DarkBorderColor}" BorderThickness="1" CornerRadius="3">
+                    <TextBlock Margin="2" FontSize="10" FontWeight="Bold">Trace recorder is activated !</TextBlock>
+                </Border>
+            </Popup>
         <!--=========================================================================================-->
 
         <!--=========================================================================================-->

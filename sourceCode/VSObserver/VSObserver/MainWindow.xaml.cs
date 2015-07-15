@@ -394,5 +394,24 @@ namespace VSObserver
             this.Title = APP_NAME;
             vo.showAllForcing();
         }
+
+        /// <summary>
+        /// Evènement déclenché lorsqu'on clique sur le bouton d'enregistrement des traces
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnRecord_Click(object sender, RoutedEventArgs e)
+        {
+            if (btnRecord.IsChecked == true)
+            {
+                pop_infoTrace.IsOpen = true;
+                pop_infoTrace.StaysOpen = true;
+            }
+            else
+            {
+                pop_infoTrace.IsOpen = false;
+                pop_infoTrace.StaysOpen = false;
+            }
+        }
     }
 }
