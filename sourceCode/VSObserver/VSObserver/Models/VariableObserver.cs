@@ -218,15 +218,17 @@ namespace VSObserver.Models
                         strRecording.Append("Triggering date: " + DateTime.Now.ToString("yyyy-MM-dd") + ";Triggering time: " + DateTime.Now.ToString("HH:mm:ss") + ";Triggering cause: Maintenance;Function return: 0\n");
                     //==========================================================================================================
 
+                        strRecording.Append("Timestamp;");
+
                     foreach (DataObserver dobs in _variableList)
                     {
                         if (dobs != _variableList.Last())
                         {
-                            strRecording.Append(dobs.PathName + " ((-));");
+                            strRecording.Append(dobs.PathName + " ((-));TS;");
                         }
                         else
                         {
-                            strRecording.Append(dobs.PathName + " ((-))");
+                            strRecording.Append(dobs.PathName + " ((-));TS");
                         }
                     }
                 }
@@ -735,6 +737,7 @@ namespace VSObserver.Models
                 {
                     //On saute une ligne à chaque raffraichissement
                     strRecording.Append("\n");
+                    strRecording.Append(DateTime.Now + ";");
                 }
 
                 foreach (DataObserver rowObserver in oldVariableTable)
@@ -876,11 +879,11 @@ namespace VSObserver.Models
                     {
                         if (rowObserver != oldVariableTable.Last())
                         {
-                            strRecording.Append(rowObserver.Value + ";");
+                            strRecording.Append(dObs.Value + ";" + dObs.WhenUpdated +";");
                         }
                         else
                         {
-                            strRecording.Append(rowObserver.Value);
+                            strRecording.Append(dObs.Value + ";" + dObs.WhenUpdated );
                         }
                     }
                 }
@@ -994,127 +997,129 @@ namespace VSObserver.Models
             return true;
         }
 
-        public void loadXMLRule(string path)
-        {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-            if (File.Exists(path))
+        #region Load the rules from XML. This action is performed when the XML file has been changed
+            public void loadXMLRule(string path)
             {
-                Console.WriteLine("LOAD XML RULE ==> " + path);
-                string rulePath = @"Resources/Rule.xsd";
-                colorRulesWithPath.Clear();
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
 
-                if(File.Exists(rulePath))
+                if (File.Exists(path))
                 {
-                    bool errors = false;
-                    XDocument xmlDoc = null;
+                    Console.WriteLine("LOAD XML RULE ==> " + path);
+                    string rulePath = @"Resources/Rule.xsd";
+                    colorRulesWithPath.Clear();
 
-                    try
+                    if(File.Exists(rulePath))
                     {
-                        xmlDoc = XDocument.Load(path);
-                    }
-                    catch (Exception)
-                    {
-                        errors = true;
-                    }
+                        bool errors = false;
+                        XDocument xmlDoc = null;
 
-                    if (errors != true && xmlDoc != null)
-                    {
-                        XmlSchemaSet schemas = new XmlSchemaSet();
-                        schemas.Add("", rulePath);
-
-                        //We are validating the format from XML file
-                        xmlDoc.Validate(schemas, (o, e) =>
+                        try
                         {
-                            Console.WriteLine("Error: {0}", e.Message);
+                            xmlDoc = XDocument.Load(path);
+                        }
+                        catch (Exception)
+                        {
                             errors = true;
-                        });
+                        }
 
-                        Console.WriteLine("doc1 {0}", errors ? "did not validate" : "validated");
-
-                        if (errors != true)
+                        if (errors != true && xmlDoc != null)
                         {
-                            //Parsing the XML file
-                            var itemsXML = from items in xmlDoc.Descendants(NODE_ITEM)
-                                           select new
-                                           {
-                                               VariableName = items.Element(NODE_VARIABLE).Value,
-                                               Comment = (string)items.Element(NODE_COMMENT),
-                                               RuleSet = items.Element(NODE_RULE_SET).Descendants(NODE_SIMPLE_RULE)
-                                           };
+                            XmlSchemaSet schemas = new XmlSchemaSet();
+                            schemas.Add("", rulePath);
 
-                            foreach (var item in itemsXML)
+                            //We are validating the format from XML file
+                            xmlDoc.Validate(schemas, (o, e) =>
                             {
-                                string varName = item.VariableName;
+                                Console.WriteLine("Error: {0}", e.Message);
+                                errors = true;
+                            });
 
-                                //We check whether the variable is a correct regex
-                                if (IsValidRegex(varName))
+                            Console.WriteLine("doc1 {0}", errors ? "did not validate" : "validated");
+
+                            if (errors != true)
+                            {
+                                //Parsing the XML file
+                                var itemsXML = from items in xmlDoc.Descendants(NODE_ITEM)
+                                               select new
+                                               {
+                                                   VariableName = items.Element(NODE_VARIABLE).Value,
+                                                   Comment = (string)items.Element(NODE_COMMENT),
+                                                   RuleSet = items.Element(NODE_RULE_SET).Descendants(NODE_SIMPLE_RULE)
+                                               };
+
+                                foreach (var item in itemsXML)
                                 {
+                                    string varName = item.VariableName;
 
-                                    ObservableCollection<ColoringRules> listColorRules = new ObservableCollection<ColoringRules>();
-                                    managerColorRules = new ColoringRulesManager();
-
-                                    foreach (var ruleSet in item.RuleSet)
+                                    //We check whether the variable is a correct regex
+                                    if (IsValidRegex(varName))
                                     {
-                                        ColoringRules colorRule = new ColoringRules();
-                                        colorRule.Value = ruleSet.Attribute(ATTR_VALUE).Value;
-                                        colorRule.Color = ruleSet.Attribute(ATTR_COLOR).Value;
 
-                                        string operatorRule = (string)ruleSet.Attribute(ATTR_OPERATOR);
+                                        ObservableCollection<ColoringRules> listColorRules = new ObservableCollection<ColoringRules>();
+                                        managerColorRules = new ColoringRulesManager();
 
-                                        ///Si la variable operatorRule est null, 
-                                        ///alors ça veut dire que le champ operatro n'existe pas 
-                                        ///donc on le met par défaut à equal
-                                        if (operatorRule == null)
+                                        foreach (var ruleSet in item.RuleSet)
                                         {
-                                            colorRule.Operator = OPERATOR_EQUAL;
+                                            ColoringRules colorRule = new ColoringRules();
+                                            colorRule.Value = ruleSet.Attribute(ATTR_VALUE).Value;
+                                            colorRule.Color = ruleSet.Attribute(ATTR_COLOR).Value;
+
+                                            string operatorRule = (string)ruleSet.Attribute(ATTR_OPERATOR);
+
+                                            ///Si la variable operatorRule est null, 
+                                            ///alors ça veut dire que le champ operatro n'existe pas 
+                                            ///donc on le met par défaut à equal
+                                            if (operatorRule == null)
+                                            {
+                                                colorRule.Operator = OPERATOR_EQUAL;
+                                            }
+                                            else
+                                            {
+                                                colorRule.Operator = operatorRule;
+                                            }
+
+                                            listColorRules.Add(colorRule);
                                         }
-                                        else
+
+                                        //Adding the colors in function of value on the rule object
+                                        managerColorRules.ListOfColoringRules = listColorRules;
+
+                                        //Adding comment in the rules
+                                        managerColorRules.RuleComment = item.Comment;
+
+                                        //Ajout de l'expression régulière dans le manager
+                                        managerColorRules.RuleRegex = varName;
+
+                                        //Searching all variables in all variables list
+                                        var source = _listOfDataObserver.AsEnumerable();
+                                        var searchResult = source.Where(x => (Regex.IsMatch(x.PathName, varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, varName, RegexOptions.IgnoreCase)));
+                                        ObservableCollection<DataObserver> _resSearh = new ObservableCollection<DataObserver>(searchResult);
+
+                                        ///Creating the dictionnary with elements 
+                                        foreach (DataObserver result in _resSearh)
                                         {
-                                            colorRule.Operator = operatorRule;
+                                            string varPathAndName = result.PathName;
+
+                                            if (!colorRulesWithPath.ContainsKey(varPathAndName))
+                                            {
+                                                colorRulesWithPath.Add(varPathAndName, managerColorRules);
+                                            }
                                         }
-
-                                        listColorRules.Add(colorRule);
-                                    }
-
-                                    //Adding the colors in function of value on the rule object
-                                    managerColorRules.ListOfColoringRules = listColorRules;
-
-                                    //Adding comment in the rules
-                                    managerColorRules.RuleComment = item.Comment;
-
-                                    //Ajout de l'expression régulière dans le manager
-                                    managerColorRules.RuleRegex = varName;
-
-                                    //Searching all variables in all variables list
-                                    var source = _listOfDataObserver.AsEnumerable();
-                                    var searchResult = source.Where(x => (Regex.IsMatch(x.PathName, varName, RegexOptions.IgnoreCase) || Regex.IsMatch(x.Mapping, varName, RegexOptions.IgnoreCase)));
-                                    ObservableCollection<DataObserver> _resSearh = new ObservableCollection<DataObserver>(searchResult);
-
-                                    ///Creating the dictionnary with elements 
-                                    foreach (DataObserver result in _resSearh)
-                                    {
-                                        string varPathAndName = result.PathName;
-
-                                        if (!colorRulesWithPath.ContainsKey(varPathAndName))
-                                        {
-                                            colorRulesWithPath.Add(varPathAndName, managerColorRules);
-                                        }
-                                    }
-                               }
+                                   }
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            sw.Stop();
-            Console.WriteLine("END LOAD FILE : " + sw.Elapsed.ToString());
-        }
+                sw.Stop();
+                Console.WriteLine("END LOAD FILE : " + sw.Elapsed.ToString());
+            }
+        #endregion
 
         #region Locked Variables managment
-            /// <summary>
+        /// <summary>
             /// Sauvegarde toutes les variables bloquées
             /// </summary>
             /// <param name="name"></param>
