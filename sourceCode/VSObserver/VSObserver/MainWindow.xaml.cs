@@ -97,6 +97,7 @@ namespace VSObserver
             cb_RegexSearch.DataContext = vo;
             img_lockedList.DataContext = vo;
             btnRecord.DataContext = vo;
+            pop_listLockedFiles.DataContext = vo;
 
             //Création de la tâche de fond qui va rafraichir la liste des varaibles
             refreshWorker = new BackgroundWorker();
@@ -411,6 +412,18 @@ namespace VSObserver
             {
                 pop_infoTrace.IsOpen = false;
                 pop_infoTrace.StaysOpen = false;
+            }
+        }
+
+        private void img_lockedList_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (pop_listLockedFiles.IsOpen == true)
+            {
+                pop_listLockedFiles.IsOpen = false;
+            }
+            else
+            {
+                pop_listLockedFiles.IsOpen = true;
             }
         }
     }

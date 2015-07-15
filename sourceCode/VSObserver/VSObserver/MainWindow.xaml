@@ -100,27 +100,37 @@
         <!-- Button to have a list of locked lists -->
         <!--=========================================================================================-->
             <Image  x:Name="img_lockedList" Grid.Column="3" Grid.Row="0" Source="Resources/List.png" SnapsToDevicePixels="True" Width="20"
-                    Margin="5,0,0,0">
-                <i:Interaction.Behaviors>
+                    Margin="5,0,0,0" MouseLeftButtonUp="img_lockedList_MouseLeftButtonUp">
+                <!--<i:Interaction.Behaviors>
                     <behavior:DropDownImageBehavior/>
                 </i:Interaction.Behaviors>
-            <Image.Resources>
-                <CollectionViewSource x:Name="listLockedVarFile" x:Key="LockedVarFiles" Source="{Binding Path=ListOfFileLockedVar, UpdateSourceTrigger=PropertyChanged}" />
-            </Image.Resources>
-            <Image.ContextMenu>
-                    <ContextMenu>
-                        <ContextMenu.ItemTemplate>
+                <Image.Resources>
+                    <CollectionViewSource x:Name="listLockedVarFile" x:Key="LockedVarFiles" Source="{Binding Path=ListOfFileLockedVar, UpdateSourceTrigger=PropertyChanged}" />
+                </Image.Resources>-->
+            </Image>
+            <Popup Name="pop_listLockedFiles" PlacementTarget="{Binding ElementName=img_lockedList}" PopupAnimation="Fade" Placement="Bottom" IsOpen="False" StaysOpen="False">
+                <Border BorderBrush="{StaticResource DarkBorderColor}" BorderThickness="1">
+                    <Menu>
+                        <Menu.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </Menu.ItemsPanel>
+                        <Menu.Resources>
+                            <CollectionViewSource x:Name="listLockedVarFile" x:Key="LockedVarFiles" Source="{Binding Path=ListOfFileLockedVar, UpdateSourceTrigger=PropertyChanged}" />
+                        </Menu.Resources>
+                        <Menu.ItemTemplate>
                             <DataTemplate>
                                 <MenuItem Name="fileLockedList" Header="{Binding}" Click="fileLockedList_Click" />
                             </DataTemplate>
-                        </ContextMenu.ItemTemplate>
-                        <ContextMenu.ItemsSource>
+                        </Menu.ItemTemplate>
+                        <Menu.ItemsSource>
                             <CompositeCollection>
                                 <MenuItem  Width="Auto" HorizontalAlignment="Stretch" Margin="0">
                                     <MenuItem.Header>
                                         <TextBox ToolTip="Press to Enter to save the list" Height="25" Width="Auto"
-                                                 HorizontalAlignment="Stretch" AcceptsReturn="False" 
-                                                 Text="{Binding Path=FileNameLockedList, UpdateSourceTrigger=PropertyChanged}">
+                                                         HorizontalAlignment="Stretch" AcceptsReturn="False" 
+                                                         Text="{Binding Path=FileNameLockedList, UpdateSourceTrigger=PropertyChanged}">
                                             <TextBox.InputBindings>
                                                 <KeyBinding Key="Enter" Command="{Binding Path=SaveCurrentLockedList}" />
                                             </TextBox.InputBindings>
@@ -132,10 +142,10 @@
                                 <Separator />
                                 <CollectionContainer Collection="{Binding Source={StaticResource LockedVarFiles}}" />
                             </CompositeCollection>
-                        </ContextMenu.ItemsSource>
-                    </ContextMenu>
-                </Image.ContextMenu>
-            </Image>
+                        </Menu.ItemsSource>
+                    </Menu>
+                </Border>
+            </Popup>
         <!--=========================================================================================-->
 
         <!--=========================================================================================-->
