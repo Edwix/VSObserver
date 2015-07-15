@@ -10,6 +10,9 @@ using System.Xml;
 using System.Configuration;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows;
+using System.Windows.Threading;
+using System.Threading;
 
 namespace VSObserver.Models
 {
@@ -52,19 +55,30 @@ namespace VSObserver.Models
             {
                 if (key.Contains(TAG_COLOR_RULE))
                 {
-                    ComboBoxItem cbi = new ComboBoxItem();
-                    cbi.Content = "";
-
-                    try
+                    ///We invoke the creation of combox item, because they are own thread.
+                    ///When we change the XML a thread is created. This thread use this contructor.
+                    ///So it cannot create the comboboxitems from this thread
+                    ///===================================================================================
+                    ///On utilise la méthode invoke de l'application courante, afin de généré les comboboxitem
+                    ///Car lorsqu'on change la couleur dans le fichier XML ce constructeur est appellé d'un autre thread
+                    ///donc on ne peut pas créer les comboboxitem puisqu'il on leurs propre thread.
+                    ///Ainsi le invoke permet d'invoquer les thread des composants (comboboxitem)
+                    Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, (ThreadStart)delegate
                     {
-                        cbi.Background = (SolidColorBrush)new BrushConverter().ConvertFromString(ConfigurationManager.AppSettings[key]);
-                    }
-                    catch
-                    {
-                        cbi.Background = Brushes.Transparent;
-                    }
+                        ComboBoxItem cbi = new ComboBoxItem();
+                        cbi.Content = "";
 
-                    _listOfColours.Add(cbi);
+                        try
+                        {
+                            cbi.Background = (SolidColorBrush)new BrushConverter().ConvertFromString(ConfigurationManager.AppSettings[key]);
+                        }
+                        catch
+                        {
+                            cbi.Background = Brushes.Transparent;
+                        }
+
+                        _listOfColours.Add(cbi);
+                    });
                 }
             }
         }
