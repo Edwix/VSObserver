@@ -90,13 +90,18 @@ namespace VSObserver
 
             changeVariableIndication();
 
-            //On met le data context avec le variable observer
-            tb_variableName.DataContext = vo;
-            dg_variableList.DataContext = vo;
-            btn_typeW.DataContext = vo;
-            cb_RegexSearch.DataContext = vo;
-            img_lockedList.DataContext = vo;
-            btnRecord.DataContext = vo;
+            ///================================================================================================================================
+            ///DATACONTEXT:
+            ///On met le data context avec le variable observer
+            ///================================================================================================================================
+                tb_variableName.DataContext = vo;
+                dg_variableList.DataContext = vo;
+                btn_typeW.DataContext = vo;
+                cb_RegexSearch.DataContext = vo;
+                img_lockedList.DataContext = vo;
+                btnRecord.DataContext = vo;
+                pop_listLockedFiles.DataContext = vo;
+            ///================================================================================================================================
 
             //Création de la tâche de fond qui va rafraichir la liste des varaibles
             refreshWorker = new BackgroundWorker();
@@ -363,12 +368,15 @@ namespace VSObserver
                 this.Title = APP_NAME + " - " + menuItem.Header.ToString();
                 vo.loadVariables(menuItem.Header.ToString(), true);
             }
+
+            closePopupLockedList();
         }
 
         private void defaultLockedList_Click(object sender, RoutedEventArgs e)
         {
             this.Title = APP_NAME;
             vo.loadVariables(LOCKED_LIST_FILE, true);
+            closePopupLockedList();
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
@@ -393,6 +401,55 @@ namespace VSObserver
         {
             this.Title = APP_NAME;
             vo.showAllForcing();
+            closePopupLockedList();
+        }
+
+        /// <summary>
+        /// Evènement déclenché lorsqu'on clique sur le bouton d'enregistrement des traces
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnRecord_Click(object sender, RoutedEventArgs e)
+        {
+            if (btnRecord.IsChecked == true)
+            {
+                pop_infoTrace.IsOpen = true;
+                pop_infoTrace.StaysOpen = true;
+            }
+            else
+            {
+                pop_infoTrace.IsOpen = false;
+                pop_infoTrace.StaysOpen = false;
+            }
+        }
+
+        private void img_lockedList_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (pop_listLockedFiles.IsOpen == true)
+            {
+                pop_listLockedFiles.IsOpen = false;
+            }
+            else
+            {
+                pop_listLockedFiles.IsOpen = true;
+            }
+        }
+
+        private void closePopupLockedList()
+        {
+            pop_listLockedFiles.IsOpen = false;
+        }
+
+        private void img_parameters_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (pop_parameters.IsOpen == true)
+            {
+                pop_parameters.IsOpen = false;
+            }
+            else
+            {
+                pop_parameters.IsOpen = true;
+            }
         }
     }
 }

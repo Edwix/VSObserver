@@ -3,8 +3,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:nspace="clr-namespace:VSObserver" 
-        xmlns:converters="clr-namespace:VSObserver.Converters" 
-        xmlns:behavior="clr-namespace:VSObserver.Behavior" 
+        xmlns:converters="clr-namespace:VSObserver.Converters"  
         Title="VSObserver" Height="400" Width="550"
         SizeToContent="Manual"
         Background="{StaticResource WindowBackgroundColor}" Icon="/VSObserver;component/Images/VSO_logo.ico">
@@ -100,27 +99,31 @@
         <!-- Button to have a list of locked lists -->
         <!--=========================================================================================-->
             <Image  x:Name="img_lockedList" Grid.Column="3" Grid.Row="0" Source="Resources/List.png" SnapsToDevicePixels="True" Width="20"
-                    Margin="5,0,0,0">
-                <i:Interaction.Behaviors>
-                    <behavior:DropDownImageBehavior/>
-                </i:Interaction.Behaviors>
-            <Image.Resources>
-                <CollectionViewSource x:Name="listLockedVarFile" x:Key="LockedVarFiles" Source="{Binding Path=ListOfFileLockedVar, UpdateSourceTrigger=PropertyChanged}" />
-            </Image.Resources>
-            <Image.ContextMenu>
-                    <ContextMenu>
-                        <ContextMenu.ItemTemplate>
+                    Margin="5,0,0,0" MouseLeftButtonUp="img_lockedList_MouseLeftButtonUp">
+            </Image>
+            <Popup Name="pop_listLockedFiles" PlacementTarget="{Binding ElementName=img_lockedList}" PopupAnimation="Fade" Placement="Bottom" IsOpen="False" StaysOpen="False">
+                <Border BorderBrush="{StaticResource DarkBorderColor}" BorderThickness="1">
+                    <Menu Background="{StaticResource WindowBackgroundColor}">
+                        <Menu.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </Menu.ItemsPanel>
+                        <Menu.Resources>
+                            <CollectionViewSource x:Name="listLockedVarFile" x:Key="LockedVarFiles" Source="{Binding Path=ListOfFileLockedVar, UpdateSourceTrigger=PropertyChanged}" />
+                        </Menu.Resources>
+                        <Menu.ItemTemplate>
                             <DataTemplate>
                                 <MenuItem Name="fileLockedList" Header="{Binding}" Click="fileLockedList_Click" />
                             </DataTemplate>
-                        </ContextMenu.ItemTemplate>
-                        <ContextMenu.ItemsSource>
+                        </Menu.ItemTemplate>
+                        <Menu.ItemsSource>
                             <CompositeCollection>
                                 <MenuItem  Width="Auto" HorizontalAlignment="Stretch" Margin="0">
                                     <MenuItem.Header>
                                         <TextBox ToolTip="Press to Enter to save the list" Height="25" Width="Auto"
-                                                 HorizontalAlignment="Stretch" AcceptsReturn="False" 
-                                                 Text="{Binding Path=FileNameLockedList, UpdateSourceTrigger=PropertyChanged}">
+                                                         HorizontalAlignment="Stretch" AcceptsReturn="False" 
+                                                         Text="{Binding Path=FileNameLockedList, UpdateSourceTrigger=PropertyChanged}">
                                             <TextBox.InputBindings>
                                                 <KeyBinding Key="Enter" Command="{Binding Path=SaveCurrentLockedList}" />
                                             </TextBox.InputBindings>
@@ -132,16 +135,16 @@
                                 <Separator />
                                 <CollectionContainer Collection="{Binding Source={StaticResource LockedVarFiles}}" />
                             </CompositeCollection>
-                        </ContextMenu.ItemsSource>
-                    </ContextMenu>
-                </Image.ContextMenu>
-            </Image>
+                        </Menu.ItemsSource>
+                    </Menu>
+                </Border>
+            </Popup>
         <!--=========================================================================================-->
 
         <!--=========================================================================================-->
         <!-- ToglleButton to start or stop the recording -->
         <!--=========================================================================================-->
-            <ToggleButton Name="btnRecord" IsChecked="{Binding IsRecording}" Grid.Column="4" Grid.Row="0" Margin="5,0,0,0" >
+            <ToggleButton x:Name="btnRecord" IsChecked="{Binding IsRecording}" Click="btnRecord_Click" Grid.Column="4" Grid.Row="0" Margin="5,0,0,0">
                 <ToggleButton.Style>
                     <Style TargetType="{x:Type ToggleButton}">
                         <Setter Property="Template">
@@ -175,23 +178,31 @@
                     </Image.Style>
                 </Image>
             </ToggleButton>
+            <!--Popup which displays a message when a trace is recording-->
+            <Popup Name="pop_infoTrace" IsOpen="False" StaysOpen="False" Placement="Relative" AllowsTransparency="True"
+                            PopupAnimation="Fade" PlacementTarget="{Binding ElementName=btnRecord}"
+                   VerticalOffset="-10">
+                <Border Background="#F7FF73" BorderBrush="{StaticResource DarkBorderColor}" BorderThickness="1" CornerRadius="3">
+                    <TextBlock Margin="2" FontSize="10" FontWeight="Bold">Trace recorder is activated !</TextBlock>
+                </Border>
+            </Popup>
+        
         <!--=========================================================================================-->
 
         <!--=========================================================================================-->
         <!-- Button to have the parameters -->
         <!--=========================================================================================-->
             <Image  x:Name="img_parameters" Grid.Column="5" Grid.Row="0" Source="Images/cog.png" SnapsToDevicePixels="True" Width="20"
-                            Margin="5,0,5,0">
-                <i:Interaction.Behaviors>
-                    <behavior:DropDownImageBehavior/>
-                </i:Interaction.Behaviors>
-                <Image.ContextMenu >
-                    <ContextMenu>
-                        <MenuItem Name="cb_VerifyClipBoard" IsCheckable="True" Header="Check clipboard" IsChecked="True"  />
-                        <MenuItem Name="cb_RegexSearch" IsCheckable="True" Header="Search with regex" IsChecked="{Binding SearchRegex, UpdateSourceTrigger=PropertyChanged}"/>                    
-                    </ContextMenu>
-                </Image.ContextMenu>
+                            Margin="5,0,5,0" MouseLeftButtonUp="img_parameters_MouseLeftButtonUp">
             </Image>
+            <Popup Name="pop_parameters" PlacementTarget="{Binding ElementName=img_parameters}" PopupAnimation="Fade" Placement="Bottom" IsOpen="False" StaysOpen="False">
+                <Border BorderBrush="{StaticResource DarkBorderColor}" BorderThickness="1">
+                    <Menu Background="{StaticResource WindowBackgroundColor}">
+                        <MenuItem Name="cb_VerifyClipBoard" IsCheckable="True" Header="Check clipboard" IsChecked="True"  />
+                        <MenuItem Name="cb_RegexSearch" IsCheckable="True" Header="Search with regex" IsChecked="{Binding SearchRegex, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Menu>
+                </Border>
+            </Popup>
         <!--=========================================================================================-->
 
         <DataGrid HeadersVisibility="None"

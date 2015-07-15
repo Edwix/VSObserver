@@ -7,12 +7,21 @@ using System.Windows.Input;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Xml;
+using System.Configuration;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows;
+using System.Windows.Threading;
+using System.Threading;
 
 namespace VSObserver.Models
 {
     public class ColoringRulesManager : ViewModelBase, IEqualityComparer<ColoringRules>, ICloneable
     {
+        private const string TAG_COLOR_RULE = "ColRule";
+
         private const string LIST_COLORINGRULES = "ListOfColoringRules";
+        private const string LIST_COLOURS = "ListOfColours";
         private const string RULE_REGEX = "RuleRegex";
         private const string REGEX_ERROR = "RegexError";
         private const string RULE_COMMENT = "RuleComment";
@@ -33,10 +42,50 @@ namespace VSObserver.Models
         //Permet de revenir lorsqu'on fait un cancel
         private ColoringRulesManager savedInstance;
 
+        private ObservableCollection<ComboBoxItem> _listOfColours;
+
         public ColoringRulesManager ()
         {
             _listOfColoringRules = new ObservableCollection<ColoringRules>();
             ruleExist = false;
+
+            _listOfColours = new ObservableCollection<ComboBoxItem>();
+            
+            foreach (string key in ConfigurationManager.AppSettings.AllKeys)
+            {
+                if (key.Contains(TAG_COLOR_RULE))
+                {
+                    ///We invoke the creation of combox item, because they are own thread.
+                    ///When we change the XML a thread is created. This thread use this contructor.
+                    ///So it cannot create the comboboxitems from this thread
+                    ///===================================================================================
+                    ///On utilise la méthode invoke de l'application courante, afin de généré les comboboxitem
+                    ///Car lorsqu'on change la couleur dans le fichier XML ce constructeur est appellé d'un autre thread
+                    ///donc on ne peut pas créer les comboboxitem puisqu'il on leurs propre thread.
+                    ///Ainsi le invoke permet d'invoquer les thread des composants (comboboxitem)
+                    Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, (ThreadStart)delegate
+                    {
+                        ComboBoxItem cbi = new ComboBoxItem();
+                        cbi.Content = "";
+
+                        try
+                        {
+                            cbi.Background = (SolidColorBrush)new BrushConverter().ConvertFromString(ConfigurationManager.AppSettings[key]);
+                        }
+                        catch
+                        {
+                            cbi.Background = Brushes.Transparent;
+                        }
+
+                        _listOfColours.Add(cbi);
+                    });
+                }
+            }
+        }
+
+        public ObservableCollection<ComboBoxItem> ListOfColours
+        {
+            get { return _listOfColours; }
         }
 
         public ObservableCollection<ColoringRules> ListOfColoringRules
