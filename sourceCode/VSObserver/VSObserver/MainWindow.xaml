@@ -3,8 +3,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:nspace="clr-namespace:VSObserver" 
-        xmlns:converters="clr-namespace:VSObserver.Converters" 
-        xmlns:behavior="clr-namespace:VSObserver.Behavior" 
+        xmlns:converters="clr-namespace:VSObserver.Converters"  
         Title="VSObserver" Height="400" Width="550"
         SizeToContent="Manual"
         Background="{StaticResource WindowBackgroundColor}" Icon="/VSObserver;component/Images/VSO_logo.ico">
