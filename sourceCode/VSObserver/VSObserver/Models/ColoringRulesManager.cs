@@ -18,7 +18,7 @@ namespace VSObserver.Models
 {
     public class ColoringRulesManager : ViewModelBase, IEqualityComparer<ColoringRules>, ICloneable
     {
-        private const string TAG_COLOR_RULE = "ColRule";
+        private const string TAG_COLOR_RULE = "ColorRule";
 
         private const string LIST_COLORINGRULES = "ListOfColoringRules";
         private const string LIST_COLOURS = "ListOfColours";
@@ -66,7 +66,7 @@ namespace VSObserver.Models
                     Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, (ThreadStart)delegate
                     {
                         ComboBoxItem cbi = new ComboBoxItem();
-                        cbi.Content = "";
+                        cbi.Content = key.Replace(TAG_COLOR_RULE, "");
 
                         try
                         {
