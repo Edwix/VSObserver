@@ -1,138 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <List>
-   <Item>
-       <Variable>_18A11_34$</Variable>
-       <RuleSet>
-            <SimpleRule value="1" color="Green" />
-			<SimpleRule value="0" color="Orange" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_10A11_(|_4|5|10A11_10A12_2)$</Variable>
-       <RuleSet>
-            <SimpleRule value="1" color="Red" />
-			<SimpleRule value="0" color="Green" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_10A11_(66|64|40|54|8|9|39|10A11_10XP11_XC1_3)$</Variable>
-       <RuleSet>
-            <SimpleRule value="1" color="Green" />
-			<SimpleRule value="0" color="Red" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_10A11_(10A11_10XP11_XC1_4)$</Variable>
-       <RuleSet>
-            <SimpleRule value="1" color="Green" />
-			<SimpleRule value="0" color="#CECECE" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_(21M1_B|ADD1_3|21A1_5)$</Variable>
-       <RuleSet>
-            <SimpleRule value="1" color="Green" />
-			<SimpleRule value="0" color="Red" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_18A11_(XDC_P_PERM|XDC_P_PREP|XBAT_M_1|XBAT_M_2|XU|XV|XN|XW|HV_P_|HV_M_|45|51|64|9)$</Variable>
-       <RuleSet>
-            <SimpleRule value="1" color="Green" />
-			<SimpleRule value="0" color="Red" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_10A12_(1|2|3|10A12_10XP12_XCB2_55|10XP12_XCB2_45|TR1|44|10A12_10XP12_XCB1_55|33|TR3|TR6|TR7|TR8|TR9|TR10|TR11|TR12|TR13|TR14|TR15|10A12_10XP12_XCB1_16|31|_M_|_19|10A12_10XP12_XCB2_4|10A12_10XP12_XCB2_19|10A12_10XP12_XCB1_30)$</Variable>
-       <RuleSet>
-            <SimpleRule value="1" color="Green" />
-			<SimpleRule value="0" color="Red" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_10A12_(10A12_10XP12_XCB2_53|10A12_10XP12_XCB2_43|10A12_10XP12_XCB2_8)$</Variable>
-       <RuleSet>
-            <SimpleRule value="0" color="Green" />
-			<SimpleRule value="1" color="#CECECE" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_10A12_(10A12_10XP12_XCB2_7|10A12_10XP12_XCB1_43|64|10A12_10XP12_XCB1_54|10A12_10XP12_XCB1_45|41|TR2|52|10A12_10XP12_XCB1_8|10A12_10XP12_XCB2_30|10A12_10XP12_XCB1_29)$</Variable>
-       <RuleSet>
-            <SimpleRule value="0" color="Green" />
-			<SimpleRule value="1" color="Red" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_40A1_(40A1_40XP1_X317_z22|d10|z12|d12|b8|d8|40A1_40XP1_X314_z22|b20|40A1_40XP1_X301_z8|d14|z8|z32|z14|40A1_40XP1_X314_d24|z16)$</Variable>
-       <RuleSet>
-            <SimpleRule value="1" color="Green" />
-			<SimpleRule value="0" color="Red" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_40A1_(z10|40A1_40XP1_X318_d24|d20|40A1_40XP1_X317_z18|d32)$</Variable>
-       <RuleSet>
-            <SimpleRule value="0" color="Red" />
-			<SimpleRule value="1" color="Green" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_40A1_(40A1_40XP1_X317_d22|40A1_40XP1_X317_d24|)$</Variable>
-       <RuleSet>
-            <SimpleRule value="0" color="Green" />
-			<SimpleRule value="1" color="Orange" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_19A1_(88|19A1_19XP1_A1_15_a_1|19A1_19XP1_A1_15_b_1|2|108|72|17|54|71|18|106)$</Variable>
-       <RuleSet>
-            <SimpleRule value="1" color="Green" />
-			<SimpleRule value="0" color="Red" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_10A11_(15|17|19|21|55|28)$</Variable>
-       <RuleSet>
-            <SimpleRule value="0" color="Green" />
-			<SimpleRule value="1" color="Red" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_10A11_(_3|10A11_10A13_1)$</Variable>
-       <RuleSet>
-            <SimpleRule value="1" color="Green" />
-			<SimpleRule value="0" color="Red" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_10A11_10A11_10Q1_1$</Variable>
-       <RuleSet>
-            <SimpleRule value="1" color="Green" />
-			<SimpleRule value="0" color="Red" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_10A11_68$</Variable>
-	   <Comment>State of earthing switch. 0 = No earthing on train.</Comment>
-       <RuleSet>
-            <SimpleRule value="1" color="Red" />
-			<SimpleRule value="0" color="Green" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_60S3_(24|14)$</Variable>
-	   <Comment>Dead man switch (Green = activated and Blue = not activated) </Comment>
-       <RuleSet>
-            <SimpleRule value="1" color="LightGreen" />
-			<SimpleRule value="0" color="DodgerBlue" />
-       </RuleSet>
-   </Item>
-   <Item>
-       <Variable>_27S5_(22|14)$</Variable>
-	   <Comment>The emergency pantograph is pressed</Comment>
-       <RuleSet>
-            <SimpleRule value="0" color="LightGreen" />
-			<SimpleRule value="1" color="Red" />
-       </RuleSet>
-   </Item>
+  <Item>
+    <Variable>_18A11_34$</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Green" />
+      <SimpleRule value="0" color="Orange" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_10A11_(|_4|5|10A11_10A12_2)$</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Red" />
+      <SimpleRule value="0" color="Green" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_10A11_(66|64|40|54|8|9|39|10A11_10XP11_XC1_3)$</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Green" />
+      <SimpleRule value="0" color="Red" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_10A11_(10A11_10XP11_XC1_4)$</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Green" />
+      <SimpleRule value="0" color="#CECECE" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_(21M1_B|ADD1_3|21A1_5)$</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Green" />
+      <SimpleRule value="0" color="Red" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_18A11_(XDC_P_PERM|XDC_P_PREP|XBAT_M_1|XBAT_M_2|XU|XV|XN|XW|HV_P_|HV_M_|45|51|64|9)$</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Green" />
+      <SimpleRule value="0" color="Red" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_10A12_(1|2|3|TR1|44|10A12_10XP12_XCB1_55|33|TR3|TR6|TR7|TR8|TR9|TR10|TR11|TR12|TR13|TR14|TR15|10A12_10XP12_XCB1_16|31|_M_|_19|10A12_10XP12_XCB2_4|10A12_10XP12_XCB2_19|10A12_10XP12_XCB1_30)$</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Green" operator="eq" />
+      <SimpleRule value="0" color="Red" operator="eq" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_10A12_(10A12_10XP12_XCB2_53|10A12_10XP12_XCB2_43|10A12_10XP12_XCB2_8)$</Variable>
+    <RuleSet>
+      <SimpleRule value="0" color="Green" />
+      <SimpleRule value="1" color="#CECECE" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_10A12_(10A12_10XP12_XCB1_43|64|10A12_10XP12_XCB1_54|10A12_10XP12_XCB1_45|41|TR2|52|10A12_10XP12_XCB1_8|10A12_10XP12_XCB2_30|10A12_10XP12_XCB1_29)$</Variable>
+    <RuleSet>
+      <SimpleRule value="0" color="Green" operator="eq" />
+      <SimpleRule value="1" color="Red" operator="eq" />
+      <SimpleRule value="0" color="" operator="eq" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_40A1_(40A1_40XP1_X317_z22|d10|z12|d12|b8|d8|40A1_40XP1_X314_z22|b20|40A1_40XP1_X301_z8|d14|z8|z32|z14|40A1_40XP1_X314_d24|z16)$</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Green" />
+      <SimpleRule value="0" color="Red" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_40A1_(z10|40A1_40XP1_X318_d24|d20|40A1_40XP1_X317_z18|d32)$</Variable>
+    <RuleSet>
+      <SimpleRule value="0" color="Red" />
+      <SimpleRule value="1" color="Green" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_40A1_(40A1_40XP1_X317_d22|40A1_40XP1_X317_d24|)$</Variable>
+    <RuleSet>
+      <SimpleRule value="0" color="Orange" operator="eq" />
+      <SimpleRule value="1" color="Green" operator="eq" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_19A1_(88|19A1_19XP1_A1_15_a_1|19A1_19XP1_A1_15_b_1|2|108|72|17|54|71|18|106)$</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Green" />
+      <SimpleRule value="0" color="Red" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_10A11_(15|17|19|21|55|28)$</Variable>
+    <RuleSet>
+      <SimpleRule value="0" color="Green" />
+      <SimpleRule value="1" color="Red" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_10A11_(_3|10A11_10A13_1)$</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Green" />
+      <SimpleRule value="0" color="Red" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_10A11_10A11_10Q1_1$</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Green" />
+      <SimpleRule value="0" color="Red" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_10A11_68$</Variable>
+    <Comment>State of earthing switch. 0 = No earthing on train.</Comment>
+    <RuleSet>
+      <SimpleRule value="1" color="Red" />
+      <SimpleRule value="0" color="Green" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_60S3_(24|14)$</Variable>
+    <Comment>Dead man switch (Green = activated and Blue = not activated) </Comment>
+    <RuleSet>
+      <SimpleRule value="1" color="LightGreen" />
+      <SimpleRule value="0" color="DodgerBlue" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_27S5_(22|14)$</Variable>
+    <Comment>The emergency pantograph is pressed</Comment>
+    <RuleSet>
+      <SimpleRule value="0" color="LightGreen" />
+      <SimpleRule value="1" color="Red" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_31K[12]__P_X1</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Green" />
+      <SimpleRule value="0" color="Red" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_27S1($|_)</Variable>
+    <RuleSet>
+      <SimpleRule value="1" color="Red" operator="eq" />
+      <SimpleRule value="0" color="Gray" operator="eq" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>_18A11_22</Variable>
+    <RuleSet>
+      <SimpleRule value="0" color="Green" operator="eq" />
+      <SimpleRule value="1" color="Red" operator="eq" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>K_SP_TRAIN</Variable>
+    <RuleSet>
+      <SimpleRule value="3" color="DodgerBlue" operator="le" />
+      <SimpleRule value="5" color="LimeGreen" operator="le" />
+      <SimpleRule value="30" color="Green" operator="le" />
+      <SimpleRule value="50" color="Gold" operator="le" />
+      <SimpleRule value="120" color="Red" operator="ge" />
+    </RuleSet>
+  </Item>
+  <Item>
+    <Variable>RPStatus$</Variable>
+    <RuleSet>
+      <SimpleRule value="10" color="Red" operator="le" />
+      <SimpleRule value="10" color="Green" operator="gt" />
+    </RuleSet>
+  </Item>
 </List>
