@@ -117,6 +117,7 @@ namespace VSObserver.Models
         private ICommand cmdSavCurLckedList;
         private ICommand cmdCopyMap;
         private ICommand cmdEditRule;
+        private ICommand cmdPutValue;
 
         public VariableObserver(string ipAddr, string pathDataBase, int show_number)
         {
@@ -938,66 +939,132 @@ namespace VSObserver.Models
             return sb.ToString();
         }
 
-        /// <summary>
-        /// On fait soit un forçage ou soit une écriture si le texte commence avec =
-        /// </summary>
-        public void makeActionOnValue()
-        {
-            if (SelectedVariable != null && _writTyp != null)
+        #region Action sur les variables (Forcing / Writing)
+            /// <summary>
+            /// On fait soit un forçage ou soit une écriture si le texte commence avec =
+            /// </summary>
+            public void makeActionOnValue()
             {
-                if (WritingType.Equals(F_VAL))
+                if (SelectedVariable != null && _writTyp != null)
                 {
-                   forceSelectedVariable();
-                }
-                else
-                {
-                    writeSelectedVariable();
+                    if (WritingType.Equals(F_VAL))
+                    {
+                       forceSelectedVariable();
+                    }
+                    else
+                    {
+                        writeSelectedVariable();
+                    }
                 }
             }
-        }
 
-        public void stopRefreshOnSelectedElement(bool stop)
-        {
-            SelectedVariable.IsChanging = stop;
-        }
-
-        private void forceSelectedVariable()
-        {
-            MapStrStr mSI = new MapStrStr();
-            mSI["value"] = SelectedVariable.Value;
-            vc.configureInjection(SelectedVariable.PathName, "FixedValue", mSI);
-            vc.waitForInjection(SelectedVariable.PathName, 10);
-        }
-
-        private void writeSelectedVariable()
-        {
-            //Pour l'instant on ne peut qu'écrire un entier
-            try
+            public void makeActionOnValue(DataObserver dObs, string value)
             {
-                //On remplace le = par un espace qu'on suprime par la suite
-                string strVal = _selVar.Value;
-
-                switch (_selVar.Type)
+                if (SelectedVariable != null && _writTyp != null)
                 {
-                    case VS_Type.INTEGER:
+                    if (WritingType.Equals(F_VAL))
+                    {
+                        forceVariable(dObs.PathName, value);
+                    }
+                    else
+                    {
+                        writeVariable(dObs.PathName, dObs.Type, value);
+                    }
+                }
+            }
+
+            public void stopRefreshOnSelectedElement(bool stop)
+            {
+                SelectedVariable.IsChanging = stop;
+            }
+
+            private void forceSelectedVariable()
+            {
+                MapStrStr mSI = new MapStrStr();
+                mSI["value"] = SelectedVariable.Value;
+                vc.configureInjection(SelectedVariable.PathName, "FixedValue", mSI);
+                vc.waitForInjection(SelectedVariable.PathName, 10);
+            }
+        
+            /// <summary>
+            /// Force une variable en fonction de chemin et de sa valeur
+            /// </summary>
+            /// <param name="pathName"></param>
+            /// <param name="value"></param>
+            private void forceVariable(string pathName, string value)
+            {
+                MapStrStr mSI = new MapStrStr();
+                mSI["value"] = value;
+                vc.configureInjection(pathName, "FixedValue", mSI);
+                vc.waitForInjection(pathName, 10);
+            }
+
+            private void writeSelectedVariable()
+            {
+                //Pour l'instant on ne peut qu'écrire un entier
+                try
+                {
+                    //On remplace le = par un espace qu'on suprime par la suite
+                    string strVal = _selVar.Value;
+
+                    switch (_selVar.Type)
+                    {
+                        case VS_Type.INTEGER:
+                                int valInt = Convert.ToInt32(strVal);
+                                IntegerWriter iw = vc.createIntegerWriter(SelectedVariable.PathName);
+                                iw.set(valInt);
+                            break;
+                        case VS_Type.DOUBLE:
+                            double valDbl = Convert.ToDouble(strVal.Replace('.', ','));
+                            DoubleWriter id = vc.createDoubleWriter(SelectedVariable.PathName);
+                            id.set(valDbl);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ERROOR : " + e.ToString());
+                }
+            }
+
+            /// <summary>
+            /// Ecriture d'une variable en fonction de chemin de son type et de sa valeur
+            /// </summary>
+            /// <param name="pathName"></param>
+            /// <param name="type"></param>
+            /// <param name="value"></param>
+            private void writeVariable(string pathName, VS_Type type, string value)
+            {
+                //Pour l'instant on ne peut qu'écrire un entier
+                try
+                {
+                    //On remplace le = par un espace qu'on suprime par la suite
+                    string strVal = value;
+
+                    switch (type)
+                    {
+                        case VS_Type.INTEGER:
                             int valInt = Convert.ToInt32(strVal);
-                            IntegerWriter iw = vc.createIntegerWriter(SelectedVariable.PathName);
+                            IntegerWriter iw = vc.createIntegerWriter(pathName);
                             iw.set(valInt);
-                        break;
-                    case VS_Type.DOUBLE:
-                        double valDbl = Convert.ToDouble(strVal.Replace('.', ','));
-                        DoubleWriter id = vc.createDoubleWriter(SelectedVariable.PathName);
-                        id.set(valDbl);
-                        break;
-                    default:
-                        break;
+                            break;
+                        case VS_Type.DOUBLE:
+                            double valDbl = Convert.ToDouble(strVal.Replace('.', ','));
+                            DoubleWriter id = vc.createDoubleWriter(pathName);
+                            id.set(valDbl);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ERROOR : " + e.ToString());
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("ERROOR : " + e.ToString());
-            }
-        }
+        #endregion
 
         public void cleanupInjectionSelectedVariable(string pathName)
         {
@@ -1471,7 +1538,7 @@ namespace VSObserver.Models
 
                     if (colorRulesWithPath.ContainsKey(pathName))
                     {
-                        //On passe une copie pour pouvoir vers un cancel si jamais
+                        //On passe une copie pour pouvoir faire un cancel
                         colorRuleDial.setColoringRulesManager((ColoringRulesManager)colorRulesWithPath[pathName].Clone());
                     }
 
@@ -1489,6 +1556,51 @@ namespace VSObserver.Models
                     return true;
                 else
                     return false;
+            }
+
+            public ICommand PutValue
+            {
+                get
+                {
+                    if (this.cmdPutValue == null)
+                        this.cmdPutValue = new RelayCommand(() => putValue(), () => canPutValue());
+
+                    return cmdPutValue;
+                }
+            }
+
+            private void putValue()
+            {
+                PutValueDialog dialog = new PutValueDialog();
+                dialog.ShowDialog();
+
+                //Si le dialogue n'a pas été annulé alors on peut forcer / écrire toute les variables
+                if (!dialog.hasBeenCanceled())
+                {
+                    string value = dialog.getValue();
+
+                    foreach (DataObserver dObs in _selectedItems)
+                    {
+                        makeActionOnValue(dObs, value);
+                    }
+                }
+            }
+
+            private bool canPutValue()
+            {
+                bool putValueIsOk = false;
+
+                if (_selectedItems != null)
+                {
+                    //On peut mettre une valeur via la boite de dialogue
+                    //uniquement si il y a au moins deux éléments selectionnés
+                    if (_selectedItems.Count > 1)
+                    {
+                        putValueIsOk = true;
+                    }
+                }
+
+                return putValueIsOk;
             }
         #endregion
 

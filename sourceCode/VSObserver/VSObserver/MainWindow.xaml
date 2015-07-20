@@ -394,6 +394,7 @@
                     <MenuItem Name="sortByName" Header="Sort by name" Click="sortByName_Click"  />
                     <MenuItem Header="Copy the mapping value" Command="{Binding CopyMapping}"/>
                     <MenuItem Header="Edit the coloring rule" Command="{Binding EditColoringRule}"/>
+                    <MenuItem Header="Put a value" Command="{Binding PutValue}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.InputBindings>
