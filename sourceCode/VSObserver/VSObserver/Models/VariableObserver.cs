@@ -21,6 +21,7 @@ using System.Windows.Input;
 using VSObserver.Dialog;
 using System.Configuration;
 using Forms = System.Windows.Forms;
+using System.Collections;
 
 namespace VSObserver.Models
 {
@@ -105,7 +106,9 @@ namespace VSObserver.Models
         private ColoringRulesManager managerColorRules;
 
         //dictionnaire qui va contenire le chemin + nom (clé unique) et le mapping associé
-        Dictionary<string, string> dic;
+        private Dictionary<string, string> dic;
+
+        private List<DataObserver> _selectedItems;
 
         private string _infoMsg;
 
@@ -129,6 +132,7 @@ namespace VSObserver.Models
             colorRulesWithPath = new Dictionary<string, ColoringRulesManager>();
             _listOfFileLockedVar = new ObservableCollection<string>();
             _isRecording = false;
+            _selectedItems = new List<DataObserver>();
         }
 
         public string InformationMessage
@@ -253,6 +257,25 @@ namespace VSObserver.Models
         {
             get { return _listOfFileLockedVar; }
             set { _listOfFileLockedVar = value; OnPropertyChanged(LIST_FILE_LOCKED_VAR);  }
+        }
+
+        /// <summary>
+        /// On met les éléments sélectionnés dans la liste approprié pour faire un traitement
+        /// </summary>
+        /// <param name="selectedItems"></param>
+        public void setSelectedItems(IList selectedItems)
+        {
+            _selectedItems.Clear();
+
+            foreach (var dObsSelected in selectedItems)
+            {
+                DataObserver dObs = dObsSelected as DataObserver;
+
+                if (dObs != null)
+                {
+                    _selectedItems.Add(dObs);
+                }
+            }
         }
 
         /// <summary>

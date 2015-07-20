@@ -21,6 +21,7 @@ using System.Data;
 using System.Configuration;
 using SysTime = System.Timers;
 using VSObserver.Models;
+using System.Collections;
 
 namespace VSObserver
 {
@@ -450,6 +451,18 @@ namespace VSObserver
             {
                 pop_parameters.IsOpen = true;
             }
+        }
+
+        /// <summary>
+        /// Ce produit lorsqu'il y a une sélection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dg_variableList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            IList list = dg_variableList.SelectedItems;
+
+            vo.setSelectedItems(dg_variableList.SelectedItems);
         }
     }
 }

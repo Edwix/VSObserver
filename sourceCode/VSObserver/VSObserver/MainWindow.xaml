@@ -219,9 +219,11 @@
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   ItemsSource="{Binding Path=VariableList, UpdateSourceTrigger=PropertyChanged}"
                   SelectedItem="{Binding Path=SelectedVariable, UpdateSourceTrigger=PropertyChanged}"
+                  SelectionMode="Extended"
                   CanUserAddRows="False"
                   ColumnWidth="SizeToCells"
                   CanUserResizeColumns="True"
+                  SelectionChanged="dg_variableList_SelectionChanged"
                   CanUserSortColumns="False">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Action">
