@@ -118,6 +118,7 @@ namespace VSObserver.Models
         private ICommand cmdCopyMap;
         private ICommand cmdEditRule;
         private ICommand cmdPutValue;
+        private ICommand cmdUnforcedVars;
 
         public VariableObserver(string ipAddr, string pathDataBase, int show_number)
         {
@@ -939,7 +940,7 @@ namespace VSObserver.Models
             return sb.ToString();
         }
 
-        #region Action sur les variables (Forcing / Writing)
+        #region Action sur les variables (Forcing (and cleaning) / Writing)
             /// <summary>
             /// On fait soit un forçage ou soit une écriture si le texte commence avec =
             /// </summary>
@@ -1064,12 +1065,12 @@ namespace VSObserver.Models
                     Console.WriteLine("ERROOR : " + e.ToString());
                 }
             }
-        #endregion
 
-        public void cleanupInjectionSelectedVariable(string pathName)
-        {
-            vc.cleanupInjection(pathName);
-        }
+            public void cleanupInjectionVariable(string pathName)
+            {
+                vc.cleanupInjection(pathName);
+            }
+        #endregion
 
         private static bool IsValidRegex(string pattern)
         {
@@ -1563,7 +1564,7 @@ namespace VSObserver.Models
                 get
                 {
                     if (this.cmdPutValue == null)
-                        this.cmdPutValue = new RelayCommand(() => putValue(), () => canPutValue());
+                        this.cmdPutValue = new RelayCommand(() => putValue(), () => hasSelectedElements());
 
                     return cmdPutValue;
                 }
@@ -1586,9 +1587,9 @@ namespace VSObserver.Models
                 }
             }
 
-            private bool canPutValue()
+            private bool hasSelectedElements()
             {
-                bool putValueIsOk = false;
+                bool hasElements = false;
 
                 if (_selectedItems != null)
                 {
@@ -1596,11 +1597,32 @@ namespace VSObserver.Models
                     //uniquement si il y a au moins deux éléments selectionnés
                     if (_selectedItems.Count > 1)
                     {
-                        putValueIsOk = true;
+                        hasElements = true;
                     }
                 }
 
-                return putValueIsOk;
+                return hasElements;
+            }
+
+            public ICommand UnforcedVariables
+            {
+                get
+                {
+                    if (this.cmdUnforcedVars == null)
+                        this.cmdUnforcedVars = new RelayCommand(() => unforcedVariable(), () => hasSelectedElements());
+
+                    return cmdUnforcedVars;
+                }
+            }
+
+            private void unforcedVariable()
+            {
+                foreach (DataObserver dObs in _selectedItems)
+                {
+                    if(dObs.IsForced)
+                        cleanupInjectionVariable(dObs.PathName);
+                }
+
             }
         #endregion
 

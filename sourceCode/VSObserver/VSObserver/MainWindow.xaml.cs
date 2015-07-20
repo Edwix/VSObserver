@@ -334,7 +334,7 @@ namespace VSObserver
             if (forceBallBorder != null)
             {
                 //Le tag contient le nom de la variable plus chemin
-                vo.cleanupInjectionSelectedVariable(forceBallBorder.Tag.ToString());
+                vo.cleanupInjectionVariable(forceBallBorder.Tag.ToString());
             }
         }
 
