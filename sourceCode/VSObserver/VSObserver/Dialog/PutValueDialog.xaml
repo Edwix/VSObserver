@@ -1,0 +1,25 @@
+﻿<Window x:Class="VSObserver.Dialog.PutValueDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Write / Force multiple variables" Height="115" Width="350"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        Background="{StaticResource WindowBackgroundColor}">
+    <StackPanel Orientation="Vertical" Margin="5">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label Content="Value :" Grid.Column="0" />
+            <TextBox Grid.Column="1"  AcceptsReturn="False" Text="{Binding RuleRegex, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+        <Grid Margin="10,10,10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Name="btnValid" Content="Validate" Width="50" HorizontalAlignment="Left" Grid.Column="0" Click="btnSave_Click"/>
+            <Button Name="btnCancel" Width="50" Content="Cancel" Click="btnCancel_Click" HorizontalAlignment="Right" Grid.Column="1"/>
+        </Grid>
+    </StackPanel>
+</Window>

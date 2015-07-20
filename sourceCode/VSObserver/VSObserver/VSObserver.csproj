@@ -89,6 +89,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BoolToVisibility.cs" />
+    <Compile Include="Dialog\PutValueDialog.xaml.cs">
+      <DependentUpon>PutValueDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\ColoringRules.cs" />
     <Compile Include="Models\ColoringRulesManager.cs" />
     <Compile Include="Models\DataApplication.cs" />
@@ -106,6 +109,10 @@
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="VSOTextBox.cs" />
     <Page Include="Dialog\ColoringRulesDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\PutValueDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
