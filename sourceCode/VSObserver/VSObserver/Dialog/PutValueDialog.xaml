@@ -11,14 +11,14 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Label Content="Value :" Grid.Column="0" />
-            <TextBox Grid.Column="1"  AcceptsReturn="False" Text="{Binding RuleRegex, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Name="tb_value" Grid.Column="1"  AcceptsReturn="False"/>
         </Grid>
         <Grid Margin="10,10,10,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button Name="btnValid" Content="Validate" Width="50" HorizontalAlignment="Left" Grid.Column="0" Click="btnSave_Click"/>
+            <Button Name="btnValid" Content="Validate" Width="50" HorizontalAlignment="Left" Grid.Column="0" Click="btnValid_Click"/>
             <Button Name="btnCancel" Width="50" Content="Cancel" Click="btnCancel_Click" HorizontalAlignment="Right" Grid.Column="1"/>
         </Grid>
     </StackPanel>

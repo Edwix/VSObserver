@@ -18,12 +18,38 @@ namespace VSObserver.Dialog
     /// </summary>
     public partial class PutValueDialog : Window
     {
+        private string value;
+        private bool hasCanceled;
+
         public PutValueDialog()
         {
             InitializeComponent();
 
             //Affichage en premier plan
             this.Topmost = true;
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            hasCanceled = true;
+            this.Close();
+        }
+
+        private void btnValid_Click(object sender, RoutedEventArgs e)
+        {
+            value = tb_value.Text;
+            hasCanceled = false;
+            this.Close();
+        }
+
+        public string getValue()
+        {
+            return value;
+        }
+
+        public bool hasBeenCanceled()
+        {
+            return hasCanceled;
         }
     }
 }
