@@ -58,7 +58,7 @@ namespace VSObserver
             loadConfiguration();
             InitializeComponent();
 
-            GitSync gits = new GitSync("");
+            GitSync gits = new GitSync();
             gits.pushContent();
             //gits.pullContent();
 

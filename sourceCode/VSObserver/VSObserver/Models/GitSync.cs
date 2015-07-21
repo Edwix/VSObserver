@@ -13,41 +13,58 @@ namespace VSObserver.Models
     {
         private const string CONFKEY_REPO_PATH = "RepositoryPath";
         private const string CONFKEY_URL_REPO = "URLRepository";
+        private const string CONFKEY_LOGIN = "GitHubLogin";
+        private const string CONFKEY_PASSWORD = "GitHubPassword";
+        private const string CONFKEY_NAME = "Name";
+        private const string CONFKEY_EMAIL = "Email";
 
-        private string _shaKey;
         private Repository _repository;
         private bool _gitRepoIsOk;
         private Network _network;
         private Signature _signature;
         private string _url;
         private string _repoPath;
+        private string _login;
+        private string _password;
+        private string _name;
+        private string _email;
 
-        public GitSync(string shaKey)
+        public GitSync()
         {
-            this._shaKey = shaKey;
-
             try
             {
                 _repoPath = ConfigurationManager.AppSettings[CONFKEY_REPO_PATH];
                 _url = ConfigurationManager.AppSettings[CONFKEY_URL_REPO];
+                _login = ConfigurationManager.AppSettings[CONFKEY_LOGIN];
+                _password = ConfigurationManager.AppSettings[CONFKEY_PASSWORD];
+                _name = ConfigurationManager.AppSettings[CONFKEY_NAME];
+                _email = ConfigurationManager.AppSettings[CONFKEY_EMAIL];
 
-                _signature = new Signature("Moulin Edwin", "edwin.moulin@transport.alstom.com", DateTimeOffset.Now);
+                _signature = new Signature(_name, _email, DateTimeOffset.Now);
 
+                //On supprime le dossier existant et on clone
+                //Cela permet de modifier de repository si jamais quelqu'un à modifier la clé git
                 if (Directory.Exists(_repoPath))
                 {
-                    _repository = new Repository(_repoPath);
+                    try
+                    {
+                        DeleteDirectory(_repoPath);
+                    }
+                    catch(Exception)
+                    {
+
+                    }
                 }
-                else
-                {
-                    Repository.Clone(_url, _repoPath);
-                    _repository = new Repository(_repoPath);
-                }
+
+                Repository.Clone(_url, _repoPath);
+                _repository = new Repository(_repoPath);
 
                 _network = _repository.Network;
                 _gitRepoIsOk = true;
             }
             catch (Exception e)
             {
+                Console.WriteLine("Error :" + e.ToString());
                 _gitRepoIsOk = false;
             }
         }
