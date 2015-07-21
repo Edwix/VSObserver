@@ -18,6 +18,7 @@ namespace VSObserver.Models
         private Repository _repository;
         private bool _gitRepoIsOk;
         private Network _network;
+        private Signature _signature;
 
         public GitSync(string shaKey)
         {
@@ -27,6 +28,8 @@ namespace VSObserver.Models
             {
                 string repoPath = ConfigurationManager.AppSettings[CONFKEY_REPO_PATH];
                 string url = ConfigurationManager.AppSettings[CONFKEY_URL_REPO];
+
+                _signature = new Signature("Moulin Edwin", "edwin.moulin@transport.alstom.com", DateTimeOffset.Now);
 
                 if (Directory.Exists(repoPath))
                 {
@@ -100,24 +103,21 @@ namespace VSObserver.Models
 
                     if (!repoStatus.IsDirty)
                     {
-                        _repository.Stage("*");
-                        Commit commited = _repository.Commit("VSObserver coloring files modification !");
+                        PullOptions pullOptions = new PullOptions()
+                        {
+                            MergeOptions = new MergeOptions() 
+                                            { 
+                                                FastForwardStrategy = FastForwardStrategy.Default, 
+                                                FileConflictStrategy = CheckoutFileConflictStrategy.Merge 
+                                            }
+                        };
 
-                        int NbErrors = 0;
-
-                        PullOptions pullOptions = new PullOptions();
-                        pullOptions.MergeOptions = merge => new MergeOptions() 
-                                                            { 
-                                                                FastForwardStrategy = FastForwardStrategy.Default, 
-                                                                FileConflictStrategy = CheckoutFileConflictStrategy.Merge 
-                                                            };
-
-                        _network.Pull();
+                        _network.Pull(_signature, pullOptions);
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Error GITSYNC : \n" + e.ToString());
+                    Console.WriteLine("Error PULL : \n" + e.ToString());
                 }
             }   
         }
