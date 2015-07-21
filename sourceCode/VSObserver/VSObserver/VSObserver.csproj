@@ -58,6 +58,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\WINDOWS\assembly\GAC_MSIL\gc_services_dotnet\0.0.0.0__5da1520d4db57f8e\gc_services_dotnet.dll</HintPath>
     </Reference>
+    <Reference Include="LibGit2Sharp">
+      <HintPath>..\..\..\..\..\Users\emoulin\Downloads\libgit2sharp-vNext\libgit2sharp-vNext\LibGit2Sharp\bin\Release\LibGit2Sharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -100,6 +103,7 @@
       <DependentUpon>ColoringRulesDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\FileWatcher.cs" />
+    <Compile Include="Models\GitSync.cs" />
     <Compile Include="Models\IFileChange.cs" />
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="RelayCommand.cs" />
@@ -220,6 +224,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\control_stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NativeBinaries\x86\git2-4d6362b.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

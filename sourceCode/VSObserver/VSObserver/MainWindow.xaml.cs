@@ -56,7 +56,9 @@ namespace VSObserver
         public MainWindow()
         {
             loadConfiguration();
-            InitializeComponent();  
+            InitializeComponent();
+
+            GitSync gits = new GitSync("");
 
             //Création du timer pour récupérer la valeur du presse papier
             //Initialisation de l'ancienne valeur du presse papier
