@@ -19,6 +19,8 @@ namespace VSObserver.Models
         private bool _gitRepoIsOk;
         private Network _network;
         private Signature _signature;
+        private string _url;
+        private string _repoPath;
 
         public GitSync(string shaKey)
         {
@@ -26,19 +28,19 @@ namespace VSObserver.Models
 
             try
             {
-                string repoPath = ConfigurationManager.AppSettings[CONFKEY_REPO_PATH];
-                string url = ConfigurationManager.AppSettings[CONFKEY_URL_REPO];
+                _repoPath = ConfigurationManager.AppSettings[CONFKEY_REPO_PATH];
+                _url = ConfigurationManager.AppSettings[CONFKEY_URL_REPO];
 
                 _signature = new Signature("Moulin Edwin", "edwin.moulin@transport.alstom.com", DateTimeOffset.Now);
 
-                if (Directory.Exists(repoPath))
+                if (Directory.Exists(_repoPath))
                 {
-                    _repository = new Repository(repoPath);
+                    _repository = new Repository(_repoPath);
                 }
                 else
                 {
-                    Repository.Clone(url, repoPath);
-                    _repository = new Repository(repoPath);
+                    Repository.Clone(_url, _repoPath);
+                    _repository = new Repository(_repoPath);
                 }
 
                 _network = _repository.Network;
@@ -57,40 +59,77 @@ namespace VSObserver.Models
                 try
                 {                    
                     RepositoryStatus repoStatus = _repository.RetrieveStatus();
+                    string pathClonedRepo = "Cloned" + _repoPath;
 
-                    repoStatus.Where(x => (x.State == FileStatus.NewInIndex || x.State == FileStatus.ModifiedInIndex || x.State == FileStatus.Conflicted));
+                    if (Directory.Exists(pathClonedRepo))
+                        DeleteDirectory(pathClonedRepo);
 
-                    ObservableCollection<StatusEntry> addedFiles = new ObservableCollection<StatusEntry>(repoStatus.Added);
-
-                    if (addedFiles.Count > 0)
-                    {
-                        _repository.Stage("*");
-                    }
+                    Repository clonedRepo = new Repository(Repository.Clone(_url, pathClonedRepo));
 
                     if (repoStatus.IsDirty)
                     {
                         _repository.Stage("*");
                         Commit commited = _repository.Commit("VSObserver coloring files modification !");
-
-                        int NbErrors = 0;
-
-                        PushOptions pushOptions = new PushOptions();
-                        pushOptions.CredentialsProvider = (url,user,cred) => new UsernamePasswordCredentials { Username="edwix", Password="" };
-                        pushOptions.OnPushStatusError = error =>
-                                                        {
-                                                            NbErrors++;
-                                                        };
-
-                        Remote remote = _network.Remotes["origin"];
-                        var pushRefSpec = _repository.Branches["master"].CanonicalName;
-                        _network.Push(remote, pushRefSpec, pushOptions);
                     }
+
+                    //Si les deux référence du répertoire cloné et du répertoir courant ne sont pas les mêmes
+                    //cela signifie qu'il y a eu un changment sur le serveur donc on fait un pull.
+                    if (!clonedRepo.Refs["HEAD"].ResolveToDirectReference().TargetIdentifier.Equals(
+                        _repository.Refs["HEAD"].ResolveToDirectReference().TargetIdentifier))
+                    {
+                        pullContent();
+                        _repository.Stage("*");
+                        _repository.Commit("Conflict: The initial files on the server have been kept");
+                    }
+
+                    //Suprression du repository cloné
+                    DeleteDirectory(pathClonedRepo);
+
+                    PushOptions pushOptions = new PushOptions()
+                                                {
+                                                    OnPushStatusError = OnPushStatusError,
+                                                    OnPushTransferProgress = (current, total, bytes) =>
+                                                    {
+                                                        Console.WriteLine(string.Format("Transfer Progress {0} out of {1}, Bytes {2}", current, total, bytes));
+                                                        return true;
+                                                    }
+                                                };
+                    pushOptions.CredentialsProvider = (url,user,cred) => new UsernamePasswordCredentials { Username="edwix", Password="" };
+
+                    Remote remote = _network.Remotes["origin"];
+                    var pushRefSpec = _repository.Branches["master"].CanonicalName;
+                    _network.Push(remote, pushRefSpec, pushOptions);               
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Error GITSYNC : \n" + e.ToString());
                 }
             }            
+        }
+
+        public void DeleteDirectory(string target_dir)
+        {
+            string[] files = Directory.GetFiles(target_dir);
+            string[] dirs = Directory.GetDirectories(target_dir);
+
+            foreach (string file in files)
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (string dir in dirs)
+            {
+                DeleteDirectory(dir);
+            }
+
+            Directory.Delete(target_dir, false);
+        }
+
+        private void OnPushStatusError(PushStatusError pushStatusErrors)
+        {
+            Console.WriteLine("Failed to update reference '{0}': {1}",
+                pushStatusErrors.Reference, pushStatusErrors.Message);
         }
 
         public void pullContent()
@@ -108,7 +147,7 @@ namespace VSObserver.Models
                             MergeOptions = new MergeOptions() 
                                             { 
                                                 FastForwardStrategy = FastForwardStrategy.Default, 
-                                                FileConflictStrategy = CheckoutFileConflictStrategy.Merge 
+                                                FileConflictStrategy = CheckoutFileConflictStrategy.Theirs
                                             }
                         };
 
