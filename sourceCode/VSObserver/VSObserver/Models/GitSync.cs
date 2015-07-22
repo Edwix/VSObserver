@@ -33,30 +33,23 @@ namespace VSObserver.Models
         {
             try
             {
-                _repoPath = ConfigurationManager.AppSettings[CONFKEY_REPO_PATH];
                 _url = ConfigurationManager.AppSettings[CONFKEY_URL_REPO];
                 _login = ConfigurationManager.AppSettings[CONFKEY_LOGIN];
                 _password = ConfigurationManager.AppSettings[CONFKEY_PASSWORD];
                 _name = ConfigurationManager.AppSettings[CONFKEY_NAME];
                 _email = ConfigurationManager.AppSettings[CONFKEY_EMAIL];
 
+                _repoPath = _url.Replace("https://gist.github.com/", "").Replace(".git", "");
+
                 _signature = new Signature(_name, _email, DateTimeOffset.Now);
 
                 //On supprime le dossier existant et on clone
                 //Cela permet de modifier de repository si jamais quelqu'un à modifier la clé git
-                if (Directory.Exists(_repoPath))
+                if (!Directory.Exists(_repoPath))
                 {
-                    try
-                    {
-                        DeleteDirectory(_repoPath);
-                    }
-                    catch(Exception)
-                    {
-
-                    }
+                    Repository.Clone(_url, _repoPath);
                 }
 
-                Repository.Clone(_url, _repoPath);
                 _repository = new Repository(_repoPath);
 
                 _network = _repository.Network;
