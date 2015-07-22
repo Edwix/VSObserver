@@ -45,6 +45,24 @@ namespace VSObserver.Models
                 //Démmarage du watcher (°o°)
                 watcher.EnableRaisingEvents = true;
             }
+            else if (Directory.Exists(path))
+            {
+                //On regarde uniquement sur les fichier XML
+                FileSystemWatcher watcher = new FileSystemWatcher();
+
+                watcher.Path = Path.GetFullPath(path);
+
+                //ICi on vérifie le fichier en fonction de son nom
+                watcher.NotifyFilter = NotifyFilters.LastWrite;
+
+                watcher.Filter = "*.xml";
+
+                //Puis à chaque changmement du fichier on déclenche l'évènement
+                watcher.Changed += new FileSystemEventHandler(OnChanged);
+
+                //Démmarage du watcher (°o°)
+                watcher.EnableRaisingEvents = true;
+            }
         }
 
         private void OnChanged(object source, FileSystemEventArgs e)

@@ -6,10 +6,11 @@ using LibGit2Sharp;
 using System.IO;
 using System.Configuration;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace VSObserver.Models
 {
-    public class GitSync
+    public class GitSync : IFileChange
     {
         private const string CONFKEY_REPO_PATH = "RepositoryPath";
         private const string CONFKEY_URL_REPO = "URLRepository";
@@ -28,6 +29,12 @@ namespace VSObserver.Models
         private string _password;
         private string _name;
         private string _email;
+
+        //File watcher to see if there are some modification on git repository
+        private FileWatcher _fileWatcher;
+        
+        //Timer qui va réaliser le pull continuellement
+        private Timer _pullTimer;
 
         public GitSync()
         {
@@ -54,6 +61,13 @@ namespace VSObserver.Models
 
                 _network = _repository.Network;
                 _gitRepoIsOk = true;
+
+                _fileWatcher = new FileWatcher(_repoPath);
+                _fileWatcher.setFileChangeListener(this);
+
+                TimerCallback tcb = pullTimerElapsed;
+                _pullTimer = new Timer(tcb);
+                _pullTimer.Change(0, 1000);
             }
             catch (Exception e)
             {
@@ -62,6 +76,15 @@ namespace VSObserver.Models
             }
         }
 
+        public string getRepositoryPath()
+        {
+            return _repoPath;
+        }
+
+        /// <summary>
+        /// Utilise la commande Git push
+        /// Avant de faire le push cette méthode réalise un pull et un commit
+        /// </summary>
         public void pushContent()
         {
             if (_gitRepoIsOk)
@@ -69,31 +92,14 @@ namespace VSObserver.Models
                 try
                 {                    
                     RepositoryStatus repoStatus = _repository.RetrieveStatus();
-                    string pathClonedRepo = "Cloned" + _repoPath;
 
-                    if (Directory.Exists(pathClonedRepo))
-                        DeleteDirectory(pathClonedRepo);
-
-                    Repository clonedRepo = new Repository(Repository.Clone(_url, pathClonedRepo));
+                    pullContent();
 
                     if (repoStatus.IsDirty)
                     {
                         _repository.Stage("*");
                         Commit commited = _repository.Commit("VSObserver coloring files modification !");
                     }
-
-                    //Si les deux référence du répertoire cloné et du répertoir courant ne sont pas les mêmes
-                    //cela signifie qu'il y a eu un changment sur le serveur donc on fait un pull.
-                    if (!clonedRepo.Refs["HEAD"].ResolveToDirectReference().TargetIdentifier.Equals(
-                        _repository.Refs["HEAD"].ResolveToDirectReference().TargetIdentifier))
-                    {
-                        pullContent();
-                        _repository.Stage("*");
-                        _repository.Commit("Conflict: The initial files on the server have been kept");
-                    }
-
-                    //Suprression du repository cloné
-                    DeleteDirectory(pathClonedRepo);
 
                     PushOptions pushOptions = new PushOptions()
                                                 {
@@ -104,11 +110,13 @@ namespace VSObserver.Models
                                                         return true;
                                                     }
                                                 };
-                    pushOptions.CredentialsProvider = (url,user,cred) => new UsernamePasswordCredentials { Username="edwix", Password="" };
+                    pushOptions.CredentialsProvider = (url,user,cred) => new UsernamePasswordCredentials { Username=_login, Password=_password };
 
                     Remote remote = _network.Remotes["origin"];
                     var pushRefSpec = _repository.Branches["master"].CanonicalName;
-                    _network.Push(remote, pushRefSpec, pushOptions);               
+                    _network.Push(remote, pushRefSpec, pushOptions);
+
+                    Console.WriteLine("PUSH OK !");
                 }
                 catch (Exception e)
                 {
@@ -117,23 +125,13 @@ namespace VSObserver.Models
             }            
         }
 
-        public void DeleteDirectory(string target_dir)
+        /// <summary>
+        /// Méthode appellée à chaque période du timer
+        /// </summary>
+        /// <param name="stateInfo"></param>
+        private void pullTimerElapsed(Object stateInfo)
         {
-            string[] files = Directory.GetFiles(target_dir);
-            string[] dirs = Directory.GetDirectories(target_dir);
-
-            foreach (string file in files)
-            {
-                File.SetAttributes(file, FileAttributes.Normal);
-                File.Delete(file);
-            }
-
-            foreach (string dir in dirs)
-            {
-                DeleteDirectory(dir);
-            }
-
-            Directory.Delete(target_dir, false);
+            pullContent();
         }
 
         private void OnPushStatusError(PushStatusError pushStatusErrors)
@@ -142,6 +140,11 @@ namespace VSObserver.Models
                 pushStatusErrors.Reference, pushStatusErrors.Message);
         }
 
+        /// <summary>
+        /// Méthode qui réalise la commande pull de Git
+        /// Cette méthode prend en priorité le fichier sur le serveur
+        /// en cas de conflit
+        /// </summary>
         public void pullContent()
         {
             if (_gitRepoIsOk)
@@ -162,6 +165,8 @@ namespace VSObserver.Models
                         };
 
                         _network.Pull(_signature, pullOptions);
+
+                        Console.WriteLine("PULL OK !");
                     }
                 }
                 catch (Exception e)
@@ -169,6 +174,15 @@ namespace VSObserver.Models
                     Console.WriteLine("Error PULL : \n" + e.ToString());
                 }
             }   
+        }
+
+        /// <summary>
+        /// When we load a XML rule we push because the file has been changed
+        /// </summary>
+        /// <param name="path"></param>
+        public void loadXMLRule(string path)
+        {
+            pushContent();
         }
     }
 }
