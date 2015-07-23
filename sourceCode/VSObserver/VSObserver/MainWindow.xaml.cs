@@ -271,7 +271,7 @@ namespace VSObserver
         /// <param name="e"></param>
         private void refreshWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            totalNumberOfVariables = vo.getNumberOfVariables();
+            vo.loadVariableList();
         }
 
         /// <summary>
@@ -286,6 +286,7 @@ namespace VSObserver
             dataApp.LoadDone = true;
             changeVariableIndication();
             tb_variableName.IsEnabled = true;
+            totalNumberOfVariables = vo.getNumberOfVariables();
 
             //On redémarre le timer
             clipBoardTimer.Start();
