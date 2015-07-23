@@ -84,6 +84,8 @@ namespace VSObserver.Models
         private const string REGEX_REMPLACE = @"[^0-9a-zA-Z_/\-:\*\?]";
         private const string REGEX_REMPLACE_FILE = @"[^0-9a-zA-Z_/\-]";
 
+        private string _ruleFile;
+
         private bool connectionOK;
         private Regex reg_var;
         //private DataApplication dataApp;
@@ -135,6 +137,14 @@ namespace VSObserver.Models
             _listOfFileLockedVar = new ObservableCollection<string>();
             _isRecording = false;
             _selectedItems = new List<DataObserver>();
+            _listOfDataObserver = new ObservableCollection<DataObserver>();
+
+            loadVariableList();
+        }
+
+        public int getNumberOfVariables()
+        {
+            return _listOfDataObserver.Count;
         }
 
         public string InformationMessage
@@ -281,10 +291,10 @@ namespace VSObserver.Models
         }
 
         /// <summary>
-        /// Charge toutes les variables de la configuration et returne le nombre total
+        /// Charge toutes les variables de la configuration
         /// </summary>
         /// <returns></returns>
-        public int loadVariableList()
+        public void loadVariableList()
         {
             //On crée un dictionnaire qui va contenire le chemin + nom (clé unique) et le mapping associé
             dic = new Dictionary<string, string>();
@@ -433,8 +443,6 @@ namespace VSObserver.Models
             {
                 InformationMessage = "Error on SQLite data base !";
             }
-
-            return _listOfDataObserver.Count;
         }
 
         /// <summary>
@@ -1096,6 +1104,7 @@ namespace VSObserver.Models
 
                 if (File.Exists(path))
                 {
+                    _ruleFile = path;
                     Console.WriteLine("LOAD XML RULE ==> " + path);
                     string rulePath = @"Resources/Rule.xsd";
                     colorRulesWithPath.Clear();
@@ -1534,7 +1543,7 @@ namespace VSObserver.Models
             {
                 try
                 {
-                    ColoringRulesDialog colorRuleDial = new ColoringRulesDialog();
+                    ColoringRulesDialog colorRuleDial = new ColoringRulesDialog(_ruleFile);
                     string pathName = SelectedVariable.PathName;
 
                     if (colorRulesWithPath.ContainsKey(pathName))

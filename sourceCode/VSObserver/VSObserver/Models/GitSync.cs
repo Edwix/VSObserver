@@ -18,6 +18,7 @@ namespace VSObserver.Models
         private const string CONFKEY_PASSWORD = "GitHubPassword";
         private const string CONFKEY_NAME = "Name";
         private const string CONFKEY_EMAIL = "Email";
+        private const string CONFKEY_TIME_PULL = "TimeToPull";
 
         private Repository _repository;
         private bool _gitRepoIsOk;
@@ -64,6 +65,17 @@ namespace VSObserver.Models
 
                 _fileWatcher = new FileWatcher(_repoPath);
                 _fileWatcher.setFileChangeListener(this);
+
+                int timeToPull;
+
+                try
+                {
+                    timeToPull = Convert.ToInt32(ConfigurationManager.AppSettings[CONFKEY_TIME_PULL]);
+                }
+                catch
+                {
+                    timeToPull = 1000;
+                }
 
                 TimerCallback tcb = pullTimerElapsed;
                 _pullTimer = new Timer(tcb);
@@ -115,8 +127,6 @@ namespace VSObserver.Models
                     Remote remote = _network.Remotes["origin"];
                     var pushRefSpec = _repository.Branches["master"].CanonicalName;
                     _network.Push(remote, pushRefSpec, pushOptions);
-
-                    Console.WriteLine("PUSH OK !");
                 }
                 catch (Exception e)
                 {
@@ -165,8 +175,6 @@ namespace VSObserver.Models
                         };
 
                         _network.Pull(_signature, pullOptions);
-
-                        Console.WriteLine("PULL OK !");
                     }
                 }
                 catch (Exception e)

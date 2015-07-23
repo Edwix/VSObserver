@@ -58,9 +58,9 @@ namespace VSObserver
             loadConfiguration();
             InitializeComponent();
 
-            GitSync gits = new GitSync();
-            gits.pushContent();
-            //gits.pullContent();
+            //On lance la synchronisation des fichiers dans un gist
+                GitSync gitsync = new GitSync();
+                gitsync.pushContent();
 
             //Création du timer pour récupérer la valeur du presse papier
             //Initialisation de l'ancienne valeur du presse papier
@@ -91,7 +91,7 @@ namespace VSObserver
             dataApp.LoadDone = true;
 
             vo = new VariableObserver(ipAddresseRTCServer, sqlLiteDataBase, number_variable);
-            totalNumberOfVariables = vo.loadVariableList();
+            totalNumberOfVariables = vo.getNumberOfVariables();
 
             changeVariableIndication();
 
@@ -115,8 +115,8 @@ namespace VSObserver
             refreshWorker.DoWork += refreshWorker_DoWork;
             refreshWorker.RunWorkerCompleted += refreshWorker_RunWorkerCompleted;
 
-            //Création de l'objet qui va regarder le fichier
-            FileWatcher fileWatch = new FileWatcher(rulePath);
+            //Création de l'objet qui va regarder le fichier de colorisation
+            FileWatcher fileWatch = new FileWatcher(gitsync.getRepositoryPath() + "\\" + rulePath);
             fileWatch.setFileChangeListener(vo);
 
             //Chargmement des listes de variables sauvegardé
@@ -271,7 +271,7 @@ namespace VSObserver
         /// <param name="e"></param>
         private void refreshWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            totalNumberOfVariables = vo.loadVariableList();
+            totalNumberOfVariables = vo.getNumberOfVariables();
         }
 
         /// <summary>
