@@ -6,12 +6,15 @@ using LibGit2Sharp;
 using System.IO;
 using System.Configuration;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace VSObserver.Models
 {
     public class GitSync : IFileChange
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private const string CONFKEY_REPO_PATH = "RepositoryPath";
         private const string CONFKEY_URL_REPO = "URLRepository";
         private const string CONFKEY_LOGIN = "GitHubLogin";
@@ -47,7 +50,8 @@ namespace VSObserver.Models
                 _name = ConfigurationManager.AppSettings[CONFKEY_NAME];
                 _email = ConfigurationManager.AppSettings[CONFKEY_EMAIL];
 
-                _repoPath = _url.Replace("https://gist.github.com/", "").Replace(".git", "");
+
+                _repoPath = "./GitRepos";
 
                 _signature = new Signature(_name, _email, DateTimeOffset.Now);
 
@@ -55,14 +59,17 @@ namespace VSObserver.Models
                 //Cela permet de modifier de repository si jamais quelqu'un à modifier la clé git
                 if (!Directory.Exists(_repoPath))
                 {
+                    log.Debug("Cloning repository from scratch");
                     Repository.Clone(_url, _repoPath);
                 }
+                else log.Debug("No need to clone");
 
                 _repository = new Repository(_repoPath);
 
                 _network = _repository.Network;
                 _gitRepoIsOk = true;
 
+                log.Debug("Setting Git file watcher");
                 _fileWatcher = new FileWatcher(_repoPath);
                 _fileWatcher.setFileChangeListener(this);
 
@@ -83,7 +90,7 @@ namespace VSObserver.Models
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error :" + e.ToString());
+                log.Error("Error :" + e.ToString());
                 _gitRepoIsOk = false;
             }
         }
