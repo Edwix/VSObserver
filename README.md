@@ -40,6 +40,7 @@ Please put any idea, even though it is crazy.
  * Copy and paste following commands :
    > Install-Package LibGit2Sharp -Version 0.24.0
    > Install-Package System.Data.SQLite -Version 1.0.106
+   > Install-Package Log4Net -Version 2.0.8
  * Generate project. It should be successfull.
 
 

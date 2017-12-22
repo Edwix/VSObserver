@@ -30,6 +30,7 @@ namespace VSObserver
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public const string APP_NAME = "VSObserver";
 
@@ -55,13 +56,18 @@ namespace VSObserver
 
         public MainWindow()
         {
+            log.Info("Loading configuration");
             loadConfiguration();
+
+            log.Info("initialize components");
             InitializeComponent();
 
+            log.Info("Starting GIT synchronization");
             //On lance la synchronisation des fichiers dans un gist
                 GitSync gitsync = new GitSync();
                 gitsync.pushContent();
 
+            log.Debug("initialize clipboard timer");
             //Création du timer pour récupérer la valeur du presse papier
             //Initialisation de l'ancienne valeur du presse papier
                 oldClipBoardText = "";
@@ -84,15 +90,18 @@ namespace VSObserver
             Clipboard.Clear();
             clipBoardTimer.Start();
 
+            log.Debug("initialize DataApplication()");
             dataApp = new DataApplication();
             img_refresh.DataContext = dataApp;
            
             
             dataApp.LoadDone = true;
 
+            log.Debug("initialize VariableObserver()");
             vo = new VariableObserver(ipAddresseRTCServer, sqlLiteDataBase, number_variable);
             totalNumberOfVariables = vo.getNumberOfVariables();
 
+            log.Debug("initialize changeVariableIndication()");
             changeVariableIndication();
 
             ///================================================================================================================================
@@ -108,6 +117,7 @@ namespace VSObserver
                 pop_listLockedFiles.DataContext = vo;
             ///================================================================================================================================
 
+            log.Debug("initialize variable supervisor");
             //Création de la tâche de fond qui va rafraichir la liste des varaibles
             refreshWorker = new BackgroundWorker();
 
@@ -115,15 +125,20 @@ namespace VSObserver
             refreshWorker.DoWork += refreshWorker_DoWork;
             refreshWorker.RunWorkerCompleted += refreshWorker_RunWorkerCompleted;
 
+            log.Debug("initialize GIT file watcher");
             //Création de l'objet qui va regarder le fichier de colorisation
             FileWatcher fileWatch = new FileWatcher(gitsync.getRepositoryPath() + "\\" + rulePath);
             fileWatch.setFileChangeListener(vo);
 
+            log.Debug("initialize saved variable list");
             //Chargmement des listes de variables sauvegardé
             vo.loadVariables(LOCKED_LIST_FILE, true);
 
+            log.Debug("initialize getListLockedVarSaved()");
             //Chargement de tous les fichiers sauvegardés qui contiennent les variable bloqués
             vo.getListLockedVarSaved();
+
+            log.Debug("End of main thread");
         }
 
         /// <summary>
