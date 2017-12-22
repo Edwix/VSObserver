@@ -109,8 +109,8 @@ namespace VSObserver.Models
 
                     if (repoStatus.IsDirty)
                     {
-                        _repository.Stage("*");
-                        Commit commited = _repository.Commit("VSObserver coloring files modification !");
+                        LibGit2Sharp.Commands.Stage(_repository, "*");
+                        Commit commited = _repository.Commit("VSObserver coloring files modification !", _signature, _signature);
                     }
 
                     PushOptions pushOptions = new PushOptions()
@@ -174,7 +174,7 @@ namespace VSObserver.Models
                                             }
                         };
 
-                        _network.Pull(_signature, pullOptions);
+                        LibGit2Sharp.Commands.Pull(_repository, _signature, pullOptions);
                     }
                 }
                 catch (Exception e)
